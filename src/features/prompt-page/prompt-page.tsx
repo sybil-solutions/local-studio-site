@@ -21,6 +21,8 @@ Operating rules
 3. Never print, commit, or expose secrets. Store machine-specific values in .env.local.
 4. Do not bypass hooks or security checks. With vLLM or SGLang, never disable CUDA graphs and never use enforce eager.
 5. Prefer supported, reproducible installation paths. Do not silently substitute a different product or inference stack.
+6. You must figure it out — no quitting. It is not done until one functional, proper model is running that fits the user's hardware (preferably Qwen3.6 or Gemma-4), and the recipe is saved.
+7. Test the entire app with agent-browser: use the site end to end and confirm all functionality is proper. Inform the user when done by opening a visual-explainer HTML file in their default browser.
 
 Phase 1 — inspect
 
