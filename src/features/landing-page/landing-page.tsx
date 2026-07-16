@@ -165,14 +165,18 @@ export function LandingPage() {
         </div>
 
         <figure id="product" className={styles.foldScreenshot}>
-          <Image
-            src="/marketing/screenshots/status-live.png"
-            alt="Local Studio status screen showing live controllers, GLM-5.2 telemetry, GPU usage, charts, and controller logs."
-            width={2840}
-            height={2792}
-            priority
-            sizes="(max-width: 900px) 96vw, 1240px"
-          />
+          <div className={styles.screenshotBezel}>
+            <div className={styles.screenshotViewport}>
+              <Image
+                src="/marketing/screenshots/status-live.png"
+                alt="Local Studio status screen showing live controllers, GLM-5.2 telemetry, GPU usage, charts, and controller logs."
+                width={2840}
+                height={2792}
+                priority
+                sizes="(max-width: 900px) 92vw, 1080px"
+              />
+            </div>
+          </div>
         </figure>
       </section>
 
