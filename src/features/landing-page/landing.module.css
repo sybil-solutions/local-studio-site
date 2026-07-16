@@ -61,7 +61,6 @@
   display: block;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 50%;
-  animation: signalRotate 8s linear infinite;
 }
 
 .markOrbit::before {
