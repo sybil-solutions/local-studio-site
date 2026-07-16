@@ -1,0 +1,50 @@
+:root {
+  color-scheme: dark;
+  --ui-scale: 1;
+  --space-base: 4px;
+  --radius-base: 10px;
+  --bg: #181818;
+  --fg: #fff;
+  --dim: #ffffffb3;
+  --surface: #212121;
+  --border: #ffffff14;
+  --hover: #ffffff0d;
+  --accent: #fff;
+  --ok: #40c977;
+  --color-background: #181818;
+  --color-border-hover: #ffffff29;
+  --color-foreground-subtle: #ffffffb3;
+  --color-foreground-subtlest: #ffffff80;
+  --color-foreground-inverse: #000;
+  --composer-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.055);
+  --fs-xs: calc(11px * var(--ui-scale));
+  --fs-sm: calc(12px * var(--ui-scale));
+  --fs-base: calc(14px * var(--ui-scale));
+  --fs-lg: calc(16px * var(--ui-scale));
+  --fs-xl: calc(18px * var(--ui-scale));
+  --fs-2xl: calc(20px * var(--ui-scale));
+  --fs-4xl: calc(28px * var(--ui-scale));
+  --rad-sm: calc(var(--radius-base) * 0.6);
+  --rad-lg: var(--radius-base);
+  --rad-full: 9999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--bg);
+}
+
+body {
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: #ffffff29;
+}
