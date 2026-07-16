@@ -64,14 +64,12 @@ export function LandingNav() {
         <Link href="/docs">Docs</Link>
         <Link href="/#media">Media</Link>
         <Link
-          className={styles.navCta}
           href={GITHUB_REPO}
           prefetch={false}
           target="_blank"
           rel="noopener noreferrer"
         >
-          <DownloadCloud size={16} aria-hidden="true" />
-          Get the app
+          GitHub
         </Link>
       </nav>
     </header>
@@ -142,6 +140,7 @@ export function LandingPage() {
 
           <div className={styles.signalField} aria-hidden="true">
             <div className={styles.signalGlow} />
+            <div className={styles.signalRipple} />
             <div className={[styles.signalOrbit, styles.signalOrbitOuter].join(" ")}>
               <span />
               <span />
@@ -156,12 +155,6 @@ export function LandingPage() {
               <span />
             </div>
           </div>
-
-          <p className={styles.launchManifesto}>
-            <span>For local models</span>
-            <span>On your machines</span>
-            <span>Operated by you</span>
-          </p>
         </div>
 
         <figure id="product" className={styles.foldScreenshot}>
@@ -247,14 +240,14 @@ export function LandingPage() {
         <h2 id="download-title">Your models. Your hardware. One surface.</h2>
         <div>
           <Link
-            className={styles.button}
+            className={styles.minimalLink}
             href={GITHUB_REPO}
             prefetch={false}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <DownloadCloud size={17} aria-hidden="true" />
-            Get the app
+            View on GitHub
+            <span aria-hidden="true">↗</span>
           </Link>
           <Link className={styles.minimalLink} href="/agents">
             Agent setup
