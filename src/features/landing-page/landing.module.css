@@ -316,7 +316,8 @@
   top: clamp(540px, 68svh, 680px);
   left: 50%;
   width: min(1080px, calc(100% - 96px));
-  height: 700px;
+  height: auto;
+  aspect-ratio: 5118 / 2800;
   margin: 0;
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -647,7 +648,7 @@
   .foldScreenshot {
     top: 690px;
     width: calc(100% - 48px);
-    height: 430px;
+    height: auto;
     padding: 6px;
   }
 
@@ -687,7 +688,11 @@
   .foldScreenshot {
     top: 760px;
     width: calc(100% - 28px);
-    height: 350px;
+    height: auto;
+  }
+
+  .launchHero {
+    min-height: 1020px;
   }
 
   .editorialSection,

@@ -17,36 +17,36 @@ type Screenshot = {
 
 export const screenshots: Screenshot[] = [
   {
-    src: "/marketing/screenshots/status-live.png",
-    title: "Telemetry",
+    src: "/marketing/screenshots/usage-proxy.png",
+    title: "Usage",
     meta: "live app capture",
-    alt: "Local Studio status dashboard showing controllers, decode metrics, VRAM, power, and GPU rows.",
-    width: 2840,
-    height: 2792,
+    alt: "Local Studio usage screen showing proxied tokens, requests, sessions, active days, and token activity.",
+    width: 5118,
+    height: 2800,
   },
   {
-    src: "/marketing/screenshots/discover-models.png",
-    title: "Models",
+    src: "/marketing/screenshots/configure-models.png",
+    title: "Configure",
     meta: "live app capture",
-    alt: "Local Studio Discover Models screen showing searchable model rows and download actions.",
-    width: 1440,
-    height: 1100,
+    alt: "Local Studio model configuration screen showing searchable Hugging Face models, hardware fit, and downloads.",
+    width: 5118,
+    height: 2800,
   },
   {
-    src: "/marketing/screenshots/system-settings.png",
-    title: "Runtime",
+    src: "/marketing/screenshots/workbench-browser.png",
+    title: "Workbench",
     meta: "live app capture",
-    alt: "Local Studio System settings showing installed inference engines and service topology.",
-    width: 1440,
-    height: 1000,
+    alt: "Local Studio workbench with a coding agent session and a local document open in the integrated browser.",
+    width: 5118,
+    height: 2800,
   },
   {
-    src: "/marketing/screenshots/model-library.png",
-    title: "Fit",
+    src: "/marketing/screenshots/workbench-terminal.png",
+    title: "Tools",
     meta: "live app capture",
-    alt: "Local Studio model library with hardware profile, model results, and downloads.",
-    width: 1440,
-    height: 1100,
+    alt: "Local Studio workbench with agent reasoning, terminal output, repository changes, and tool activity.",
+    width: 5118,
+    height: 2800,
   },
 ];
 
@@ -62,6 +62,7 @@ export function LandingNav() {
       <nav className={styles.navLinks} aria-label="Landing navigation">
         <Link href="/#product">Product</Link>
         <Link href="/docs">Docs</Link>
+        <Link href="/prompt">Prompt</Link>
         <Link href="/#media">Media</Link>
         <Link
           href={GITHUB_REPO}
@@ -110,15 +111,15 @@ export function LandingPage() {
         <div className={styles.launchTexture} aria-hidden="true" />
         <div className={styles.launchGrid}>
           <div className={styles.launchCopy}>
-            <p className={styles.eyebrow}>Local inference control plane</p>
+            <p className={styles.eyebrow}>Run local AI from one place</p>
             <h1 id="landing-title" className={styles.launchTitle}>
-              Local inference.
+              Your models.
               <br />
-              Under control.
+              On your machine.
             </h1>
             <p className={styles.launchLead}>
-              Run models, controllers, hardware, providers, and coding agents from one quiet
-              operating surface.
+              Install, serve, monitor, and use local models from one desktop—across Apple Silicon,
+              NVIDIA GPUs, and remote controllers.
             </p>
             <div className={styles.launchActions}>
               <Link
@@ -131,8 +132,8 @@ export function LandingPage() {
                 <DownloadCloud size={17} aria-hidden="true" />
                 Get Local Studio
               </Link>
-              <Link className={styles.minimalLink} href="/docs">
-                Read the docs
+              <Link className={styles.minimalLink} href="/prompt">
+                Set it up with any coding model
                 <span aria-hidden="true">↗</span>
               </Link>
             </div>
@@ -161,10 +162,10 @@ export function LandingPage() {
           <div className={styles.screenshotBezel}>
             <div className={styles.screenshotViewport}>
               <Image
-                src="/marketing/screenshots/status-live.png"
-                alt="Local Studio status screen showing live controllers, GLM-5.2 telemetry, GPU usage, charts, and controller logs."
-                width={2840}
-                height={2792}
+                src="/marketing/screenshots/workbench-browser.png"
+                alt="Local Studio workbench showing a coding agent and a local document in the integrated browser."
+                width={5118}
+                height={2800}
                 priority
                 sizes="(max-width: 900px) 92vw, 1080px"
               />
@@ -213,7 +214,7 @@ export function LandingPage() {
           playsInline
           controls
           preload="metadata"
-          poster="/marketing/screenshots/status-dashboard.png"
+          poster="/marketing/screenshots/workbench-terminal.png"
         >
           <source src="/media/recordings/local-studio-product-tour.mp4" type="video/mp4" />
         </video>
@@ -249,8 +250,8 @@ export function LandingPage() {
             View on GitHub
             <span aria-hidden="true">↗</span>
           </Link>
-          <Link className={styles.minimalLink} href="/agents">
-            Agent setup
+          <Link className={styles.minimalLink} href="/prompt">
+            Setup prompt
             <span aria-hidden="true">↗</span>
           </Link>
         </div>
