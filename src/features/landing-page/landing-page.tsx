@@ -3,7 +3,9 @@ import Image from "next/image";
 import {
   CheckCircle2,
   DownloadCloud,
+  Film,
   HardDrive,
+  ImageIcon,
   PlugZap,
   ServerCog,
   TerminalSquare,
@@ -100,6 +102,7 @@ export function LandingNav() {
       </Link>
       <nav className={styles.navLinks} aria-label="Landing navigation">
         <Link href="/#product">Product</Link>
+        <Link href="/#media">Media</Link>
         <Link href="/docs">Docs</Link>
         <Link href="/#downloads">Download</Link>
         <Link
@@ -247,6 +250,103 @@ export function LandingPage() {
               <p>{copy}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section id="media" className={styles.mediaBand} aria-labelledby="media-title">
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <p className={styles.sectionKicker}>Press kit</p>
+              <h2 id="media-title" className={styles.sectionTitle}>
+                Recordings and screenshots.
+              </h2>
+            </div>
+            <p className={styles.sectionLead}>
+              Clean, full-resolution product media for demos, articles, launch posts, and talks.
+              Open it here or download the original asset.
+            </p>
+          </div>
+
+          <div className={styles.recordingGrid}>
+            <div className={styles.videoFrame}>
+              <div className={styles.frameHeader}>
+                <span>Product tour</span>
+                <span>10 sec · 1080p</span>
+              </div>
+              <video
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                poster="/marketing/screenshots/status-dashboard.png"
+              >
+                <source src="/media/recordings/local-studio-product-tour.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <aside className={styles.mediaSummary}>
+              <div className={styles.capabilityIcon}>
+                <Film size={18} aria-hidden="true" />
+              </div>
+              <p className={styles.smallCaps}>Share-ready reel</p>
+              <h3>Local Studio in motion.</h3>
+              <p>
+                Four real product surfaces, rendered as a compact silent reel that loops cleanly
+                in browsers and social posts.
+              </p>
+              <div className={styles.mediaActions}>
+                <a
+                  className={styles.button}
+                  href="/media/recordings/local-studio-product-tour.mp4"
+                  download
+                >
+                  <DownloadCloud size={17} aria-hidden="true" />
+                  Download MP4
+                </a>
+                <a
+                  className={styles.ghostButton}
+                  href="/media/recordings/local-studio-product-tour.mp4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open recording
+                </a>
+              </div>
+              <div className={styles.mediaFacts}>
+                <span>1920 × 1080</span>
+                <span>H.264</span>
+                <span>silent</span>
+                <span>3.0 MB</span>
+              </div>
+            </aside>
+          </div>
+
+          <div className={styles.mediaGallery} aria-label="Downloadable product screenshots">
+            {screenshots.map((screenshot) => (
+              <article className={styles.mediaCard} key={screenshot.src}>
+                <Image
+                  src={screenshot.src}
+                  alt={screenshot.alt}
+                  width={screenshot.width}
+                  height={screenshot.height}
+                  sizes="(max-width: 760px) 100vw, 50vw"
+                />
+                <div className={styles.mediaCardFooter}>
+                  <div>
+                    <span className={styles.mediaCardTitle}>{screenshot.title}</span>
+                    <span className={styles.mediaCardMeta}>
+                      {screenshot.width} × {screenshot.height} PNG
+                    </span>
+                  </div>
+                  <a href={screenshot.src} download aria-label={`Download ${screenshot.title} screenshot`}>
+                    <ImageIcon size={16} aria-hidden="true" />
+                    Download
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
