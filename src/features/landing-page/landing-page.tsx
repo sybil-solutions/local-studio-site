@@ -3,14 +3,6 @@ import Image from "next/image";
 import {
   CheckCircle2,
   DownloadCloud,
-  Film,
-  HardDrive,
-  ImageIcon,
-  PlugZap,
-  ServerCog,
-  TerminalSquare,
-  Zap,
-  type LucideIcon,
 } from "lucide-react";
 import styles from "./landing.module.css";
 
@@ -25,12 +17,12 @@ type Screenshot = {
 
 export const screenshots: Screenshot[] = [
   {
-    src: "/marketing/screenshots/status-dashboard.png",
+    src: "/marketing/screenshots/status-live.png",
     title: "Telemetry",
     meta: "live app capture",
     alt: "Local Studio status dashboard showing controllers, decode metrics, VRAM, power, and GPU rows.",
-    width: 1440,
-    height: 1000,
+    width: 2840,
+    height: 2792,
   },
   {
     src: "/marketing/screenshots/discover-models.png",
@@ -58,40 +50,7 @@ export const screenshots: Screenshot[] = [
   },
 ];
 
-const capabilities: Array<{ icon: LucideIcon; title: string; copy: string }> = [
-  {
-    icon: ServerCog,
-    title: "Controllers",
-    copy: "Local or remote. Same status, launch, logs, metrics, and proxy surface.",
-  },
-  {
-    icon: HardDrive,
-    title: "Models",
-    copy: "Find, fit, download, launch, evict. VRAM stays visible the whole way.",
-  },
-  {
-    icon: PlugZap,
-    title: "Agents",
-    copy: "Pi runtime, skills, browser, files, terminal, and project state — in one session.",
-  },
-];
-
 const GITHUB_REPO = "https://github.com/sybil-solutions/local-studio";
-
-const downloads = [
-  {
-    title: "GitHub",
-    copy: "Source, releases, and changelog. Clone, install, and run the controller and frontend.",
-    href: GITHUB_REPO,
-    meta: ["source", "releases", "changelog"],
-  },
-  {
-    title: "Build from source",
-    copy: "Prerequisites, quick start, engine installs, and the desktop shell — step by step.",
-    href: "/docs",
-    meta: ["setup", "guide"],
-  },
-];
 
 export function LandingNav() {
   return (
@@ -102,9 +61,8 @@ export function LandingNav() {
       </Link>
       <nav className={styles.navLinks} aria-label="Landing navigation">
         <Link href="/#product">Product</Link>
-        <Link href="/#media">Media</Link>
         <Link href="/docs">Docs</Link>
-        <Link href="/#downloads">Download</Link>
+        <Link href="/#media">Media</Link>
         <Link
           className={styles.navCta}
           href={GITHUB_REPO}
@@ -147,318 +105,167 @@ export function ScreenshotFrame({
 
 export function LandingPage() {
   return (
-    <main className={styles.shell}>
+    <main className={styles.minimalShell}>
       <LandingNav />
 
-      <section className={styles.hero} aria-labelledby="landing-title">
-        <div className={styles.heroImage} aria-hidden="true">
-          <Image
-            src="/marketing/screenshots/status-dashboard.png"
-            alt=""
-            width={1440}
-            height={1000}
-            priority
-            sizes="100vw"
-          />
-        </div>
-        <div className={styles.heroScrim} aria-hidden="true" />
-        <div className={styles.heroInner}>
-          <div className={styles.heroLayout}>
-            <div className={styles.heroCopyColumn}>
-              <p className={styles.eyebrow}>Local inference control plane</p>
-              <h1 id="landing-title" className={styles.heroTitle}>
-                Local Studio
-              </h1>
-              <p className={styles.heroCopy}>
-                One operating surface for controllers, GPUs, models, providers, and agents. Launch
-                self-hosted backends, watch the hardware, and route it all through an
-                OpenAI-compatible proxy.
-              </p>
-              <div className={styles.heroActions}>
-                <Link
-                  className={styles.button}
-                  href={GITHUB_REPO}
-                  prefetch={false}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <DownloadCloud size={18} aria-hidden="true" />
-                  Get the app
-                </Link>
-                <Link className={styles.ghostButton} href="/docs">
-                  <TerminalSquare size={18} aria-hidden="true" />
-                  Read the docs
-                </Link>
-              </div>
-            </div>
-            <div className={styles.heroPreview}>
-              <ScreenshotFrame screenshot={screenshots[0]} priority />
+      <section className={styles.launchHero} aria-labelledby="landing-title">
+        <div className={styles.launchTexture} aria-hidden="true" />
+        <div className={styles.launchGrid}>
+          <div className={styles.launchCopy}>
+            <p className={styles.eyebrow}>Local inference control plane</p>
+            <h1 id="landing-title" className={styles.launchTitle}>
+              Local inference.
+              <br />
+              Under control.
+            </h1>
+            <p className={styles.launchLead}>
+              Run models, controllers, hardware, providers, and coding agents from one quiet
+              operating surface.
+            </p>
+            <div className={styles.launchActions}>
+              <Link
+                className={styles.button}
+                href={GITHUB_REPO}
+                prefetch={false}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <DownloadCloud size={17} aria-hidden="true" />
+                Get Local Studio
+              </Link>
+              <Link className={styles.minimalLink} href="/docs">
+                Read the docs
+                <span aria-hidden="true">↗</span>
+              </Link>
             </div>
           </div>
-          <div className={styles.metricStrip} aria-label="Local Studio product scope">
-            <div className={styles.metric}>
-              <span className={styles.metricLabel}>Serve</span>
-              <span className={styles.metricValue}>vLLM / SGLang / MLX / llama.cpp</span>
-            </div>
-            <div className={styles.metric}>
-              <span className={styles.metricLabel}>Control</span>
-              <span className={styles.metricValue}>local or remote</span>
-            </div>
-            <div className={styles.metric}>
-              <span className={styles.metricLabel}>Route</span>
-              <span className={styles.metricValue}>OpenAI-compatible</span>
-            </div>
-            <div className={styles.metric}>
-              <span className={styles.metricLabel}>Tool</span>
-              <span className={styles.metricValue}>Pi + local tools</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section id="product" className={styles.section} aria-labelledby="product-title">
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionKicker}>Actual app, no mock glass</p>
-            <h2 id="product-title" className={styles.sectionTitle}>
-              The machine stays in frame.
-            </h2>
+          <div className={styles.signalField} aria-hidden="true">
+            <div className={styles.signalGlow} />
+            <div className={[styles.signalOrbit, styles.signalOrbitOuter].join(" ")}>
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className={[styles.signalOrbit, styles.signalOrbitInner].join(" ")}>
+              <span />
+              <span />
+            </div>
+            <div className={styles.signalAxis} />
+            <div className={styles.signalCore}>
+              <span />
+            </div>
           </div>
-          <p className={styles.sectionLead}>
-            Status, runtime, models, agents. The working surfaces are the pitch — these are
-            unretouched captures of the live app.
+
+          <p className={styles.launchManifesto}>
+            <span>For local models</span>
+            <span>On your machines</span>
+            <span>Operated by you</span>
           </p>
         </div>
-        <div className={styles.screenshotGrid}>
-          <ScreenshotFrame screenshot={screenshots[0]} priority />
-          <div className={styles.stack}>
-            {screenshots.slice(1, 3).map((s) => (
-              <ScreenshotFrame key={s.src} screenshot={s} />
-            ))}
+
+        <figure id="product" className={styles.foldScreenshot}>
+          <Image
+            src="/marketing/screenshots/status-live.png"
+            alt="Local Studio status screen showing live controllers, GLM-5.2 telemetry, GPU usage, charts, and controller logs."
+            width={2840}
+            height={2792}
+            priority
+            sizes="(max-width: 900px) 96vw, 1240px"
+          />
+        </figure>
+      </section>
+
+      <section className={styles.editorialSection} aria-labelledby="system-title">
+        <div className={styles.editorialHeading}>
+          <p className={styles.sectionKicker}>One operating truth</p>
+          <h2 id="system-title">The machine stays in frame.</h2>
+          <p>
+            Local Studio keeps the model, the runtime, and the hardware together. Nothing important
+            disappears behind a provider abstraction.
+          </p>
+        </div>
+        <div className={styles.editorialRows}>
+          <div>
+            <span>01</span>
+            <h3>Control</h3>
+            <p>Local and remote controllers, live status, launch state, logs, and metrics.</p>
+          </div>
+          <div>
+            <span>02</span>
+            <h3>Serve</h3>
+            <p>vLLM, SGLang, MLX, and llama.cpp behind one OpenAI-compatible surface.</p>
+          </div>
+          <div>
+            <span>03</span>
+            <h3>Work</h3>
+            <p>Models, providers, browser, files, terminal, and agents in the same session.</p>
           </div>
         </div>
       </section>
 
-      <section className={styles.section} aria-label="Capabilities">
-        <div className={styles.capabilityGrid}>
-          {capabilities.map(({ icon: Icon, title, copy }) => (
-            <article className={styles.capability} key={title}>
-              <div className={styles.capabilityIcon}>
-                <Icon size={18} aria-hidden="true" />
-              </div>
-              <h3>{title}</h3>
-              <p>{copy}</p>
-            </article>
+      <section id="media" className={styles.minimalMedia} aria-labelledby="media-title">
+        <div className={styles.mediaIntro}>
+          <p className={styles.sectionKicker}>See it move</p>
+          <h2 id="media-title">Ten seconds. Four surfaces.</h2>
+          <p>The public reel and original captures are ready for demos, launch posts, and articles.</p>
+        </div>
+        <video
+          muted
+          loop
+          playsInline
+          controls
+          preload="metadata"
+          poster="/marketing/screenshots/status-dashboard.png"
+        >
+          <source src="/media/recordings/local-studio-product-tour.mp4" type="video/mp4" />
+        </video>
+        <div className={styles.assetRows} aria-label="Downloadable product media">
+          <a href="/media/recordings/local-studio-product-tour.mp4" download>
+            <span>Product reel</span>
+            <small>MP4 · 1920 × 1080 · 10 sec</small>
+            <strong>Download ↘</strong>
+          </a>
+          {screenshots.map((screenshot) => (
+            <a href={screenshot.src} download key={screenshot.src}>
+              <span>{screenshot.title}</span>
+              <small>
+                PNG · {screenshot.width} × {screenshot.height}
+              </small>
+              <strong>Download ↘</strong>
+            </a>
           ))}
         </div>
       </section>
 
-      <section id="media" className={styles.mediaBand} aria-labelledby="media-title">
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <p className={styles.sectionKicker}>Press kit</p>
-              <h2 id="media-title" className={styles.sectionTitle}>
-                Recordings and screenshots.
-              </h2>
-            </div>
-            <p className={styles.sectionLead}>
-              Clean, full-resolution product media for demos, articles, launch posts, and talks.
-              Open it here or download the original asset.
-            </p>
-          </div>
-
-          <div className={styles.recordingGrid}>
-            <div className={styles.videoFrame}>
-              <div className={styles.frameHeader}>
-                <span>Product tour</span>
-                <span>10 sec · 1080p</span>
-              </div>
-              <video
-                muted
-                loop
-                playsInline
-                controls
-                preload="metadata"
-                poster="/marketing/screenshots/status-dashboard.png"
-              >
-                <source src="/media/recordings/local-studio-product-tour.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <aside className={styles.mediaSummary}>
-              <div className={styles.capabilityIcon}>
-                <Film size={18} aria-hidden="true" />
-              </div>
-              <p className={styles.smallCaps}>Share-ready reel</p>
-              <h3>Local Studio in motion.</h3>
-              <p>
-                Four real product surfaces, rendered as a compact silent reel that loops cleanly
-                in browsers and social posts.
-              </p>
-              <div className={styles.mediaActions}>
-                <a
-                  className={styles.button}
-                  href="/media/recordings/local-studio-product-tour.mp4"
-                  download
-                >
-                  <DownloadCloud size={17} aria-hidden="true" />
-                  Download MP4
-                </a>
-                <a
-                  className={styles.ghostButton}
-                  href="/media/recordings/local-studio-product-tour.mp4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Open recording
-                </a>
-              </div>
-              <div className={styles.mediaFacts}>
-                <span>1920 × 1080</span>
-                <span>H.264</span>
-                <span>silent</span>
-                <span>3.0 MB</span>
-              </div>
-            </aside>
-          </div>
-
-          <div className={styles.mediaGallery} aria-label="Downloadable product screenshots">
-            {screenshots.map((screenshot) => (
-              <article className={styles.mediaCard} key={screenshot.src}>
-                <Image
-                  src={screenshot.src}
-                  alt={screenshot.alt}
-                  width={screenshot.width}
-                  height={screenshot.height}
-                  sizes="(max-width: 760px) 100vw, 50vw"
-                />
-                <div className={styles.mediaCardFooter}>
-                  <div>
-                    <span className={styles.mediaCardTitle}>{screenshot.title}</span>
-                    <span className={styles.mediaCardMeta}>
-                      {screenshot.width} × {screenshot.height} PNG
-                    </span>
-                  </div>
-                  <a href={screenshot.src} download aria-label={`Download ${screenshot.title} screenshot`}>
-                    <ImageIcon size={16} aria-hidden="true" />
-                    Download
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
+      <section id="downloads" className={styles.finalCallout} aria-labelledby="download-title">
+        <p className={styles.sectionKicker}>Local Studio</p>
+        <h2 id="download-title">Your models. Your hardware. One surface.</h2>
+        <div>
+          <Link
+            className={styles.button}
+            href={GITHUB_REPO}
+            prefetch={false}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <DownloadCloud size={17} aria-hidden="true" />
+            Get the app
+          </Link>
+          <Link className={styles.minimalLink} href="/agents">
+            Agent setup
+            <span aria-hidden="true">↗</span>
+          </Link>
         </div>
       </section>
 
-      <section className={`${styles.section} ${styles.quoteBand}`} aria-label="Operating thesis">
-        <blockquote className={styles.quote}>
-          Control the stack before the stack controls you.
-        </blockquote>
-        <ul className={styles.terminalList}>
-          <li>{"GET /status -> active model, pid, backend, port"}</li>
-          <li>{"GET /gpus -> VRAM, power, temperature, utilization"}</li>
-          <li>{"POST /studio/providers -> route provider/model requests"}</li>
-          <li>{"GET /v1/chat/completions -> OpenAI-compatible"}</li>
-        </ul>
-      </section>
-
-      <section className={styles.section} aria-labelledby="gallery-title">
-        <div className={styles.sectionHeader}>
-          <div>
-            <p className={styles.sectionKicker}>Operator surfaces</p>
-            <h2 id="gallery-title" className={styles.sectionTitle}>
-              Runtime. Fit. Tools.
-            </h2>
-          </div>
-          <p className={styles.sectionLead}>
-            The app is for the moment when a model, a GPU box, and an agent all need the same truth.
-          </p>
-        </div>
-        <div className={styles.screenshotGrid}>
-          <ScreenshotFrame screenshot={screenshots[3]} />
-          <div className={styles.stack}>
-            <ScreenshotFrame screenshot={screenshots[1]} />
-            <ScreenshotFrame screenshot={screenshots[2]} />
-          </div>
-        </div>
-      </section>
-
-      <section id="downloads" className={styles.wideBand} aria-labelledby="downloads-title">
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <p className={styles.sectionKicker}>Download</p>
-              <h2 id="downloads-title" className={styles.sectionTitle}>
-                Download the app. Point it at the machines.
-              </h2>
-            </div>
-            <p className={styles.sectionLead}>
-              Mac artifacts are served here. For controller, provider, and agent setup,
-              <Link href="/docs" style={{ color: "inherit", textDecoration: "underline" }}>
-                {" "}
-                read the docs
-              </Link>
-              .
-            </p>
-          </div>
-          <div className={styles.downloadGrid}>
-            {downloads.map((d) => (
-              <article className={styles.downloadCard} key={d.title}>
-                <div className={styles.capabilityIcon}>
-                  <DownloadCloud size={18} aria-hidden="true" />
-                </div>
-                <h3>{d.title}</h3>
-                <p>{d.copy}</p>
-                <div className={styles.downloadMeta}>
-                  {d.meta.map((item) => (
-                    <span className={styles.pill} key={item}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                <div className={styles.downloadActions}>
-                  <Link
-                    className={styles.ghostButton}
-                    href={d.href}
-                    prefetch={false}
-                    target={d.href.startsWith("http") ? "_blank" : undefined}
-                    rel={d.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  >
-                    {d.href.startsWith("http") ? "Open GitHub" : "Read the docs"}
-                  </Link>
-                </div>
-              </article>
-            ))}
-            <article className={styles.downloadCard}>
-              <div className={styles.capabilityIcon}>
-                <Zap size={18} aria-hidden="true" />
-              </div>
-              <h3>Docs</h3>
-              <p>
-                Prerequisites, quick start, runtime backends, remote/LAN, and the agent surface.
-              </p>
-              <div className={styles.downloadMeta}>
-                <span className={styles.pill}>setup</span>
-                <span className={styles.pill}>guide</span>
-              </div>
-              <div className={styles.downloadActions}>
-                <Link className={styles.ghostButton} href="/docs">
-                  Read the docs
-                </Link>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <footer className={styles.footer}>
+      <footer className={styles.minimalFooter}>
         <span>Local Studio</span>
-        <span>Desktop / web / controller / Pi</span>
+        <span>Desktop / web / controller / agents</span>
       </footer>
     </main>
   );
 }
-
 const tocSections = [
   { id: "prerequisites", label: "Prerequisites" },
   { id: "quick-start", label: "Quick start" },
