@@ -117,16 +117,12 @@ export function LandingPage() {
         <div className={styles.launchTexture} aria-hidden="true" />
         <div className={styles.launchGrid}>
           <div className={styles.launchCopy}>
-            <p className={styles.eyebrow}>Run local AI from one place</p>
             <h1 id="landing-title" className={styles.launchTitle}>
-              Your models.
+              Run your intelligence
               <br />
-              On your machine.
+              at home.
             </h1>
-            <p className={styles.launchLead}>
-              Install, serve, monitor, and use local models from one desktop—across Apple Silicon,
-              NVIDIA GPUs, and remote controllers.
-            </p>
+            <p className={styles.launchLead}>AI workspace built to help you go local.</p>
             <div className={styles.launchActions}>
               <Link
                 className={styles.button}
@@ -180,64 +176,52 @@ export function LandingPage() {
         </figure>
       </section>
 
-      <section className={styles.editorialSection} aria-labelledby="system-title">
-        <div className={styles.editorialHeading}>
-          <p className={styles.sectionKicker}>One operating truth</p>
-          <h2 id="system-title">The machine stays in frame.</h2>
+      <section id="media" className={styles.storySection} aria-labelledby="system-title">
+        <div className={styles.storyIntro}>
+          <p className={styles.sectionKicker}>All in one</p>
+          <h2 id="system-title">Local AI is hard, this will make it easier.</h2>
           <p>
             Local Studio keeps the model, the runtime, and the hardware together. Nothing important
             disappears behind a provider abstraction.
           </p>
         </div>
-        <div className={styles.editorialRows}>
-          <div>
-            <span>01</span>
-            <h3>Control</h3>
-            <p>Local and remote controllers, live status, launch state, logs, and metrics.</p>
-          </div>
-          <div>
-            <span>02</span>
-            <h3>Serve</h3>
-            <p>vLLM, SGLang, MLX, and llama.cpp behind one OpenAI-compatible surface.</p>
-          </div>
-          <div>
-            <span>03</span>
-            <h3>Work</h3>
-            <p>Models, providers, browser, files, terminal, and agents in the same session.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="media" className={styles.minimalMedia} aria-labelledby="media-title">
-        <div className={styles.mediaIntro}>
-          <p className={styles.sectionKicker}>See it move</p>
-          <h2 id="media-title">Ten seconds. Four surfaces.</h2>
-          <p>The public reel and original captures are ready for demos, launch posts, and articles.</p>
-        </div>
-        <video
-          muted
-          loop
-          playsInline
-          controls
-          preload="metadata"
-          poster="/marketing/screenshots/workbench-terminal.png"
-        >
-          <source src="/media/recordings/local-studio-product-tour.mp4" type="video/mp4" />
-        </video>
-        <div className={styles.assetRows} aria-label="Downloadable product media">
-          <a href="/media/recordings/local-studio-product-tour.mp4" download>
-            <span>Product reel</span>
-            <small>MP4 · 1920 × 1080 · 10 sec</small>
-            <strong>Download ↘</strong>
-          </a>
-          {screenshots.map((screenshot) => (
-            <a href={screenshot.src} download key={screenshot.src}>
-              <span>{screenshot.title}</span>
-              <small>
-                PNG · {screenshot.width} × {screenshot.height}
-              </small>
-              <strong>Download ↘</strong>
-            </a>
+        <div className={styles.featureList}>
+          {[
+            {
+              number: "01",
+              title: "Control",
+              body: "Local and remote controllers, live status, launch state, logs, and metrics.",
+              screenshot: screenshots[0],
+            },
+            {
+              number: "02",
+              title: "Serve",
+              body: "vLLM, SGLang, MLX, and llama.cpp behind one OpenAI-compatible surface.",
+              screenshot: screenshots[1],
+            },
+            {
+              number: "03",
+              title: "Work",
+              body: "Models, providers, browser, files, terminal, and agents in the same session.",
+              screenshot: screenshots[3],
+            },
+          ].map((feature) => (
+            <article className={styles.featureRow} key={feature.number}>
+              <div className={styles.featureCopy}>
+                <span>{feature.number}</span>
+                <h3>{feature.title}</h3>
+                <p>{feature.body}</p>
+              </div>
+              <figure className={styles.featureVisual}>
+                <Image
+                  src={feature.screenshot.src}
+                  alt={feature.screenshot.alt}
+                  width={feature.screenshot.width}
+                  height={feature.screenshot.height}
+                  sizes="(max-width: 900px) 100vw, 58vw"
+                />
+              </figure>
+            </article>
           ))}
         </div>
       </section>
