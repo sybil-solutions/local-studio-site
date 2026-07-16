@@ -38,16 +38,69 @@
 }
 
 .mark {
-  display: grid;
+  position: relative;
+  display: block;
   width: calc(var(--space-base) * 7);
   height: calc(var(--space-base) * 7);
-  place-items: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--fg);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: var(--fs-xs);
+  flex: 0 0 auto;
+}
+
+.mark::before {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.2);
+  content: "";
+  animation: signalBreathe 3.8s ease-in-out infinite;
+}
+
+.markOrbit {
+  position: absolute;
+  inset: 2px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  animation: signalRotate 8s linear infinite;
+}
+
+.markOrbit::before {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  content: "";
+}
+
+.markOrbit > span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 7px rgba(255, 255, 255, 0.9);
+}
+
+.markOrbit > span:first-child {
+  top: 1px;
+  left: 5px;
+}
+
+.markOrbit > span:last-child {
+  right: 2px;
+  bottom: 4px;
+}
+
+.markCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 9px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
 }
 
 .navLinks {
@@ -343,6 +396,28 @@
   content: "";
 }
 
+.foldScreenshot::after {
+  position: absolute;
+  z-index: 4;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--shine-angle),
+    transparent 0deg 304deg,
+    rgba(255, 255, 255, 0.05) 320deg,
+    rgba(255, 255, 255, 0.76) 344deg,
+    transparent 360deg
+  );
+  content: "";
+  pointer-events: none;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: borderShine 7s linear infinite;
+}
+
 .screenshotBezel {
   height: 100%;
   padding: 5px;
@@ -616,7 +691,21 @@
   }
 }
 
+@property --shine-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes borderShine {
+  to {
+    --shine-angle: 360deg;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .mark::before,
+  .markOrbit,
   .signalGlow,
   .signalOrbit,
   .signalField,
@@ -624,7 +713,8 @@
   .signalAxis,
   .launchTexture,
   .launchCopy > *,
-  .foldScreenshot {
+  .foldScreenshot,
+  .foldScreenshot::after {
     animation: none;
   }
 }
@@ -1411,7 +1501,7 @@
     min-height: 58px;
   }
 
-  .brand span:last-child {
+  .brand > span:last-child {
     display: none;
   }
 

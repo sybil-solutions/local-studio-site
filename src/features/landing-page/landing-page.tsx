@@ -56,13 +56,19 @@ export function LandingNav() {
   return (
     <header className={styles.nav}>
       <Link href="/" className={styles.brand} aria-label="Local Studio">
-        <span className={styles.mark}>LS</span>
+        <span className={styles.mark} aria-hidden="true">
+          <span className={styles.markOrbit}>
+            <span />
+            <span />
+          </span>
+          <span className={styles.markCore} />
+        </span>
         <span>Local Studio</span>
       </Link>
       <nav className={styles.navLinks} aria-label="Landing navigation">
         <Link href="/#product">Product</Link>
         <Link href="/docs">Docs</Link>
-        <Link href="/prompt">Prompt</Link>
+        <Link href="/prompt">Setup</Link>
         <Link href="/#media">Media</Link>
         <Link
           href={GITHUB_REPO}
@@ -133,7 +139,7 @@ export function LandingPage() {
                 Get Local Studio
               </Link>
               <Link className={styles.minimalLink} href="/prompt">
-                Set it up with any coding model
+                Setup
                 <span aria-hidden="true">↗</span>
               </Link>
             </div>
@@ -251,7 +257,7 @@ export function LandingPage() {
             <span aria-hidden="true">↗</span>
           </Link>
           <Link className={styles.minimalLink} href="/prompt">
-            Setup prompt
+            Setup
             <span aria-hidden="true">↗</span>
           </Link>
         </div>
