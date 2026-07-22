@@ -594,6 +594,7 @@
 }
 
 .kittyCapture {
+  position: relative;
   overflow: hidden;
   margin: 0;
   border: 1px solid var(--border);
@@ -614,6 +615,27 @@
 .kittyCapture img {
   display: block;
   width: 100%;
+  height: auto;
+}
+
+.phoneCover {
+  position: absolute;
+  z-index: 2;
+  bottom: -1.5%;
+  left: 29.5%;
+  width: 25%;
+  overflow: hidden;
+  aspect-ratio: 347 / 724;
+  border-radius: 18% / 9%;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.38);
+}
+
+.phoneCover img {
+  position: absolute;
+  top: -2.8%;
+  left: -158.5%;
+  width: 417%;
+  max-width: none;
   height: auto;
 }
 

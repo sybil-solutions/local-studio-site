@@ -254,21 +254,37 @@ export function LandingPage() {
             <figcaption>Light</figcaption>
             <Image
               src="/marketing/screenshots/kittylitter-connect-light.png"
-              alt="Local Studio phone connection screen in light mode with the private pairing QR code blurred."
+              alt="Local Studio phone connection screen in light mode with a KittyLitter iPhone capture covering the private pairing code."
               width={948}
               height={768}
               sizes="(max-width: 900px) 100vw, 50vw"
             />
+            <span className={styles.phoneCover} aria-hidden="true">
+              <Image
+                src="/marketing/screenshots/kittylitter-iphone.jpeg"
+                alt=""
+                width={1447}
+                height={768}
+              />
+            </span>
           </figure>
           <figure className={styles.kittyCapture}>
             <figcaption>Dark</figcaption>
             <Image
               src="/marketing/screenshots/kittylitter-connect-dark.png"
-              alt="Local Studio phone connection screen in dark mode with the private pairing QR code blurred."
+              alt="Local Studio phone connection screen in dark mode with a KittyLitter iPhone capture covering the private pairing code."
               width={948}
               height={768}
               sizes="(max-width: 900px) 100vw, 50vw"
             />
+            <span className={styles.phoneCover} aria-hidden="true">
+              <Image
+                src="/marketing/screenshots/kittylitter-iphone.jpeg"
+                alt=""
+                width={1447}
+                height={768}
+              />
+            </span>
           </figure>
         </div>
       </section>
