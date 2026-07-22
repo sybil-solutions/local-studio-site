@@ -226,6 +226,53 @@ export function LandingPage() {
         </div>
       </section>
 
+      <section className={styles.kittySection} aria-labelledby="kittylitter-title">
+        <div className={styles.kittyIntro}>
+          <div>
+            <p className={styles.sectionKicker}>KittyLitter</p>
+            <h2 id="kittylitter-title">Your agents, in your pocket.</h2>
+          </div>
+          <div className={styles.kittyCopy}>
+            <p>
+              Pair your phone from Local Studio, then keep working with Codex, Claude, OpenCode,
+              Pi, and Droid from anywhere.
+            </p>
+            <Link
+              className={styles.minimalLink}
+              href="https://kittylitter.app"
+              prefetch={false}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get KittyLitter
+              <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+        </div>
+        <div className={styles.kittyGallery}>
+          <figure className={styles.kittyCapture}>
+            <figcaption>Light</figcaption>
+            <Image
+              src="/marketing/screenshots/kittylitter-connect-light.png"
+              alt="Local Studio phone connection screen in light mode with the private pairing QR code blurred."
+              width={948}
+              height={768}
+              sizes="(max-width: 900px) 100vw, 50vw"
+            />
+          </figure>
+          <figure className={styles.kittyCapture}>
+            <figcaption>Dark</figcaption>
+            <Image
+              src="/marketing/screenshots/kittylitter-connect-dark.png"
+              alt="Local Studio phone connection screen in dark mode with the private pairing QR code blurred."
+              width={948}
+              height={768}
+              sizes="(max-width: 900px) 100vw, 50vw"
+            />
+          </figure>
+        </div>
+      </section>
+
       <section id="downloads" className={styles.finalCallout} aria-labelledby="download-title">
         <p className={styles.sectionKicker}>Local Studio</p>
         <h2 id="download-title">Your models. Your hardware. One surface.</h2>
