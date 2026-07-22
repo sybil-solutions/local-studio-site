@@ -87,9 +87,8 @@ export function AgentsPage() {
         <div className={styles.heroActions}>
           <Link
             className={styles.button}
-            href="https://github.com/sybil-solutions/local-studio/releases/latest"
+            href="/download/macos"
             prefetch={false}
-            target="_blank"
             rel="noopener noreferrer"
           >
             <DownloadCloud size={18} aria-hidden="true" />

@@ -51,6 +51,7 @@ export const screenshots: Screenshot[] = [
 ];
 
 const GITHUB_REPO = "https://github.com/sybil-solutions/local-studio";
+const DOWNLOAD_DMG = "/download/macos";
 
 export function LandingNav() {
   return (
@@ -126,13 +127,12 @@ export function LandingPage() {
             <div className={styles.launchActions}>
               <Link
                 className={styles.button}
-                href={GITHUB_REPO}
+                href={DOWNLOAD_DMG}
                 prefetch={false}
-                target="_blank"
                 rel="noopener noreferrer"
               >
                 <DownloadCloud size={17} aria-hidden="true" />
-                Get Local Studio
+                Download for macOS
               </Link>
               <Link className={styles.minimalLink} href="/prompt">
                 Setup
@@ -230,6 +230,10 @@ export function LandingPage() {
         <p className={styles.sectionKicker}>Local Studio</p>
         <h2 id="download-title">Your models. Your hardware. One surface.</h2>
         <div>
+          <Link className={styles.button} href={DOWNLOAD_DMG} prefetch={false} rel="noopener noreferrer">
+            <DownloadCloud size={18} aria-hidden="true" />
+            Download for macOS
+          </Link>
           <Link
             className={styles.minimalLink}
             href={GITHUB_REPO}
