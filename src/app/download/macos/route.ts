@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const DMG_ASSET = "Local-Studio-arm64.dmg";
 const MANIFEST_ASSET = "Local-Studio-release.json";
@@ -39,7 +39,7 @@ function unavailable(reason: string): NextResponse {
 
 async function githubJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
-    next: { revalidate: 300 },
+    cache: "no-store",
     headers: { accept: "application/vnd.github+json" },
   });
   if (!response.ok) throw new Error(`${url} returned ${response.status}`);
