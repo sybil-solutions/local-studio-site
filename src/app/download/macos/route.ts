@@ -3,31 +3,84 @@ import { NextResponse } from "next/server";
 export const revalidate = 300;
 
 const DMG_ASSET = "Local-Studio-arm64.dmg";
-const RELEASES_API = "https://api.github.com/repos/sybil-solutions/local-studio/releases?per_page=20";
-const FALLBACK_DMG =
-  "https://github.com/sybil-solutions/local-studio/releases/download/v2.1.0/Local-Studio-arm64.dmg";
+const MANIFEST_ASSET = "Local-Studio-release.json";
+const LATEST_RELEASE_API =
+  "https://api.github.com/repos/sybil-solutions/local-studio/releases/latest";
+const MAIN_COMMIT_API =
+  "https://api.github.com/repos/sybil-solutions/local-studio/commits/main";
 
 type ReleaseAsset = { name?: string; browser_download_url?: string };
-type Release = { draft?: boolean; prerelease?: boolean; assets?: ReleaseAsset[] };
+type Release = {
+  tag_name?: string;
+  draft?: boolean;
+  prerelease?: boolean;
+  assets?: ReleaseAsset[];
+};
+type Commit = { sha?: string };
+type ReleaseManifest = {
+  schemaVersion?: number;
+  version?: string;
+  commit?: string;
+  assets?: Record<string, { sha256?: string }>;
+};
+
+function unavailable(reason: string): NextResponse {
+  return NextResponse.json(
+    { error: "The latest verified macOS build is temporarily unavailable.", reason },
+    {
+      status: 503,
+      headers: {
+        "cache-control": "no-store",
+        "retry-after": "300",
+      },
+    },
+  );
+}
+
+async function githubJson<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    next: { revalidate: 300 },
+    headers: { accept: "application/vnd.github+json" },
+  });
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+  return (await response.json()) as T;
+}
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const response = await fetch(RELEASES_API, {
-      next: { revalidate: 300 },
-      headers: { accept: "application/vnd.github+json" },
-    });
-    if (response.ok) {
-      const releases = (await response.json()) as Release[];
-      for (const release of releases) {
-        if (release.draft || release.prerelease) continue;
-        const asset = release.assets?.find((entry) => entry.name === DMG_ASSET);
-        if (asset?.browser_download_url) {
-          return NextResponse.redirect(asset.browser_download_url, 302);
-        }
-      }
+    const [release, main] = await Promise.all([
+      githubJson<Release>(LATEST_RELEASE_API),
+      githubJson<Commit>(MAIN_COMMIT_API),
+    ]);
+    if (release.draft || release.prerelease) return unavailable("latest release is not stable");
+
+    const dmg = release.assets?.find((entry) => entry.name === DMG_ASSET);
+    const manifestAsset = release.assets?.find((entry) => entry.name === MANIFEST_ASSET);
+    if (!dmg?.browser_download_url || !manifestAsset?.browser_download_url) {
+      return unavailable("latest release is incomplete");
     }
-  } catch {
-    return NextResponse.redirect(FALLBACK_DMG, 302);
+
+    const manifest = await githubJson<ReleaseManifest>(manifestAsset.browser_download_url);
+    const version = release.tag_name?.replace(/^v/, "");
+    const digest = manifest.assets?.[DMG_ASSET]?.sha256;
+    if (
+      manifest.schemaVersion !== 1 ||
+      !version ||
+      manifest.version !== version ||
+      !main.sha ||
+      manifest.commit !== main.sha ||
+      !digest ||
+      !/^[0-9a-f]{64}$/.test(digest)
+    ) {
+      return unavailable("latest release does not match main");
+    }
+
+    const response = NextResponse.redirect(dmg.browser_download_url, 302);
+    response.headers.set("x-local-studio-version", version);
+    response.headers.set("x-local-studio-commit", main.sha);
+    response.headers.set("x-local-studio-sha256", digest);
+    return response;
+  } catch (error) {
+    return unavailable(error instanceof Error ? error.message : "GitHub request failed");
   }
-  return NextResponse.redirect(FALLBACK_DMG, 302);
 }
