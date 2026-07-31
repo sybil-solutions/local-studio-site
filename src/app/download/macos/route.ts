@@ -10,7 +10,10 @@ const MAIN_COMMIT_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/commits/main";
 const COMPARE_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/compare";
-const NON_PACKAGED_RELEASE_FILES = new Set(["scripts/sign-desktop-release.mjs"]);
+const NON_PACKAGED_RELEASE_FILES = new Set([
+  "README.md",
+  "scripts/sign-desktop-release.mjs",
+]);
 
 type ReleaseAsset = { name?: string; browser_download_url?: string };
 type Release = {
