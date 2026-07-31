@@ -67,11 +67,13 @@ export function LandingNav() {
         <span>Local Studio</span>
       </Link>
       <nav className={styles.navLinks} aria-label="Landing navigation">
-        <Link href="/#product">Product</Link>
-        <Link href="/docs">Docs</Link>
-        <Link href="/prompt">Setup</Link>
-        <Link href="/#media">Media</Link>
+        <Link className={styles.navOptionalSmall} href="/#product">Product</Link>
+        <Link className={styles.navMobilePrimary} href="/mobile">Mobile</Link>
+        <Link className={styles.navDocs} href="/docs">Docs</Link>
+        <Link className={styles.navSetup} href="/prompt">Setup</Link>
+        <Link className={styles.navOptional} href="/#media">Media</Link>
         <Link
+          className={styles.navOptional}
           href={GITHUB_REPO}
           prefetch={false}
           target="_blank"
@@ -237,6 +239,10 @@ export function LandingPage() {
               Pair your phone from Local Studio, then keep working with Codex, Claude, OpenCode,
               Pi, and Droid from anywhere.
             </p>
+            <Link className={styles.minimalLink} href="/mobile">
+              See how mobile works
+              <span aria-hidden="true">→</span>
+            </Link>
             <Link
               className={styles.minimalLink}
               href="https://kittylitter.app"
