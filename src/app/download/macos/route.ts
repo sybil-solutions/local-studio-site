@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import {
+  comparisonContainsRelease,
+  type ReleaseComparison,
+} from "./release-provenance";
 
 export const dynamic = "force-dynamic";
 
@@ -10,10 +14,6 @@ const MAIN_COMMIT_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/commits/main";
 const COMPARE_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/compare";
-const NON_PACKAGED_RELEASE_FILES = new Set([
-  "README.md",
-  "scripts/sign-desktop-release.mjs",
-]);
 
 type ReleaseAsset = { name?: string; browser_download_url?: string };
 type Release = {
@@ -23,14 +23,6 @@ type Release = {
   assets?: ReleaseAsset[];
 };
 type Commit = { sha?: string };
-type Comparison = {
-  status?: string;
-  ahead_by?: number;
-  behind_by?: number;
-  total_commits?: number;
-  commits?: unknown[];
-  files?: { filename?: string }[];
-};
 type ReleaseManifest = {
   schemaVersion?: number;
   version?: string;
@@ -66,22 +58,10 @@ async function releaseMatchesMain(releaseCommit: string, mainCommit: string): Pr
     return false;
   }
 
-  const comparison = await githubJson<Comparison>(
+  const comparison = await githubJson<ReleaseComparison>(
     `${COMPARE_API}/${releaseCommit}...${mainCommit}`,
   );
-  const commits = comparison.commits ?? [];
-  const files = comparison.files ?? [];
-  return (
-    comparison.status === "ahead" &&
-    comparison.behind_by === 0 &&
-    typeof comparison.ahead_by === "number" &&
-    comparison.ahead_by > 0 &&
-    comparison.total_commits === commits.length &&
-    files.length > 0 &&
-    files.every(
-      ({ filename }) => typeof filename === "string" && NON_PACKAGED_RELEASE_FILES.has(filename),
-    )
-  );
+  return comparisonContainsRelease(comparison);
 }
 
 export async function GET(): Promise<NextResponse> {
