@@ -3,23 +3,24 @@ import {
   comparisonContainsRelease,
   type ReleaseComparison,
 } from "./release-provenance";
+import {
+  selectLatestValidRelease,
+  type ListedRelease,
+} from "./release-selection";
 
 export const dynamic = "force-dynamic";
 
 const DMG_ASSET = "Local-Studio-arm64.dmg";
 const MANIFEST_ASSET = "Local-Studio-release.json";
-const LATEST_RELEASE_API =
-  "https://api.github.com/repos/sybil-solutions/local-studio/releases/latest";
+const RELEASES_API =
+  "https://api.github.com/repos/sybil-solutions/local-studio/releases?per_page=100";
 const MAIN_COMMIT_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/commits/main";
 const COMPARE_API =
   "https://api.github.com/repos/sybil-solutions/local-studio/compare";
 
 type ReleaseAsset = { name?: string; browser_download_url?: string };
-type Release = {
-  tag_name?: string;
-  draft?: boolean;
-  prerelease?: boolean;
+type Release = ListedRelease & {
   assets?: ReleaseAsset[];
 };
 type Commit = { sha?: string };
@@ -28,6 +29,12 @@ type ReleaseManifest = {
   version?: string;
   commit?: string;
   assets?: Record<string, { sha256?: string }>;
+};
+type VerifiedRelease = {
+  commit: string;
+  digest: string;
+  downloadUrl: string;
+  version: string;
 };
 
 function unavailable(reason: string): NextResponse {
@@ -66,41 +73,60 @@ async function releaseMatchesMain(releaseCommit: string, mainCommit: string): Pr
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const [release, main] = await Promise.all([
-      githubJson<Release>(LATEST_RELEASE_API),
+    const [releases, main] = await Promise.all([
+      githubJson<Release[]>(RELEASES_API),
       githubJson<Commit>(MAIN_COMMIT_API),
     ]);
-    if (release.draft || release.prerelease) return unavailable("latest release is not stable");
+    if (!main.sha) return unavailable("main commit is unavailable");
+    const mainCommit = main.sha;
 
-    const dmg = release.assets?.find((entry) => entry.name === DMG_ASSET);
-    const manifestAsset = release.assets?.find((entry) => entry.name === MANIFEST_ASSET);
-    if (!dmg?.browser_download_url || !manifestAsset?.browser_download_url) {
-      return unavailable("latest release is incomplete");
-    }
+    const verified = await selectLatestValidRelease<Release, VerifiedRelease>(
+      releases,
+      async (release) => {
+        try {
+          const dmg = release.assets?.find((entry) => entry.name === DMG_ASSET);
+          const manifestAsset = release.assets?.find((entry) => entry.name === MANIFEST_ASSET);
+          if (!dmg?.browser_download_url || !manifestAsset?.browser_download_url) {
+            return undefined;
+          }
 
-    const manifest = await githubJson<ReleaseManifest>(manifestAsset.browser_download_url);
-    const version = release.tag_name?.replace(/^v/, "");
-    const digest = manifest.assets?.[DMG_ASSET]?.sha256;
-    if (
-      manifest.schemaVersion !== 1 ||
-      !version ||
-      manifest.version !== version ||
-      !main.sha ||
-      !manifest.commit ||
-      !digest ||
-      !/^[0-9a-f]{64}$/.test(digest)
-    ) {
-      return unavailable("latest release does not match main");
-    }
-    if (!(await releaseMatchesMain(manifest.commit, main.sha))) {
-      return unavailable("latest release does not match main");
-    }
+          const manifest = await githubJson<ReleaseManifest>(manifestAsset.browser_download_url);
+          const version = release.tag_name?.replace(/^v/, "");
+          const digest = manifest.assets?.[DMG_ASSET]?.sha256;
+          if (
+            manifest.schemaVersion !== 1 ||
+            !version ||
+            manifest.version !== version ||
+            !manifest.commit ||
+            !digest ||
+            !/^[0-9a-f]{64}$/.test(digest)
+          ) {
+            return undefined;
+          }
+          if (!(await releaseMatchesMain(manifest.commit, mainCommit))) return undefined;
 
-    const response = NextResponse.redirect(dmg.browser_download_url, 302);
-    response.headers.set("x-local-studio-version", version);
-    response.headers.set("x-local-studio-commit", manifest.commit);
-    response.headers.set("x-local-studio-main-commit", main.sha);
-    response.headers.set("x-local-studio-sha256", digest);
+          return {
+            commit: manifest.commit,
+            digest,
+            downloadUrl: dmg.browser_download_url,
+            version,
+          };
+        } catch {
+          return undefined;
+        }
+      },
+    );
+    if (!verified) return unavailable("no verified stable release was found");
+
+    const response = NextResponse.redirect(verified.downloadUrl, 302);
+    response.headers.set(
+      "cache-control",
+      "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
+    );
+    response.headers.set("x-local-studio-version", verified.version);
+    response.headers.set("x-local-studio-commit", verified.commit);
+    response.headers.set("x-local-studio-main-commit", mainCommit);
+    response.headers.set("x-local-studio-sha256", verified.digest);
     return response;
   } catch (error) {
     return unavailable(error instanceof Error ? error.message : "GitHub request failed");
