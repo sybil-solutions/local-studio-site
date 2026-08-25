@@ -26,7 +26,8 @@ export const styles = stylex.create({
 		borderBottomColor: tokens.uiBorder,
 		borderLeftColor: tokens.uiBorder,
 		backgroundColor: tokens.uiBg,
-		boxShadow: "8px 0 28px rgba(0, 0, 0, 0.2)",
+		boxShadow:
+			"1px 0 0 rgba(255, 255, 255, 0.018), 6px 0 16px rgba(0, 0, 0, 0.1)",
 	},
 	header73: {
 		display: "flex",

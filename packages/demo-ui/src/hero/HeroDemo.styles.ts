@@ -343,7 +343,8 @@ export const styles = stylex.create({
     borderBottomColor: tokens.border,
     borderLeftColor: tokens.border,
     backgroundColor: tokens.colorPanel,
-    boxShadow: "-16px 0 36px rgba(0, 0, 0, 0.2)",
+    boxShadow:
+      "-1px 0 0 rgba(255, 255, 255, 0.018), -8px 0 20px rgba(0, 0, 0, 0.11)",
   },
   div738: {
     display: { default: null, "::-webkit-scrollbar": "none" },
@@ -447,12 +448,8 @@ export const styles = stylex.create({
       default: constants.panelElevation,
       ":hover": constants.panelElevationHover,
     },
-    transitionProperty: "background-color, box-shadow, transform",
+    transitionProperty: "background-color, box-shadow",
     transitionDuration: "160ms",
-    transform: {
-      default: "translateY(0)",
-      ":hover": "translateY(-1px)",
-    },
     paddingLeft: "calc(0.25rem * 3)",
     paddingRight: "calc(0.25rem * 3)",
     paddingTop: "calc(0.25rem * 2.5)",

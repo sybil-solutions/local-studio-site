@@ -181,12 +181,8 @@ export const styles = stylex.create({
 			default: constants.panelElevation,
 			":hover": constants.panelElevationHover,
 		},
-		transitionProperty: "background-color, box-shadow, transform",
+		transitionProperty: "background-color, box-shadow",
 		transitionDuration: "160ms",
-		transform: {
-			default: "translateY(0)",
-			":hover": "translateY(-1px)",
-		},
 		paddingTop: "calc(0.25rem * 4)",
 		paddingRight: "calc(0.25rem * 4)",
 		paddingBottom: "calc(0.25rem * 4)",
