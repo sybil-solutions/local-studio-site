@@ -14,7 +14,6 @@ export const colors = stylex.defineVars({
 	borderStrongHover: stylex.types.color({ default: "rgba(138,212,255,0.72)" }),
 	hover: stylex.types.color({ default: "rgba(255,255,255,0.06)" }),
 	surfaceFaint: stylex.types.color({ default: "rgba(255,255,255,0.03)" }),
-	navSurface: stylex.types.color({ default: "rgba(0,0,0,0.84)" }),
 	foregroundHover: stylex.types.color({ default: "#ffffff" }),
 	buttonInk: stylex.types.color({ default: "#000000" }),
 	mediaRingInner: stylex.types.color({ default: "rgba(93,183,255,0.05)" }),

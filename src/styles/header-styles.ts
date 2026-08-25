@@ -39,13 +39,18 @@ export const headerStyles = stylex.create({
 		left: 0,
 		height: "100%",
 		pointerEvents: "none",
-		backgroundColor: colors.navSurface,
-		backdropFilter: "blur(12px)",
+		backgroundColor: "transparent",
 		display: { default: "block", [mobile]: "block" },
 	},
 	navBackdropOpen: { display: { default: "block", [mobile]: "none" } },
-	navBackdropProducts: { height: "calc(100% + 164px)" },
-	navBackdropResources: { height: "calc(100% + 164px)" },
+	navBackdropProducts: {
+		height: "calc(100% + 164px)",
+		backgroundColor: colors.background,
+	},
+	navBackdropResources: {
+		height: "calc(100% + 164px)",
+		backgroundColor: colors.background,
+	},
 	primary: {
 		position: "relative",
 		zIndex: 2,
