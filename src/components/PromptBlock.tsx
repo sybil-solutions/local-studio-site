@@ -18,9 +18,9 @@ const styles = stylex.create({
 		overflow: "visible",
 		borderWidth: '1px',
 		borderStyle: 'solid',
-		borderColor: colors.border,
+		borderColor: colors.borderStrong,
 		borderRadius: lengths.radiusPanel,
-		boxShadow: `0 24px 64px ${colors.shadowAmbient}, 0 6px 18px ${colors.shadowDirect}, inset 0 1px 0 ${colors.borderSoft}`,
+		boxShadow: `inset 0 1px 0 ${colors.borderSoft}`,
 	},
 	collapsedRoot: {
 		"::after": {
@@ -90,9 +90,9 @@ const styles = stylex.create({
 		color: colors.foreground,
 		backgroundColor: colors.background,
 		fontFamily: constants.fontSans,
-		fontSize: "14px",
+		fontSize: "16px",
 		fontWeight: 400,
-		lineHeight: "20px",
+		lineHeight: "24px",
 		transform: "translate(-50%, 50%)",
 		boxShadow: `0 8px 24px ${colors.shadowControl}, 0 2px 8px ${colors.shadowControlDirect}`,
 		transitionProperty: "color, border-color, box-shadow",

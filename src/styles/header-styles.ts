@@ -213,6 +213,7 @@ export const headerStyles = stylex.create({
 			default: "transparent",
 			":hover": { default: "transparent", [canHover]: colors.hover },
 		},
+		boxShadow: `inset 0 1px 0 ${colors.borderSoft}`,
 		fontWeight: 500,
 		textDecoration: "none",
 		transitionProperty: "color, background-color, border-color",

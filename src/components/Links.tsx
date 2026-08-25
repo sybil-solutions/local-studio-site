@@ -172,20 +172,8 @@ const styles = stylex.create({
 				":hover": colors.hover,
 			},
 		},
-		borderColor: {
-			default: colors.borderStrong,
-			"@media (hover: hover)": {
-				default: colors.borderStrong,
-				":hover": colors.borderStrongHover,
-			},
-		},
-		boxShadow: {
-			default: `0 8px 24px ${colors.shadowControl}, 0 2px 8px ${colors.shadowControlDirect}, inset 0 1px 0 ${colors.borderSoft}`,
-			"@media (hover: hover)": {
-				default: `0 8px 24px ${colors.shadowControl}, 0 2px 8px ${colors.shadowControlDirect}, inset 0 1px 0 ${colors.borderSoft}`,
-				":hover": `0 10px 28px ${colors.shadowControl}, 0 3px 12px ${colors.focusHalo}, inset 0 1px 0 ${colors.borderStrong}`,
-			},
-		},
+		borderColor: colors.borderStrong,
+		boxShadow: `inset 0 1px 0 ${colors.borderSoft}`,
 		fontWeight: 400,
 		transitionProperty: "color, background, border-color, box-shadow",
 		transitionDuration: times.fast,

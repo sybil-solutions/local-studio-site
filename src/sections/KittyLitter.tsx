@@ -124,6 +124,7 @@ const FeatureCard = memo(function FeatureCard({
 			<div
 				{...stylex.props(baseStyles.element, baseStyles.focusable, styles.kittyFeatureMedia)}
 				data-kitty-feature-media=""
+				data-kitty-drag-interactive=""
 				role="region"
 				tabIndex={0}
 				aria-label={`Show ${feature.title}`}
@@ -150,6 +151,7 @@ const FeatureCard = memo(function FeatureCard({
 			</div>
 			<div
 				{...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.kittyFeatureBody)}
+				data-kitty-drag-interactive=""
 				role="button"
 				tabIndex={0}
 				aria-expanded={descriptionVisible}
@@ -242,12 +244,24 @@ function nearestTargetIndex(targets: readonly number[], position: number) {
 	return nearestIndex;
 }
 
+function isolateCarouselDrag(carousel: HTMLDivElement, dragging: boolean, origin: HTMLElement | null = null) {
+	if (dragging) window.getSelection()?.removeAllRanges();
+	carousel.querySelectorAll<HTMLElement>("[data-kitty-drag-interactive]").forEach((element) => {
+		element.inert = dragging && element !== origin;
+	});
+	if (dragging && document.activeElement instanceof HTMLElement && document.activeElement !== origin) {
+		document.activeElement.blur();
+	}
+}
+
 export function KittyLitter() {
 	const [active, setActive] = useState<number | null>(null);
+	const [dragging, setDragging] = useState(false);
 	const [carouselIndex, setCarouselIndex] = useState(0);
 	const [visibleFeatures, setVisibleFeatures] = useState(3);
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const carouselAnimation = useRef<{ stop: () => void } | null>(null);
+	const dragOrigin = useRef<HTMLElement | null>(null);
 	const dragState = useRef({
 		pointerId: -1,
 		startX: 0,
@@ -330,7 +344,7 @@ export function KittyLitter() {
 				</div>
 				<div
 					ref={carouselRef}
-					{...stylex.props(baseStyles.element, baseStyles.focusable, styles.kittyCarousel)}
+					{...stylex.props(baseStyles.element, baseStyles.focusable, styles.kittyCarousel, dragging && styles.kittyCarouselDragging)}
 					data-carousel-index={carouselIndex}
 					role="region"
 					aria-label="KittyLitter features"
@@ -368,6 +382,10 @@ export function KittyLitter() {
 						if (event.pointerType === "mouse" && event.button !== 0) return;
 						dragState.current.moved = false;
 						carouselAnimation.current?.stop();
+						dragOrigin.current =
+							event.target instanceof HTMLElement
+								? event.target.closest<HTMLElement>("[data-kitty-drag-interactive]")
+								: null;
 						dragState.current = {
 							pointerId: event.pointerId,
 							startX: event.clientX,
@@ -379,7 +397,16 @@ export function KittyLitter() {
 					onPointerMove={(event) => {
 						if (dragState.current.pointerId !== event.pointerId) return;
 						const delta = event.clientX - dragState.current.startX;
-						if (Math.abs(delta) > 6) dragState.current.moved = true;
+						if (Math.abs(delta) > 6 && !dragState.current.moved) {
+							dragState.current.moved = true;
+							isolateCarouselDrag(
+								event.currentTarget,
+								true,
+								dragOrigin.current,
+							);
+							setDragging(true);
+							highlightCard(null);
+						}
 						event.currentTarget.scrollLeft =
 							dragState.current.startScroll - delta;
 					}}
@@ -387,6 +414,8 @@ export function KittyLitter() {
 						if (dragState.current.pointerId !== event.pointerId) return;
 						const { moved, startX } = dragState.current;
 						dragState.current.pointerId = -1;
+						isolateCarouselDrag(event.currentTarget, false);
+						setDragging(false);
 						event.currentTarget.releasePointerCapture(event.pointerId);
 						const metrics = measureCarousel(event.currentTarget);
 						if (!metrics) return;
@@ -415,11 +444,18 @@ export function KittyLitter() {
 						if (dragState.current.pointerId !== event.pointerId) return;
 						dragState.current.pointerId = -1;
 						dragState.current.moved = false;
+						isolateCarouselDrag(event.currentTarget, false);
+						setDragging(false);
 						const metrics = measureCarousel(event.currentTarget);
 						if (!metrics) return;
 						animateToIndex(
 							nearestTargetIndex(metrics.targets, event.currentTarget.scrollLeft),
 						);
+					}}
+					onLostPointerCapture={(event) => {
+						dragState.current.pointerId = -1;
+						isolateCarouselDrag(event.currentTarget, false);
+						setDragging(false);
 					}}
 				>
 					<div {...stylex.props(baseStyles.element, styles.kittyItems)} data-kitty-items="">
