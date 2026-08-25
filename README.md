@@ -2,6 +2,8 @@
 
 Read the [`agents-localstudio` product-design system](https://github.com/gildrb/agents-localstudio/tree/main/.agents/skills/product-design) before changing the landing page, embedded Local Studio UI, hero demo, or product showcase. All authored interface styling uses strongly typed StyleX tokens and extracted atomic CSS.
 
+
+
 ### Run
 
 ```sh
@@ -37,3 +39,7 @@ pnpm preview
 `pnpm test` needs Playwright Chromium. This NixOS host cannot launch it.
 Ubuntu CI installs Chromium and runs `pnpm test` plus `pnpm test:visual`.
 Record the first visual snapshots on Ubuntu with `pnpm test:visual --update-snapshots`, then commit `tests/visual`. Non-Linux hosts skip this Linux-only suite.
+
+### Acknowledgements
+
+The renderer and model is built with heavy inspiration from https://eve.dev. We thank the creators of Vercel for their talents and design sense.
