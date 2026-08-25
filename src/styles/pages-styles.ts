@@ -64,7 +64,7 @@ export const styles = stylex.create({
 	productText: {
 		maxWidth: 448,
 		marginTop: 24,
-		color: colors.dim,
+		color: colors.fine,
 		fontSize: 16,
 		lineHeight: "24px",
 	},
@@ -130,7 +130,7 @@ export const styles = stylex.create({
 		borderTopRightRadius: lengths.radiusCompact,
 		borderBottomRightRadius: lengths.radiusCompact,
 		borderBottomLeftRadius: lengths.radiusCompact,
-		color: `color-mix(in srgb, ${colors.foreground} 80%, transparent)`,
+		color: colors.fine,
 		fontFamily: constants.fontMono,
 		fontSize: 14,
 		fontWeight: 400,
@@ -262,7 +262,7 @@ export const styles = stylex.create({
 		paddingBottom: 4,
 		paddingLeft: 12,
 		color: {
-			default: colors.subtlest,
+			default: colors.dim,
 			"@media (hover: hover)": {
 				":hover": colors.foreground,
 			},
@@ -333,7 +333,7 @@ export const styles = stylex.create({
 		marginRight: 0,
 		marginBottom: 0,
 		marginLeft: 0,
-		color: colors.dim,
+		color: colors.fine,
 		whiteSpace: "pre-wrap",
 		overflowWrap: "anywhere",
 	},
@@ -450,7 +450,7 @@ export const styles = stylex.create({
 		alignItems: "center",
 		columnGap: 6,
 		color: {
-			default: colors.quiet,
+			default: colors.dim,
 			"@media (hover: hover)": {
 				":hover": colors.foreground,
 			},
@@ -469,7 +469,7 @@ export const styles = stylex.create({
 		marginRight: 0,
 		marginBottom: 0,
 		marginLeft: 0,
-		color: colors.dim,
+		color: colors.fine,
 	},
 	overviewTextLink: {
 		color: {

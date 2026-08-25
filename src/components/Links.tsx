@@ -39,9 +39,9 @@ const styles = stylex.create({
 		alignItems: "center",
 		gap: "4px",
 		color: {
-			default: colors.quiet,
+			default: colors.dim,
 			"@media (hover: hover)": {
-				default: colors.quiet,
+				default: colors.dim,
 				":hover": colors.foreground,
 			},
 		},

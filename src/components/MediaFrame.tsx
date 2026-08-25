@@ -27,7 +27,7 @@ const styles = stylex.create({
 		justifyContent: "space-between",
 		paddingBlock: '12px',
 		paddingInline: '14px',
-		color: colors.subtlest,
+		color: colors.dim,
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
 		fontWeight: 400,

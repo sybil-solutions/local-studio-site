@@ -22,12 +22,12 @@ export const colors = stylex.defineVars({
 	depthShadow: stylex.types.color({ default: "rgba(0,0,0,0.52)" }),
 	depthShadowDemo: stylex.types.color({ default: "rgba(0,0,0,0.44)" }),
 	focusRing: stylex.types.color({ default: "#5db7ff" }),
-	selectionSkyBright: stylex.types.color({ default: "#c2e8ff" }),
-	selectionSkyDay: stylex.types.color({ default: "#8ad4ff" }),
-	selectionSkyBlue: stylex.types.color({ default: "#4aa8ff" }),
-	selectionSkyDusk: stylex.types.color({ default: "#285ca8" }),
-	selectionSkyNight: stylex.types.color({ default: "#132b52" }),
-	selection: stylex.types.color({ default: "#a8dcff" }),
+	selectionSkyBright: stylex.types.color({ default: "#e0f5ff" }),
+	selectionSkyDay: stylex.types.color({ default: "#daf2ff" }),
+	selectionSkyBlue: stylex.types.color({ default: "#d4efff" }),
+	selectionSkyDusk: stylex.types.color({ default: "#cfedff" }),
+	selectionSkyNight: stylex.types.color({ default: "#c9ebff" }),
+	selection: stylex.types.color({ default: "#d4efff" }),
 	selectionInk: stylex.types.color({ default: "#000000" }),
 });
 

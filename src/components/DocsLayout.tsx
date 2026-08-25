@@ -51,9 +51,9 @@ const styles = stylex.create({
 	},
 	link: {
 		color: {
-			default: colors.quiet,
+			default: colors.dim,
 			"@media (hover: hover)": {
-				default: colors.quiet,
+				default: colors.dim,
 				":hover": colors.foreground,
 			},
 		},
@@ -63,7 +63,7 @@ const styles = stylex.create({
 	},
 	prose: {
 		minWidth: 0,
-		color: colors.dim,
+		color: colors.fine,
 		fontSize: "16px",
 		lineHeight: "24px",
 	},

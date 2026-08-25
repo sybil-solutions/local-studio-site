@@ -187,7 +187,7 @@ export const styles = stylex.create({
 		fontSize: "16px",
 		fontWeight: 400,
 		lineHeight: "24px",
-		color: colors.quiet,
+		color: colors.dim,
 		textAlign: "left",
 	},
 	sponsorsList: {
@@ -354,7 +354,7 @@ export const styles = stylex.create({
 		marginRight: 0,
 		marginBottom: 0,
 		marginLeft: 0,
-		color: colors.dim,
+		color: colors.fine,
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
 		fontWeight: 400,
@@ -528,7 +528,7 @@ export const styles = stylex.create({
 	kittyFeatureDescriptionText: {
 		maxWidth: "42ch",
 		paddingTop: "12px",
-		color: colors.dim,
+		color: colors.fine,
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
 		fontWeight: 400,

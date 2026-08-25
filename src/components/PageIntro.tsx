@@ -91,7 +91,7 @@ const styles = stylex.create({
 		marginRight: "auto",
 		marginBottom: 0,
 		marginLeft: "auto",
-		color: colors.dim,
+		color: colors.fine,
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
 		fontWeight: 400,

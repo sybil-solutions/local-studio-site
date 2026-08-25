@@ -31,7 +31,7 @@ const styles = stylex.create({
 			default: "32px 80px 32px 32px",
 			"@media (max-width: 620px)": "20px 48px 20px 20px",
 		},
-		color: colors.dim,
+		color: colors.fine,
 		fontFamily: constants.fontMono,
 		fontSize: "16px",
 		lineHeight: "24px",

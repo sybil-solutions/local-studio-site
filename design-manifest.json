@@ -1,5 +1,5 @@
 {
-	"hash": "78fa5006a7868d3c551cb5e0ab0d5db3c0f170dad6eb254e6416f1105589f68a",
+	"hash": "afa5fc4c473023f4d632efd560714d4eb725d9ee4c6590e089b8d26b4d12227c",
 	"routes": [
 		"/",
 		"/product",
@@ -82,6 +82,7 @@
 		"public": [
 			"background",
 			"foreground",
+			"fine",
 			"dim",
 			"subtlest",
 			"quiet",

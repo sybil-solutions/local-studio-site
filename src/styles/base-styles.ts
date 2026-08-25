@@ -46,9 +46,6 @@ export const selectionStyles = stylex.create({
 	darkInk: {
 		color: { default: null, "::selection": colors.selectionInk },
 	},
-	lightInk: {
-		color: { default: null, "::selection": colors.foreground },
-	},
 });
 
 export const baseStyles = stylex.create({
