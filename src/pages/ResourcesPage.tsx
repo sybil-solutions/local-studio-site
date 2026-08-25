@@ -348,6 +348,8 @@ export function ResourcesPage() {
 	return (
 		<PageShell>
 			<PageIntro
+				layout="left"
+				sx={styles.docsIntro}
 				id="resources-title"
 				title={routes[overviewPath].heading}
 				description="Documentation, setup paths, downloads, and the surrounding ecosystem in one place."

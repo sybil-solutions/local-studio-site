@@ -171,7 +171,7 @@ export function PageIntro({
 					<div
 						{...stylex.props(baseStyles.element, 
 							styles.actions,
-							layout === "split" && styles.actionsSplit,
+							alignedLeft && styles.actionsSplit,
 						)}
 					>
 						{actions}
