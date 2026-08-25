@@ -2,6 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { colors, constants, lengths, times } from "./public-tokens.stylex";
 
 const reducedMotion = "@media (prefers-reduced-motion: reduce)";
+const canHover = "@media (hover: hover)";
 const desktopNavHeight = `max(${lengths.navHeight}, calc(env(safe-area-inset-top, 0px) + 40px))`;
 const mobileNavHeight = `max(${lengths.navHeight}, calc(env(safe-area-inset-top, 0px) + 44px))`;
 const storyDemoEnter = stylex.keyframes({
@@ -543,31 +544,31 @@ export const styles = stylex.create({
 		overflow: "hidden",
 		padding: "1px",
 		borderRadius: lengths.radiusFrame,
-		backgroundImage: `linear-gradient(${colors.surfaceFaint}, ${colors.surfaceFaint}), linear-gradient(to bottom, ${colors.border}, ${colors.background})`,
-		"::before": {
-			content: '""',
-			position: "absolute",
-			zIndex: 1,
-			inset: 0,
-			pointerEvents: "none",
-			backgroundColor: colors.background,
-			mixBlendMode: "lighten",
+		backgroundImage: {
+			default: `linear-gradient(to bottom, ${colors.borderStrong}, ${colors.borderSoft})`,
+			":focus-visible": `linear-gradient(to bottom, ${colors.borderStrongHover}, ${colors.border})`,
+			[canHover]: {
+				default: `linear-gradient(to bottom, ${colors.borderStrong}, ${colors.borderSoft})`,
+				":hover": `linear-gradient(to bottom, ${colors.borderStrongHover}, ${colors.border})`,
+			},
 		},
 		"::after": {
 			content: '""',
 			position: "absolute",
 			zIndex: 1,
-			inset: 0,
+			inset: "1px",
+			borderRadius: `calc(${lengths.radiusFrame} - 1px)`,
 			pointerEvents: "none",
-			backgroundColor: colors.mediaTone,
-			mixBlendMode: "darken",
+			backgroundColor: colors.surfaceFaint,
+			mixBlendMode: "screen",
 		},
 	},
 	kittyFeatureImage: {
 		display: "block",
 		width: "100%",
 		height: "100%",
+		borderRadius: `calc(${lengths.radiusFrame} - 1px)`,
 		objectFit: "cover",
-		filter: "grayscale(1) contrast(0.88)",
+		filter: "saturate(1.08) contrast(1.02)",
 	},
 });

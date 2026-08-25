@@ -16,7 +16,6 @@ export const colors = stylex.defineVars({
 	navSurface: stylex.types.color({ default: "rgba(0,0,0,0.84)" }),
 	foregroundHover: stylex.types.color({ default: "#ffffff" }),
 	buttonInk: stylex.types.color({ default: "#000000" }),
-	mediaTone: stylex.types.color({ default: "#e5e5e5" }),
 	mediaRingInner: stylex.types.color({ default: "rgba(93,183,255,0.05)" }),
 	mediaRingOuter: stylex.types.color({ default: "rgba(93,183,255,0.12)" }),
 	shadowAmbient: stylex.types.color({ default: "rgba(0,0,0,0.72)" }),

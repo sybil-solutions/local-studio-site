@@ -55,3 +55,42 @@ test("website surfaces use layered light and concentric edges", async ({ page })
 	expect(fade.backgroundImage).not.toBe("none");
 	expect(fade.maskImage).toBe("none");
 });
+
+test("site chrome stays quieter until interaction", async ({ page }) => {
+	await page.goto("/");
+	const brightness = (color: string) =>
+		(color.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? []).reduce(
+			(total, channel) => total + channel,
+			0,
+		);
+	const heading = page.getByRole("heading", { level: 1 });
+	const products = page.getByRole("button", { name: "Products" });
+	const headingColor = await heading.evaluate((element) => getComputedStyle(element).color);
+	const productRest = await products.evaluate((element) => getComputedStyle(element).color);
+	await products.hover();
+	const productHover = await products.evaluate((element) => getComputedStyle(element).color);
+	expect(brightness(productRest)).toBeLessThan(brightness(headingColor));
+	expect(brightness(productHover)).toBeGreaterThan(brightness(productRest));
+
+	const footerLink = page.locator("footer a").first();
+	await footerLink.scrollIntoViewIfNeeded();
+	const footerRest = await footerLink.evaluate((element) => getComputedStyle(element).color);
+	await footerLink.hover();
+	const footerHover = await footerLink.evaluate((element) => getComputedStyle(element).color);
+	expect(brightness(footerRest)).toBeLessThan(brightness(headingColor));
+	expect(brightness(footerHover)).toBeGreaterThan(brightness(footerRest));
+});
+
+test("mobile product cards preserve source color without section shadows", async ({ page }) => {
+	await page.goto("/#mobile");
+	const card = page.locator("[data-kitty-feature]").first();
+	const media = card.getByRole("region");
+	const image = card.locator("img");
+	const treatment = await media.evaluate((element) => ({
+		boxShadow: getComputedStyle(element).boxShadow,
+		filter: getComputedStyle(element.querySelector("img")!).filter,
+	}));
+	expect(treatment.boxShadow).toBe("none");
+	expect(treatment.filter).not.toContain("grayscale");
+	await expect(image).toBeVisible();
+});

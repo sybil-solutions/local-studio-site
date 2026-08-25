@@ -1,5 +1,5 @@
 {
-	"hash": "4a40e2f92a07f7ef4506d861b880d5959842838e9a8fb23d7eb9defb40f89f39",
+	"hash": "9b62b33788b6f33b25beecad193ab3852433fcbf35cb0ecae11086bb5b5d513c",
 	"routes": [
 		"/",
 		"/product",
@@ -95,7 +95,6 @@
 			"navSurface",
 			"foregroundHover",
 			"buttonInk",
-			"mediaTone",
 			"mediaRingInner",
 			"mediaRingOuter",
 			"shadowAmbient",
