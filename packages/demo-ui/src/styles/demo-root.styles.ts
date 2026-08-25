@@ -271,14 +271,16 @@ export const demoStyles = stylex.create({
 	heroAppTransform: (mobile: boolean, scale: number) => ({
 		width: 1392,
 		height: 787,
-		transform: mobile ? `scale(${scale})` : null,
+		transform: mobile ? `translateZ(0) scale(${scale})` : null,
 		transformOrigin: mobile ? "top left" : null,
+		willChange: mobile ? "transform" : null,
 	}),
 	storyAppTransform: (scale: number, shiftX: number, shiftY: number) => ({
 		width: 1392,
 		height: 787,
-		transform: `scale(${scale}) translate(${shiftX}px, ${shiftY}px)`,
+		transform: `translateZ(0) scale(${scale}) translate(${shiftX}px, ${shiftY}px)`,
 		transformOrigin: "top left",
+		willChange: "transform",
 	}),
 	fixedWidth: (width: number) => ({ width }),
 	hiddenOverflow: {
