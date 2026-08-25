@@ -1,5 +1,5 @@
 {
-	"hash": "cb90b233c6046407a6c1b6e573b354f5c83b392b43133a0e06d553d901f5d4fd",
+	"hash": "5d060223b9d40cafa8feeda6294dba0ee1881c3abe0fc449c39a0848d90ad02c",
 	"routes": [
 		"/",
 		"/product",
@@ -93,7 +93,6 @@
 			"borderStrongHover",
 			"hover",
 			"surfaceFaint",
-			"navSurface",
 			"foregroundHover",
 			"buttonInk",
 			"mediaRingInner",
