@@ -20,7 +20,7 @@ const styles = stylex.create({
 		borderRadius: lengths.radiusMediaFrame,
 		backgroundColor: colors.surfaceFaint,
 		boxShadow:
-			`0 0 0 7px ${colors.mediaRingInner}, 0 0 0 8px ${colors.mediaRingOuter}, 0 30px 100px ${colors.depthShadow}`,
+			`0 0 0 7px ${colors.mediaRingInner}, 0 0 0 8px ${colors.mediaRingOuter}, 0 28px 80px ${colors.shadowAmbient}, 0 8px 24px ${colors.shadowDirect}`,
 	},
 	caption: {
 		display: "flex",
@@ -40,7 +40,7 @@ const styles = stylex.create({
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: colors.border,
-		borderRadius: lengths.radiusCompact,
+		borderRadius: lengths.radiusControl,
 	},
 });
 

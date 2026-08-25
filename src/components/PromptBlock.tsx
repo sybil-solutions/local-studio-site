@@ -20,6 +20,22 @@ const styles = stylex.create({
 		borderStyle: 'solid',
 		borderColor: colors.border,
 		borderRadius: lengths.radiusPanel,
+		boxShadow: `0 24px 64px ${colors.shadowAmbient}, 0 6px 18px ${colors.shadowDirect}, inset 0 1px 0 ${colors.borderSoft}`,
+	},
+	collapsedRoot: {
+		"::after": {
+			content: '""',
+			position: "absolute",
+			zIndex: 0,
+			right: "2px",
+			bottom: "2px",
+			left: "2px",
+			height: "160px",
+			borderBottomRightRadius: `calc(${lengths.radiusPanel} - 2px)`,
+			borderBottomLeftRadius: `calc(${lengths.radiusPanel} - 2px)`,
+			pointerEvents: "none",
+			backgroundImage: `linear-gradient(to bottom, transparent, ${colors.background} 88%)`,
+		},
 	},
 	pre: {
 		width: "100%",
@@ -44,8 +60,6 @@ const styles = stylex.create({
 			default: "420px",
 			"@media (max-width: 620px)": "320px",
 		},
-		maskImage:
-			`linear-gradient(${colors.foreground} 62%, transparent 96%)`,
 	},
 	code: {
 		maxWidth: "100%",
@@ -66,10 +80,10 @@ const styles = stylex.create({
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: {
-			default: colors.border,
+			default: colors.borderStrong,
 			"@media (hover: hover)": {
-				default: colors.border,
-				":hover": colors.borderStrong,
+				default: colors.borderStrong,
+				":hover": colors.borderStrongHover,
 			},
 		},
 		borderRadius: lengths.radiusControl,
@@ -80,7 +94,8 @@ const styles = stylex.create({
 		fontWeight: 400,
 		lineHeight: "20px",
 		transform: "translate(-50%, 50%)",
-		transitionProperty: "color, border-color",
+		boxShadow: `0 8px 24px ${colors.shadowControl}, 0 2px 8px ${colors.shadowControlDirect}`,
+		transitionProperty: "color, border-color, box-shadow",
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
 		cursor: "pointer",
@@ -93,7 +108,7 @@ export function PromptBlock({ label, sx, text }: PromptBlockProps) {
 
 	return (
 		<section
-			{...stylex.props(baseStyles.element, styles.root, stylex.defaultMarker(), sx)}
+			{...stylex.props(baseStyles.element, styles.root, !expanded && styles.collapsedRoot, stylex.defaultMarker(), sx)}
 			aria-label={label}
 			data-expanded={expanded ? "true" : "false"}
 		>

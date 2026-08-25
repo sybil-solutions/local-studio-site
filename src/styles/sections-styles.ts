@@ -64,7 +64,7 @@ export const styles = stylex.create({
 			content: '""',
 			inset: "-60% -80%",
 			backgroundImage:
-				"radial-gradient(50% 50% at 50% 50%, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.025) 55%, transparent 100%)",
+				`radial-gradient(50% 50% at 50% 50%, ${colors.veilCore}, ${colors.veilEdge} 55%, transparent 100%)`,
 			pointerEvents: "none",
 		},
 	},
@@ -85,7 +85,7 @@ export const styles = stylex.create({
 			"@media (max-width: 620px)": "-0.022em",
 		},
 		textWrap: "balance",
-		textShadow: "0 1px 2px rgb(0 0 0 / 0.16)",
+		textShadow: `0 1px 2px ${colors.textShadowSoft}`,
 	},
 	heroTitleEnd: {
 		whiteSpace: "nowrap",
@@ -118,7 +118,7 @@ export const styles = stylex.create({
 		fontSize: "16px",
 		fontWeight: 500,
 		lineHeight: "24px",
-		textShadow: "0 1px 4px rgb(0 0 0 / 0.18)",
+		textShadow: `0 1px 4px ${colors.textShadowStrong}`,
 	},
 	heroActions: {
 		display: "flex",
@@ -348,6 +348,15 @@ export const styles = stylex.create({
 	storySelectedOptionTitle: {
 		color: colors.foreground,
 	},
+	storyDescriptionMotion: {
+		opacity: 0,
+		transform: "translateY(6px)",
+		filter: "blur(8px)",
+		transitionProperty: "opacity, transform, filter",
+		transitionDuration: times.feature,
+		transitionTimingFunction:
+			"cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1)",
+	},
 	storyDescription: {
 		maxWidth: "440px",
 		marginTop: "8px",
@@ -359,13 +368,6 @@ export const styles = stylex.create({
 		fontSize: "16px",
 		fontWeight: 400,
 		lineHeight: "24px",
-		opacity: 0,
-		transform: "translateY(6px)",
-		filter: "blur(8px)",
-		transitionProperty: "opacity, transform, filter",
-		transitionDuration: times.feature,
-		transitionTimingFunction:
-			"cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1)",
 	},
 	storySelectedDescription: {
 		opacity: 1,
@@ -541,7 +543,7 @@ export const styles = stylex.create({
 		overflow: "hidden",
 		padding: "1px",
 		borderRadius: lengths.radiusFrame,
-		backgroundImage: `linear-gradient(${colors.surfaceFaint}, ${colors.surfaceFaint}), linear-gradient(to bottom, ${colors.border}, rgb(0 0 0))`,
+		backgroundImage: `linear-gradient(${colors.surfaceFaint}, ${colors.surfaceFaint}), linear-gradient(to bottom, ${colors.border}, ${colors.background})`,
 		"::before": {
 			content: '""',
 			position: "absolute",

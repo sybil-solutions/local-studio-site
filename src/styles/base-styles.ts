@@ -115,11 +115,11 @@ export const baseStyles = stylex.create({
 		textDecoration: "inherit",
 		touchAction: "manipulation",
 		userSelect: "none",
-		opacity: {
+		filter: {
 			default: null,
 			[coarsePointer]: {
 				default: null,
-				":active": 0.72,
+				":active": "brightness(1.16)",
 			},
 		},
 	},
@@ -133,7 +133,7 @@ export const baseStyles = stylex.create({
 			":focus": {
 				default: null,
 				[stylex.when.ancestor("[data-keyboard='true']")]:
-					`0 0 0 2px ${colors.focusRing}`,
+					`0 0 0 2px ${colors.focusRing}, 0 0 0 5px ${colors.focusHalo}`,
 			},
 		},
 	},
