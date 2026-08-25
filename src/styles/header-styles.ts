@@ -44,8 +44,8 @@ export const headerStyles = stylex.create({
 		display: { default: "block", [mobile]: "block" },
 	},
 	navBackdropOpen: { display: { default: "block", [mobile]: "none" } },
-	navBackdropProducts: { height: "calc(100% + 188px)" },
-	navBackdropResources: { height: "calc(100% + 188px)" },
+	navBackdropProducts: { height: "calc(100% + 164px)" },
+	navBackdropResources: { height: "calc(100% + 164px)" },
 	primary: {
 		position: "relative",
 		zIndex: 2,

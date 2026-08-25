@@ -28,8 +28,8 @@ test("renderer environment interaction follows its own bounds", () => {
 });
 
 test("a local vertical band scrubs one smooth orbital day path", () => {
-	const above = mapAt(0.5, 0.15);
-	const below = mapAt(0.5, 0.85);
+	const above = mapAt(0.5, -0.25);
+	const below = mapAt(0.5, 1.25);
 	const farAbove = mapAt(0.5, -1);
 	const farBelow = mapAt(0.5, 2);
 	expect(above.normalizedY).toBe(-1);
@@ -42,14 +42,14 @@ test("a local vertical band scrubs one smooth orbital day path", () => {
 	expect(farBelow).toEqual(below);
 });
 
-test("horizontal movement stays a small predictable parallax", () => {
+test("horizontal movement cannot change the lighting cycle", () => {
 	const left = mapAt(0, 0.65);
 	const center = mapAt(0.5, 0.65);
 	const right = mapAt(1, 0.65);
+	expect(left.envYaw).toBe(center.envYaw);
+	expect(right.envYaw).toBe(center.envYaw);
 	expect(left.envPitch).toBe(center.envPitch);
 	expect(right.envPitch).toBe(center.envPitch);
-	expect(center.envYaw - left.envYaw).toBeCloseTo(0.12);
-	expect(right.envYaw - center.envYaw).toBeCloseTo(0.12);
 });
 
 test("degenerate renderer bounds keep finite interaction values", () => {
