@@ -267,7 +267,7 @@ export const headerStyles = stylex.create({
 	mega: {
 		position: "absolute",
 		zIndex: 3,
-		top: "100%",
+		top: "calc(100% - 24px)",
 		right: 0,
 		left: 0,
 		height: "188px",
