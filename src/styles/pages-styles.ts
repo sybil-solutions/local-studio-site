@@ -64,7 +64,7 @@ export const styles = stylex.create({
 	productText: {
 		maxWidth: 448,
 		marginTop: 24,
-		color: "rgba(255, 255, 255, 0.7)",
+		color: colors.dim,
 		fontSize: 16,
 		lineHeight: "24px",
 	},
@@ -178,7 +178,7 @@ export const styles = stylex.create({
 		columnGap: 16,
 		rowGap: 8,
 		marginTop: 16,
-		color: colors.quiet,
+		color: colors.fine,
 		fontFamily: constants.fontSans,
 		fontSize: 14,
 		fontWeight: 400,
@@ -305,7 +305,7 @@ export const styles = stylex.create({
 		width: "max-content",
 		maxWidth: "100%",
 		marginTop: 8,
-		color: colors.subtlest,
+		color: colors.fine,
 	},
 	machineRoutes: {
 		display: "flex",
@@ -315,7 +315,7 @@ export const styles = stylex.create({
 		marginTop: 24,
 	},
 	machineRoute: {
-		color: colors.subtlest,
+		color: colors.fine,
 		textDecoration: "none",
 	},
 	machineSectionHeading: {
@@ -339,7 +339,7 @@ export const styles = stylex.create({
 	},
 	machineEnd: {
 		marginTop: 64,
-		color: colors.subtlest,
+		color: colors.fine,
 	},
 	machineBanner: {
 		display: "flex",

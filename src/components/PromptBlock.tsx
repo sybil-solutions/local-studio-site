@@ -18,7 +18,7 @@ const styles = stylex.create({
 		overflow: "visible",
 		borderWidth: '1px',
 		borderStyle: 'solid',
-		borderColor: 'rgba(255, 255, 255, 0.15)',
+		borderColor: colors.border,
 		borderRadius: lengths.radiusPanel,
 	},
 	pre: {
@@ -31,7 +31,7 @@ const styles = stylex.create({
 			default: "32px 80px 32px 32px",
 			"@media (max-width: 620px)": "20px 48px 20px 20px",
 		},
-		color: "rgba(255, 255, 255, 0.8)",
+		color: colors.dim,
 		fontFamily: constants.fontMono,
 		fontSize: "16px",
 		lineHeight: "24px",

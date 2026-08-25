@@ -114,7 +114,7 @@ const rendererStyles = stylex.create({
 		transitionDuration: rendererTimes.fade,
 		transitionTimingFunction: "ease-out",
 	},
-	fallbackVisible: { opacity: 0.08 },
+	fallbackVisible: { opacity: 0.16 },
 });
 
 type RuntimeOwner = {

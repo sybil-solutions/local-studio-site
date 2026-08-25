@@ -58,9 +58,8 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4f {
       return vec4f(encode_normal(reflected), 1.0);
     }
     case 3u: {
-      // Dark chrome mirroring the baked night-sky studio: the flat faces sit
-      // near-black so the cloud bodies, softbox streaks, and the sun glint
-      // carry the look, brightening toward grazing angles via Fresnel.
+      // Polished dark chrome keeps enough normal-incidence reflectance for the
+      // sky and clouds to remain legible, then brightens toward grazing angles.
       let environment = env_reflection_from_dir(
         studioCube,
         studioSampler,
@@ -69,8 +68,8 @@ fn fs_main(input: VertexOutput) -> @location(0) vec4f {
         params.envPitch,
       );
       let edgeFresnel = pow(clamp(1.0 - dot(n, v), 0.0, 1.0), 5.0);
-      let metallicReflectance = mix(0.16, 1.0, edgeFresnel);
-      glass = vec4f(max(environment * metallicReflectance, vec3f(0.006)), 0.92);
+      let metallicReflectance = mix(0.34, 1.0, edgeFresnel);
+      glass = vec4f(max(environment * metallicReflectance, vec3f(0.008, 0.012, 0.020)), 0.96);
     }
     default: {
       glass = shade_glass(studioCube, studioSampler, n, v, reflected, params.envYaw, params.envPitch, false, params.glassAbsorption);

@@ -107,9 +107,9 @@ export const headerStyles = stylex.create({
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
 		color: {
-			default: colors.quiet,
+			default: colors.fine,
 			":hover": {
-				default: colors.quiet,
+				default: colors.fine,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -152,9 +152,9 @@ export const headerStyles = stylex.create({
 		justifyContent: "center",
 		borderRadius: lengths.radiusControl,
 		color: {
-			default: colors.quiet,
+			default: colors.fine,
 			":hover": {
-				default: colors.quiet,
+				default: colors.fine,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -249,9 +249,9 @@ export const headerStyles = stylex.create({
 		paddingLeft: "14px",
 		borderWidth: 0,
 		color: {
-			default: colors.quiet,
+			default: colors.fine,
 			":hover": {
-				default: colors.quiet,
+				default: colors.fine,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -469,8 +469,8 @@ export const headerStyles = stylex.create({
 		alignItems: "center",
 		columnGap: "4px",
 		color: {
-			default: colors.quiet,
-			":hover": { default: colors.quiet, [canHover]: colors.foreground },
+			default: colors.fine,
+			":hover": { default: colors.fine, [canHover]: colors.foreground },
 		},
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
