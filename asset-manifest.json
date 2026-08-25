@@ -1,0 +1,483 @@
+{
+	"files": [
+		{
+			"path": "public/fonts/geist-mono.woff2",
+			"role": "font",
+			"type": "font/woff2",
+			"dimensions": null,
+			"bytes": 23108,
+			"sha256": "5f3d6ad60f29d6cb708414ec6887163d63bf197377ef5417d2483ff31ace6c3b"
+		},
+		{
+			"path": "public/fonts/geist-sans.woff2",
+			"role": "font",
+			"type": "font/woff2",
+			"dimensions": null,
+			"bytes": 29288,
+			"sha256": "9b6f5ff45b278c744b5f379a2c4ecbaf858a842b8eaf82ac8d21b699ca16c608"
+		},
+		{
+			"path": "public/images/configure-models-1300.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 1300,
+				"height": 711
+			},
+			"bytes": 192232,
+			"sha256": "74821a4a23a284809e828293a995047399c6b752d8f2b34a2c8275b9ebfedca8"
+		},
+		{
+			"path": "public/images/configure-models-2600.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 2600,
+				"height": 1422
+			},
+			"bytes": 517905,
+			"sha256": "290bdf0c3268b7f0cc7e28b63271f68b85d6ba2936107897e79be8986feb1115"
+		},
+		{
+			"path": "public/images/configure-models-800.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 800,
+				"height": 437
+			},
+			"bytes": 95708,
+			"sha256": "c46869f1c4853f4ad73099996f3ab6f6449c4f2b61f676c24a20ef2aa82de928"
+		},
+		{
+			"path": "public/images/configure-models.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 5118,
+				"height": 2800
+			},
+			"bytes": 1057355,
+			"sha256": "0398ffd4db275a7f0ec7d75bb43084179d9ad9fe313245891aa972cbc26f225d"
+		},
+		{
+			"path": "public/images/favicon-dark.svg",
+			"role": "icon",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 428,
+				"height": 428
+			},
+			"bytes": 989,
+			"sha256": "3493f5f4527c0b8efad79e71856ee9daf78b8f169d9b51ddab2b4fff16b8b2f1"
+		},
+		{
+			"path": "public/images/favicon.svg",
+			"role": "icon",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 428,
+				"height": 428
+			},
+			"bytes": 989,
+			"sha256": "8de45cde7dccd23487c1159336bd4a10477f75b3c81da5064e790f2ff5185edf"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-01-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 14117,
+			"sha256": "b6576c823ff0103e9802e37ff85a22a68317420cd48e4058af31bea1a46468b8"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-01.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 28794,
+			"sha256": "d7b8ea359d08107e1019ff9f4d0647491f4469d5160f7bcac5729d3b4d38bcdf"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-02-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 44506,
+			"sha256": "6cb1a0f78d779d457dec6fe98cc05b1194f26b2fba0b84e503afa4cd084f0a3a"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-02.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 98626,
+			"sha256": "514f450f4d0ac0c9c5acbfb7d93ddd72ec9db13eb37f529b62ea0b62ca9563b9"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-03-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 43689,
+			"sha256": "d9287423dda90f66c1e8314b374febc5ea62e5379ef8c0002c7fa288a5ac7d34"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-03.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 97302,
+			"sha256": "4c18d9ddecaa503eec7c4a62d3ffa8463e70f340ccd051cde12a68638ac45824"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-04-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 38873,
+			"sha256": "94c0acebde60f32d4640dad290aec3fafe333649ba94552dd1040000d3135b12"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-04.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 93668,
+			"sha256": "1ad4628739874669e57eef1962e21034f81e67dcf2108b55a8c71fc77f348b07"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-05-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 33030,
+			"sha256": "706741861d03c2c163973df9a35acc96ee0c8f18d8639b6f3b3411aeffaa98ef"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-05.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 64884,
+			"sha256": "71abe1fca52ac8656ab2c4f4edd604feab58ee7ea0582af81e3813dc0efc2e6a"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-06-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 16407,
+			"sha256": "6c44379a5fa6cf4b04c66e11fbd3611f08619ba7ad9db449eedeeef7b5d0f0f9"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-06.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 34791,
+			"sha256": "04ed6ac87a8b73939ad980db9fea241a407805000a3abed70812dc4427735de7"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-07-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 35013,
+			"sha256": "6cb896dee796e9cd6ff4c699ffebf0c02bff1c87b4a0f55128d2ddda94d51693"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-07.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 70759,
+			"sha256": "c49b1f0ca4b08e88eee657deea4fbfc8c1f96d3ae2aebce5006b6d47519a01e7"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-08-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 44180,
+			"sha256": "51fcebefcf735339bfcc638ab97d13d6e4fe15f7cd6478d879590ba72ca2ba6d"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-08.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 95168,
+			"sha256": "d6f10b43aefd6b5f1529b6de2476cb725d1174ceb6306b279f2a221edd6adf4d"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-09-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 14255,
+			"sha256": "d30afa7a978b2688110a9d4d93be070e387d8f2d121e0e0b97299ffd492ac9e4"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-09.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 29228,
+			"sha256": "88a4d3eda5f94cdb70d2f69df57265f4700692d7c32a1a0a32279558653c6ee8"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-10-660.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 17727,
+			"sha256": "fdaa98f3c25e7d1a31ff6b3b1bbe90a029e9baed8908ad180a41749ab3ae700f"
+		},
+		{
+			"path": "public/images/kittylitter-appstore-iphone-10.avif",
+			"role": "binary",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 29238,
+			"sha256": "8d10e7ef670d7c0d5f96f3e17ab0c41e18f8b33aa661787fb6669a312ea78619"
+		},
+		{
+			"path": "public/images/localai_dark.svg",
+			"role": "image",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 525,
+				"height": 525
+			},
+			"bytes": 1587,
+			"sha256": "0f0689d8065a4048ae74745253c9e1ab840972c53a45c217fbc1773416416df5"
+		},
+		{
+			"path": "public/images/localstudio-logo.svg",
+			"role": "image",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 3000,
+				"height": 566
+			},
+			"bytes": 11615,
+			"sha256": "55e0397d92f54666715816efa8160d8a0881199e767a741d431a347fb654bdfa"
+		},
+		{
+			"path": "public/images/optimized.svg",
+			"role": "image",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 525,
+				"height": 525
+			},
+			"bytes": 1607,
+			"sha256": "122a9b026ebdc63d31a73120a0933eadea740af9bf521f99410cac694d0de5c0"
+		},
+		{
+			"path": "public/images/sponsors/factory.svg",
+			"role": "sponsor",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 127,
+				"height": 19
+			},
+			"bytes": 10337,
+			"sha256": "2c46aff5e7f423b753bb9bff7869d806e3442c643dd4d45094fabac37e3ad8a0"
+		},
+		{
+			"path": "public/images/sponsors/lambda.svg",
+			"role": "sponsor",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 196,
+				"height": 42
+			},
+			"bytes": 4113,
+			"sha256": "9b459dd2e5adde58a34abb4a35ade5730d71d5e1b1b3cfec625c29a11dd65930"
+		},
+		{
+			"path": "public/images/sponsors/nvidia.svg",
+			"role": "sponsor",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 630.2,
+				"height": 118.2
+			},
+			"bytes": 702,
+			"sha256": "aea3498efe6df90801d026818016ef283c1a38cd862bd56478bb66e1d6ec1711"
+		},
+		{
+			"path": "public/images/sponsors/prime-intellect.svg",
+			"role": "sponsor",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 240,
+				"height": 40
+			},
+			"bytes": 18673,
+			"sha256": "108fb8057cf432b47c07329812c980d928b5d9b400fea3cfe9df9c37e85b7e24"
+		},
+		{
+			"path": "public/images/sponsors/tng.svg",
+			"role": "sponsor",
+			"type": "image/svg+xml",
+			"dimensions": {
+				"width": 4071,
+				"height": 596
+			},
+			"bytes": 9491,
+			"sha256": "8b2b9c52c73f89d9ab019c7040655686f86cdacc9a5b48c53ab21044a1857fff"
+		},
+		{
+			"path": "public/images/usage-proxy-1300.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 1300,
+				"height": 711
+			},
+			"bytes": 129409,
+			"sha256": "9df83cc70a6632047491dcab075e371056b3e651b2111dbf10d16d1273f4b6ad"
+		},
+		{
+			"path": "public/images/usage-proxy-2600.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 2600,
+				"height": 1422
+			},
+			"bytes": 331235,
+			"sha256": "b77d345efd10f013eaff1cf59c322deeafd30a11361aa5d96ba2e851fc5025a9"
+		},
+		{
+			"path": "public/images/usage-proxy-800.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 800,
+				"height": 437
+			},
+			"bytes": 70716,
+			"sha256": "2bc7b6fe41d7fd4d20b4133a3da0fa7dc3206840b00b0de3c3e6039e731c5d26"
+		},
+		{
+			"path": "public/images/usage-proxy.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 5118,
+				"height": 2800
+			},
+			"bytes": 691451,
+			"sha256": "675822f86e087b06bdb8a257071b0299a39d57d7b6dbf8849927ba9daa994446"
+		},
+		{
+			"path": "public/images/workbench-browser-1300.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 1300,
+				"height": 711
+			},
+			"bytes": 461294,
+			"sha256": "31f1c36553bdab04badf7a6d28a44bcbda00b669d11169228f6d192763f48916"
+		},
+		{
+			"path": "public/images/workbench-browser-2600.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 2600,
+				"height": 1422
+			},
+			"bytes": 1235890,
+			"sha256": "65a1ba848c23bca9828ff53e4f67aa524d55259ad1d824c63b30ac8d608040cc"
+		},
+		{
+			"path": "public/images/workbench-browser-800.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 800,
+				"height": 437
+			},
+			"bytes": 223266,
+			"sha256": "da36a39fb26ce3c9659b8632945c90b5a2b76778b27e8ca294ca33f3bdfa0207"
+		},
+		{
+			"path": "public/images/workbench-browser.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 5118,
+				"height": 2800
+			},
+			"bytes": 1814461,
+			"sha256": "5c46e687e4b8e5fc5688aa8bf89a754a63d8a05f49055363a9a9e0d50bba2ce8"
+		},
+		{
+			"path": "public/images/workbench-terminal-1300.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 1300,
+				"height": 711
+			},
+			"bytes": 463582,
+			"sha256": "230db47b25f7767a2601289bdb79f07a39b339adde7c44d579625034cfafe6fc"
+		},
+		{
+			"path": "public/images/workbench-terminal-2600.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 2600,
+				"height": 1422
+			},
+			"bytes": 1192946,
+			"sha256": "7271252557ad99b31a79a51f691b4ea57c133caaab95e349500ba8daaaae42d3"
+		},
+		{
+			"path": "public/images/workbench-terminal-800.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 800,
+				"height": 437
+			},
+			"bytes": 226491,
+			"sha256": "7540e98b537bb6ac999e91a43f86326d8719e2b065d0d5afac7296176ae2378d"
+		},
+		{
+			"path": "public/images/workbench-terminal.png",
+			"role": "image",
+			"type": "image/png",
+			"dimensions": {
+				"width": 5118,
+				"height": 2800
+			},
+			"bytes": 1640350,
+			"sha256": "92cea3f2423d60c3c369b8983fa26610b6ea8b0556f34e3177ac2fd93a1c4167"
+		},
+		{
+			"path": "public/localai/localai-logo.bin",
+			"role": "logo-mesh",
+			"type": "application/octet-stream",
+			"dimensions": null,
+			"bytes": 595512,
+			"sha256": "187b1eca831f5acfa0b515f496a15488d6153ff0175759d24c184359a9c1766e"
+		},
+		{
+			"path": "public/localai/localai-logo.gltf",
+			"role": "logo-mesh",
+			"type": "model/gltf+json",
+			"dimensions": null,
+			"bytes": 1269,
+			"sha256": "ec3220296789cae5f2b6763ca8ef2db1aceef2652e4006640f183a1608bbc443"
+		}
+	],
+	"duplicateGroups": []
+}
