@@ -206,7 +206,7 @@ test("KittyLitter carousel supports image jumps and pointer dragging", async ({
 		.locator("[data-kitty-feature]")
 		.nth(3)
 		.getByRole("region")
-		.dispatchEvent("click");
+		.click();
 	await expect
 		.poll(() => carousel.evaluate((element) => element.scrollLeft))
 		.toBeGreaterThan(0);

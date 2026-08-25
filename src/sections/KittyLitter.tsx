@@ -122,6 +122,7 @@ function FeatureCard({
 		>
 			<div
 				{...stylex.props(baseStyles.element, baseStyles.focusable, styles.kittyFeatureMedia)}
+				data-kitty-feature-media=""
 				role="region"
 				tabIndex={0}
 				aria-label={`Show ${feature.title}`}
@@ -207,12 +208,18 @@ function measureCarousel(carousel: HTMLDivElement) {
 			? maxScroll
 			: Math.min(index * stride, maxScroll),
 	);
-	const centerTargets = cards.map((item) =>
-		Math.min(
-			Math.max(item.offsetLeft + item.offsetWidth / 2 - carousel.clientWidth / 2, 0),
+	const carouselBounds = carousel.getBoundingClientRect();
+	const centerTargets = cards.map((item) => {
+		const itemBounds = item.getBoundingClientRect();
+		return Math.min(
+			Math.max(
+				carousel.scrollLeft + itemBounds.left + itemBounds.width / 2 -
+					(carouselBounds.left + carouselBounds.width / 2),
+				0,
+			),
 			maxScroll,
-		),
-	);
+		);
+	});
 	return {
 		centerTargets,
 		stride,
@@ -317,7 +324,7 @@ export function KittyLitter() {
 			>
 				<div data-kitty-intro {...stylex.props(baseStyles.element, styles.sectionWidth, styles.kittyIntro)}>
 					<h2 id="kittylitter-title" {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.kittyHeading)}>
-						Keep the Session When You Leave Your Desk
+						Your Session, Anywhere
 					</h2>
 				</div>
 				<div
@@ -334,10 +341,26 @@ export function KittyLitter() {
 					}}
 					onScroll={(event) => syncFromScroll(event.currentTarget)}
 					onClickCapture={(event) => {
-						if (!dragState.current.moved) return;
-						event.preventDefault();
+						if (dragState.current.moved) {
+							event.preventDefault();
+							event.stopPropagation();
+							dragState.current.moved = false;
+							return;
+						}
+						const eventTarget = event.target instanceof Element ? event.target : null;
+						const pointTarget = document.elementFromPoint(event.clientX, event.clientY);
+						const media =
+							eventTarget?.closest<HTMLElement>("[data-kitty-feature-media]") ??
+							pointTarget?.closest<HTMLElement>("[data-kitty-feature-media]");
+						const card = media?.closest<HTMLElement>("[data-kitty-feature]");
+						if (!card) return;
+						const cards = Array.from(
+							event.currentTarget.querySelectorAll<HTMLElement>("[data-kitty-feature]"),
+						);
+						const index = cards.indexOf(card);
+						if (index < 0) return;
 						event.stopPropagation();
-						dragState.current.moved = false;
+						animateToIndex(index, true);
 					}}
 					onPointerDown={(event) => {
 						if (!event.isPrimary) return;
