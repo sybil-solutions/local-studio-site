@@ -1,5 +1,5 @@
 {
-	"hash": "2f1e53ab3572079f5606861a8a97a8bef2e3e6e8a792fffd9835588398eefdce",
+	"hash": "78fa5006a7868d3c551cb5e0ab0d5db3c0f170dad6eb254e6416f1105589f68a",
 	"routes": [
 		"/",
 		"/product",
@@ -194,6 +194,7 @@
 			"hl2",
 			"hl3",
 			"fg05",
+			"fg10",
 			"fg035",
 			"fg025",
 			"dim15",

@@ -33,7 +33,7 @@ function stylexDevCssWatch(): Plugin {
 			let lastModules = -1;
 			const collectFrom = server.config.plugins.find(
 				(plugin): plugin is Plugin & { __stylexCollectCss?: () => string } =>
-					typeof plugin === "object" && "__stylexCollectCss" in plugin,
+					"__stylexCollectCss" in plugin,
 			);
 			timer = setInterval(() => {
 				let changed = false;
@@ -43,13 +43,10 @@ function stylexDevCssWatch(): Plugin {
 						lastCss = css;
 						changed = true;
 					}
-				} catch {}
-				const moduleCount =
-					(
-						server.moduleGraph as unknown as {
-							urlToModuleMap?: Map<string, unknown>;
-						}
-					).urlToModuleMap?.size ?? 0;
+				} catch {
+					changed = false;
+				}
+				const moduleCount = server.moduleGraph.urlToModuleMap.size;
 				if (lastModules === -1) {
 					lastModules = moduleCount;
 				} else if (moduleCount !== lastModules) {
