@@ -20,7 +20,7 @@ const pageWidth = `min(${lengths.pageWidth}, calc(100% - ${lengths.pageGutter}))
 const heroStagePadding = `calc((100% - ${pageWidth}) / 2)`;
 const heroStageClippedWidth = `calc(100% - ${heroStagePadding})`;
 const kittyCarouselGutter = `max(24px, calc((100vw - ${lengths.pageWidth}) / 2))`;
-const kittyCardWidth = `min(400px, calc((min(${lengths.pageWidth}, calc(100vw - ${lengths.pageGutter})) - 48px) / 3))`;
+const kittyCardWidth = "min(620px, calc(100vw - 48px))";
 
 export const styles = stylex.create({
 	sectionWidth: {
@@ -493,11 +493,7 @@ export const styles = stylex.create({
 		minWidth: 0,
 		flexGrow: 0,
 		flexShrink: 0,
-		flexBasis: {
-			default: kittyCardWidth,
-			"@media (max-width: 900px)": "calc((100vw - 48px - 24px) / 2)",
-			"@media (max-width: 620px)": "calc(100vw - 48px)",
-		},
+		flexBasis: kittyCardWidth,
 	},
 	kittyFeatureBody: {
 		minHeight: "56px",

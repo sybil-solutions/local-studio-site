@@ -150,16 +150,10 @@ export const headerStyles = stylex.create({
 			},
 		},
 		textDecoration: "none",
-		transitionProperty: "color, background-color",
+		transitionProperty: "color",
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
-		backgroundColor: {
-			default: "transparent",
-			":hover": {
-				default: "transparent",
-				[canHover]: colors.hover,
-			},
-		},
+		backgroundColor: "transparent",
 	},
 	githubIcon: { width: "18px", height: "18px" },
 	button: {

@@ -17,7 +17,7 @@ import {
 } from "./canvas-sizing";
 import type { ControlsRef, HeroRuntimeState } from "./state";
 
-const ENV_YAW_LERP_SPEED = 3;
+const ENV_ROTATION_LERP_SPEED = 8;
 const ASCII_MOUSE_LERP_SPEED = 6;
 const PAINT_MOVEMENT_GRACE_MS = 72;
 const PAINT_SETTLE_DURATION_MS = 750;
@@ -108,12 +108,12 @@ export function createDrawLoop({
     state.mouseEnvYaw = lerp(
       state.mouseEnvYaw,
       state.targetMouseEnvYaw,
-      clamp01(deltaSeconds * ENV_YAW_LERP_SPEED),
+      clamp01(deltaSeconds * ENV_ROTATION_LERP_SPEED),
     );
     state.mouseEnvPitch = lerp(
       state.mouseEnvPitch,
       state.targetMouseEnvPitch,
-      clamp01(deltaSeconds * ENV_YAW_LERP_SPEED),
+      clamp01(deltaSeconds * ENV_ROTATION_LERP_SPEED),
     );
     state.asciiMouseX = lerp(
       state.asciiMouseX,

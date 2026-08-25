@@ -144,7 +144,7 @@ test("KittyLitter image hover reveals context without moving images or links", a
 		"More tools",
 		"Codex in your pocket",
 	]);
-	await expect(page.locator("[data-kitty-feature-description]")).toHaveCount(3);
+	await expect(page.locator("[data-kitty-feature-description]")).toHaveCount(2);
 	const images = cards.getByRole("region");
 	const before = await images.evaluateAll((elements) =>
 		elements.map((element) => element.getBoundingClientRect().top + window.scrollY),
@@ -210,6 +210,25 @@ test("KittyLitter carousel supports image jumps and pointer dragging", async ({
 	await expect
 		.poll(() => carousel.evaluate((element) => element.scrollLeft))
 		.toBeGreaterThan(0);
+	await expect
+		.poll(() =>
+			carousel.evaluate((element) => {
+				const card = element.querySelectorAll<HTMLElement>("[data-kitty-feature]")[3];
+				if (!card) return Number.POSITIVE_INFINITY;
+				const carouselBounds = element.getBoundingClientRect();
+				const cardBounds = card.getBoundingClientRect();
+				return Math.abs(
+					cardBounds.left + cardBounds.width / 2 -
+						(carouselBounds.left + carouselBounds.width / 2),
+				);
+			}),
+		)
+		.toBeLessThanOrEqual(2);
+	await page.waitForTimeout(500);
+	await carousel.evaluate((element) => {
+		element.scrollLeft = 0;
+	});
+	await expect.poll(() => carousel.evaluate((element) => element.scrollLeft)).toBe(0);
 	await page.waitForTimeout(500);
 	const dragMetrics = await carousel.evaluate((element) => {
 		const card = element.querySelector<HTMLElement>("[data-kitty-feature]");

@@ -7,13 +7,12 @@ import {
   type DevicePixelRatioRef,
 } from "./canvas-sizing";
 import type { ControlsRef, HeroRuntimeState } from "./state";
+import { mapPointerToLocalEnvironment } from "./environment-input";
 
 // Owns browser pointer input for env yaw and paint brush updates.
 // INVARIANT: coarse-pointer mode disables paint and switches to env auto-rotate.
 // Imported only by index.tsx's single effect.
 
-const MAX_ENV_YAW = 0.3;
-const MAX_ENV_PITCH = 0.2;
 const PAINT_POINTER_MOVE_EPSILON_PX = 0.5;
 
 export function syncPointerInteractionMode(state: HeroRuntimeState, isCoarsePointer: boolean) {
@@ -76,16 +75,13 @@ export function createPointerController({
 
   const updateEnvRotation = (clientX: number, clientY: number) => {
     if (evePointerInteractionMode(state.isCoarsePointer).autoRotateEnvYaw) return;
-    const viewportWidth = Math.max(1, window.innerWidth || 1);
-    const viewportHeight = Math.max(1, window.innerHeight || 1);
-    const clampedX = Math.max(0, Math.min(viewportWidth, clientX));
-    const clampedY = Math.max(0, Math.min(viewportHeight, clientY));
-    const normalizedX = (clampedX / viewportWidth) * 2 - 1;
-    const normalizedY = (clampedY / viewportHeight) * 2 - 1;
-    state.targetMouseEnvYaw = normalizedX * MAX_ENV_YAW;
-    state.targetMouseEnvPitch = normalizedY * MAX_ENV_PITCH;
-    state.targetAsciiMouseX = normalizedX;
-    state.targetAsciiMouseY = normalizedY;
+    const rect = getCanvasRect();
+    if (!rect) return;
+    const mapped = mapPointerToLocalEnvironment({ clientX, clientY, rect });
+    state.targetMouseEnvYaw = mapped.envYaw;
+    state.targetMouseEnvPitch = mapped.envPitch;
+    state.targetAsciiMouseX = mapped.normalizedX;
+    state.targetAsciiMouseY = mapped.normalizedY;
     requestRender();
   };
 

@@ -136,7 +136,7 @@ function FeatureCard({
 					{...stylex.props(baseStyles.element, baseStyles.image, styles.kittyFeatureImage)}
 					src={feature.image}
 					srcSet={`${feature.image} 660w, ${feature.image2x} 1320w`}
-					sizes="(max-width: 620px) calc(100vw - 48px), (max-width: 900px) 50vw, 33vw"
+					sizes="(max-width: 900px) min(620px, calc(100vw - 48px)), 620px"
 					alt={feature.alt}
 					width="1320"
 					height="1320"
@@ -198,14 +198,23 @@ function measureCarousel(carousel: HTMLDivElement) {
 		1,
 		Math.floor((carousel.clientWidth + gap) / stride),
 	);
-	const cardCount = grid.querySelectorAll("[data-kitty-feature]").length;
+	const cards = Array.from(
+		grid.querySelectorAll<HTMLElement>("[data-kitty-feature]"),
+	);
 	const maxScroll = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
-	const targets = Array.from({ length: cardCount }, (_, index) =>
-		index === cardCount - 1
+	const targets = cards.map((_, index) =>
+		index === cards.length - 1
 			? maxScroll
 			: Math.min(index * stride, maxScroll),
 	);
+	const centerTargets = cards.map((item) =>
+		Math.min(
+			Math.max(item.offsetLeft + item.offsetWidth / 2 - carousel.clientWidth / 2, 0),
+			maxScroll,
+		),
+	);
 	return {
+		centerTargets,
 		stride,
 		targets,
 		visible,
@@ -240,13 +249,15 @@ export function KittyLitter() {
 	const reducedMotion = useReducedMotion();
 
 	const animateToIndex = useCallback(
-		(index: number) => {
+		(index: number, center = false) => {
 			const carousel = carouselRef.current;
 			if (!carousel) return;
 			const metrics = measureCarousel(carousel);
 			if (!metrics) return;
 			const bounded = Math.min(Math.max(index, 0), metrics.targets.length - 1);
-			const target = metrics.targets[bounded] ?? 0;
+			const target = center
+				? (metrics.centerTargets[bounded] ?? 0)
+				: (metrics.targets[bounded] ?? 0);
 			carouselAnimation.current?.stop();
 			if (reducedMotion || document.hidden) {
 				carousel.scrollLeft = target;
@@ -396,14 +407,7 @@ export function KittyLitter() {
 								revealed={index < carouselIndex + visibleFeatures}
 								reducedMotion={reducedMotion ?? false}
 								onActivate={highlightCard}
-								onRequestVisible={(requested) => {
-									let next = carouselIndex;
-									if (requested < carouselIndex) next = requested;
-									if (requested >= carouselIndex + visibleFeatures) {
-										next = requested - visibleFeatures + 1;
-									}
-									if (next !== carouselIndex) jumpToCarousel(next);
-								}}
+								onRequestVisible={(requested) => animateToIndex(requested, true)}
 								key={feature.title}
 							/>
 						))}
