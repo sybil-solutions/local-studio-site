@@ -174,7 +174,8 @@ export const demoStyles = stylex.create({
 		borderBottomWidth: 0,
 		borderLeftWidth: 0,
 		color: tokens.fg,
-		boxShadow: "0 24px 80px rgba(0, 0, 0, 0.44)",
+		boxShadow:
+			"0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 24px 80px rgba(0, 0, 0, 0.32), 0 8px 24px rgba(0, 0, 0, 0.18)",
 		fontFamily: constants.fontSans,
 		fontSize: constants.fsBase,
 		lineHeight: 1.5,
@@ -218,9 +219,9 @@ export const demoStyles = stylex.create({
 		paddingLeft: { default: null, "::before": "1px" },
 		backgroundImage: {
 			default: null,
-			"::before": "linear-gradient(180deg, #ffffff14, #000)",
+			"::before": `linear-gradient(180deg, ${tokens.frameEdge}, ${tokens.frameShade})`,
 			"::after":
-				"radial-gradient(38% 32% at 0% 0%, color-mix(in srgb, #fff 2.2%, transparent), transparent 72%), linear-gradient(180deg, color-mix(in srgb, #fff 1%, transparent), transparent 10%)",
+				`radial-gradient(38% 32% at 0% 0%, color-mix(in srgb, ${tokens.dim} 4%, transparent), transparent 72%), linear-gradient(180deg, color-mix(in srgb, ${tokens.dim} 2%, transparent), transparent 12%)`,
 		},
 		WebkitMaskImage: {
 			default: null,

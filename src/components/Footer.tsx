@@ -23,7 +23,7 @@ const styles = stylex.create({
 		paddingRight: '0',
 		paddingBottom: 'calc(48px + env(safe-area-inset-bottom,0px))',
 		paddingLeft: '0',
-		color: colors.subtlest,
+		color: colors.chrome,
 		fontFamily: constants.fontSans,
 		fontSize: "14px",
 		fontWeight: 400,
@@ -68,9 +68,9 @@ const styles = stylex.create({
 			"@media (max-width: 620px)": "6px 0",
 		},
 		color: {
-			default: colors.subtlest,
+			default: colors.chrome,
 			"@media (hover: hover)": {
-				default: colors.subtlest,
+				default: colors.chrome,
 				":hover": colors.foreground,
 			},
 		},

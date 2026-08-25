@@ -107,9 +107,9 @@ export const headerStyles = stylex.create({
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
 		color: {
-			default: colors.subtlest,
+			default: colors.chrome,
 			":hover": {
-				default: colors.subtlest,
+				default: colors.chrome,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -123,16 +123,7 @@ export const headerStyles = stylex.create({
 		height: "38px",
 		translate: "0 -50%",
 		borderRadius: lengths.radiusControl,
-		backgroundColor: {
-			default: "transparent",
-			[canHover]: {
-				default: "transparent",
-				[stylex.when.ancestor(":hover")]: colors.hover,
-			},
-		},
-		transitionProperty: "background",
-		transitionDuration: times.fast,
-		transitionTimingFunction: "ease-out",
+		backgroundColor: "transparent",
 	},
 	actions: {
 		position: "relative",
@@ -152,9 +143,9 @@ export const headerStyles = stylex.create({
 		justifyContent: "center",
 		borderRadius: lengths.radiusControl,
 		color: {
-			default: colors.subtlest,
+			default: colors.chrome,
 			":hover": {
-				default: colors.subtlest,
+				default: colors.chrome,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -249,9 +240,9 @@ export const headerStyles = stylex.create({
 		paddingLeft: "14px",
 		borderWidth: 0,
 		color: {
-			default: colors.subtlest,
+			default: colors.chrome,
 			":hover": {
-				default: colors.subtlest,
+				default: colors.chrome,
 				[canHover]: colors.foreground,
 			},
 		},
@@ -327,20 +318,20 @@ export const headerStyles = stylex.create({
 		paddingBottom: 0,
 		paddingLeft: "12px",
 		borderRadius: lengths.radiusControl,
-		color: colors.foreground,
+		color: {
+			default: colors.chrome,
+			":hover": { default: colors.chrome, [canHover]: colors.foreground },
+		},
 		fontFamily: constants.fontSans,
 		fontSize: "19px",
 		fontWeight: 425,
 		lineHeight: "28px",
 		textDecoration: "none",
 		textAlign: "left",
-		transitionProperty: "color, background-color",
+		transitionProperty: "color",
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
-		backgroundColor: {
-			default: "transparent",
-			":hover": { default: "transparent", [canHover]: colors.hover },
-		},
+		backgroundColor: "transparent",
 	},
 	spacer: {
 		display: { default: "none", [mobile]: "block" },
@@ -469,8 +460,8 @@ export const headerStyles = stylex.create({
 		alignItems: "center",
 		columnGap: "4px",
 		color: {
-			default: colors.subtlest,
-			":hover": { default: colors.subtlest, [canHover]: colors.foreground },
+			default: colors.chrome,
+			":hover": { default: colors.chrome, [canHover]: colors.foreground },
 		},
 		fontFamily: constants.fontSans,
 		fontSize: "16px",

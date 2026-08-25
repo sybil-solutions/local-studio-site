@@ -42,6 +42,7 @@ test("public text tokens preserve their APCA contrast roles", () => {
 		dim: 75,
 		subtlest: 70,
 		quiet: 65,
+		chrome: 50,
 		focusRing: 55,
 	};
 

@@ -1,5 +1,5 @@
 {
-	"hash": "640ef1adba3bb5cf18d5562a228386b3646566bf1d0fcd3f02bb611df1413af7",
+	"hash": "cb90b233c6046407a6c1b6e573b354f5c83b392b43133a0e06d553d901f5d4fd",
 	"routes": [
 		"/",
 		"/product",
@@ -86,6 +86,7 @@
 			"dim",
 			"subtlest",
 			"quiet",
+			"chrome",
 			"border",
 			"borderSoft",
 			"borderStrong",
@@ -174,6 +175,8 @@
 			"separator",
 			"hover",
 			"active",
+			"frameEdge",
+			"frameShade",
 			"accent",
 			"link",
 			"ok",
