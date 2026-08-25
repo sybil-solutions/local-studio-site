@@ -5,9 +5,8 @@ import { assets } from "../domain/asset";
 const styles = stylex.create({
 	logo: {
 		display: "block",
-		width: "140px",
-		height: "auto",
-		filter: "invert(1)",
+		width: "28px",
+		height: "28px",
 	},
 });
 
@@ -15,10 +14,10 @@ export function BrandLogo({ sx }: { sx?: PublicStyle }) {
 	return (
 		<img
 			{...stylex.props(baseStyles.element, baseStyles.image, styles.logo, sx)}
-			src={assets.wordmark}
+			src={assets.brandLogo}
 			alt=""
-			width="3000"
-			height="566"
+			width="525"
+			height="525"
 			draggable={false}
 		/>
 	);

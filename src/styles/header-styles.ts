@@ -57,7 +57,7 @@ export const headerStyles = stylex.create({
 		display: "flex",
 		minWidth: 0,
 		alignItems: "center",
-		columnGap: "16px",
+		columnGap: "12px",
 	},
 	brand: {
 		position: "relative",

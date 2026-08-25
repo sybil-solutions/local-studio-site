@@ -254,15 +254,15 @@
 			"sha256": "0f0689d8065a4048ae74745253c9e1ab840972c53a45c217fbc1773416416df5"
 		},
 		{
-			"path": "public/images/localstudio-logo.svg",
+			"path": "public/images/localai_light.svg",
 			"role": "image",
 			"type": "image/svg+xml",
 			"dimensions": {
-				"width": 3000,
-				"height": 566
+				"width": 525,
+				"height": 525
 			},
-			"bytes": 11615,
-			"sha256": "55e0397d92f54666715816efa8160d8a0881199e767a741d431a347fb654bdfa"
+			"bytes": 1606,
+			"sha256": "86688041e99d50818134604b74ef14402a1ff50ebaa479127d8dd7fd653ac334"
 		},
 		{
 			"path": "public/images/optimized.svg",

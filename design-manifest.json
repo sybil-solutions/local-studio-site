@@ -1,5 +1,5 @@
 {
-	"hash": "5d060223b9d40cafa8feeda6294dba0ee1881c3abe0fc449c39a0848d90ad02c",
+	"hash": "01ee3dbda3aa0503fd3f00551cf347febafeff25ed192724c0ca76fb3388bf6a",
 	"routes": [
 		"/",
 		"/product",
@@ -22,7 +22,7 @@
 		"/agents"
 	],
 	"assets": [
-		"wordmark",
+		"brandLogo",
 		"mark",
 		"favicon",
 		"faviconDark",

@@ -1,5 +1,5 @@
 export const assets = {
-	wordmark: "/images/localstudio-logo.svg",
+	brandLogo: "/images/localai_light.svg",
 	mark: "/images/optimized.svg",
 	favicon: "/images/favicon.svg",
 	faviconDark: "/images/favicon-dark.svg",
