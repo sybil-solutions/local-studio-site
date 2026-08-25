@@ -2,6 +2,7 @@ import { baseStyles } from "../styles/base-styles";
 import * as stylex from "@stylexjs/stylex";
 import { assets } from "../domain/asset";
 import {
+	memo,
 	useCallback,
 	useEffect,
 	useLayoutEffect,
@@ -94,7 +95,7 @@ const features = [
 	},
 ] as const satisfies readonly KittyFeature[];
 
-function FeatureCard({
+const FeatureCard = memo(function FeatureCard({
 	feature,
 	index,
 	active,
@@ -109,7 +110,7 @@ function FeatureCard({
 	revealed: boolean;
 	reducedMotion: boolean;
 	onActivate: (index: number | null) => void;
-	onRequestVisible: (index: number) => void;
+	onRequestVisible: (index: number, center?: boolean) => void;
 }) {
 	const descriptionVisible = revealed || active;
 	return (
@@ -129,9 +130,9 @@ function FeatureCard({
 				onKeyDown={(event) => {
 					if (event.key !== "Enter" && event.key !== " ") return;
 					event.preventDefault();
-					onRequestVisible(index);
+					onRequestVisible(index, true);
 				}}
-				onClick={() => onRequestVisible(index)}
+				onClick={() => onRequestVisible(index, true)}
 			>
 				<img
 					{...stylex.props(baseStyles.element, baseStyles.image, styles.kittyFeatureImage)}
@@ -187,7 +188,7 @@ function FeatureCard({
 			</div>
 		</article>
 	);
-}
+});
 
 function measureCarousel(carousel: HTMLDivElement) {
 	const card = carousel.querySelector<HTMLElement>("[data-kitty-feature]");
@@ -306,9 +307,9 @@ export function KittyLitter() {
 		[],
 	);
 
-	function highlightCard(index: number | null) {
+	const highlightCard = useCallback((index: number | null) => {
 		setActive(index);
-	}
+	}, []);
 
 	function jumpToCarousel(index: number) {
 		setCarouselIndex(index);
@@ -430,7 +431,7 @@ export function KittyLitter() {
 								revealed={index < carouselIndex + visibleFeatures}
 								reducedMotion={reducedMotion ?? false}
 								onActivate={highlightCard}
-								onRequestVisible={(requested) => animateToIndex(requested, true)}
+								onRequestVisible={animateToIndex}
 								key={feature.title}
 							/>
 						))}
