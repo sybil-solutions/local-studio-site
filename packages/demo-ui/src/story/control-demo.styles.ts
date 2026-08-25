@@ -51,6 +51,13 @@ export const styles = stylex.create({
   },
   section45: {
     marginTop: "calc(0.25rem * 10)",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: tokens.uiBorder,
+    borderRadius: "12px",
+    backgroundColor: tokens.uiSurface,
+    boxShadow: constants.panelElevation,
+    padding: "calc(0.25rem * 5)",
   },
   h446: {
     marginBottom: "calc(0.25rem * 4)",

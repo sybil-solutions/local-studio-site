@@ -1,5 +1,5 @@
 {
-	"hash": "01ee3dbda3aa0503fd3f00551cf347febafeff25ed192724c0ca76fb3388bf6a",
+	"hash": "c13f2b060e691e079ce0683542b5fbf5bb6bf7d8673cb75ca98ce463a855eac2",
 	"routes": [
 		"/",
 		"/product",
@@ -162,6 +162,10 @@
 			"sidebarPaddingX",
 			"composerRadius",
 			"composerElevation",
+			"panelElevation",
+			"panelElevationHover",
+			"recessedElevation",
+			"headerElevation",
 			"radiusXs",
 			"radius2xl",
 			"iconScale",

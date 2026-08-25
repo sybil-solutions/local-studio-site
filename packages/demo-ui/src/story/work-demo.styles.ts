@@ -241,6 +241,7 @@ export const styles = stylex.create({
 	div102: {
 		marginTop: "calc(0.25rem * 3)",
 		height: "calc(0.25rem * 24)",
+		borderRadius: "8px",
 		borderTopStyle: "solid",
 		borderRightStyle: "solid",
 		borderBottomStyle: "solid",
@@ -253,6 +254,8 @@ export const styles = stylex.create({
 		borderRightColor: tokens.separator,
 		borderBottomColor: tokens.separator,
 		borderLeftColor: tokens.separator,
+		backgroundColor: tokens.uiBg,
+		boxShadow: constants.recessedElevation,
 		paddingTop: "calc(0.25rem * 3)",
 		paddingRight: "calc(0.25rem * 3)",
 		paddingBottom: "calc(0.25rem * 3)",
@@ -294,6 +297,13 @@ export const styles = stylex.create({
 	},
 	section152: {
 		minWidth: "0px",
+		borderWidth: "1px",
+		borderStyle: "solid",
+		borderColor: tokens.uiBorder,
+		borderRadius: "10px",
+		backgroundColor: tokens.uiSurface,
+		boxShadow: constants.panelElevation,
+		padding: "calc(0.25rem * 3)",
 	},
 	div153: {
 		display: "flex",

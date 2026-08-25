@@ -29,7 +29,15 @@ export const constants = stylex.defineConsts({
 	sidebarPaddingX: "7px",
 	composerRadius: "25px",
 	composerElevation:
-		"0 16px 40px rgba(0, 0, 0, 0.24), 0 2px 8px rgba(0, 0, 0, 0.32)",
+		"inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.36), 0 18px 48px rgba(0, 0, 0, 0.28)",
+	panelElevation:
+		"inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 1px 2px rgba(0, 0, 0, 0.48), 0 12px 28px rgba(0, 0, 0, 0.2)",
+	panelElevationHover:
+		"inset 0 1px 0 rgba(255, 255, 255, 0.075), 0 2px 4px rgba(0, 0, 0, 0.48), 0 16px 34px rgba(0, 0, 0, 0.24)",
+	recessedElevation:
+		"inset 0 2px 4px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(0, 0, 0, 0.28)",
+	headerElevation:
+		"0 1px 0 rgba(255, 255, 255, 0.025), 0 8px 20px rgba(0, 0, 0, 0.16)",
 	radiusXs: "4px",
 	radius2xl: "16px",
 	iconScale: "0.84",
