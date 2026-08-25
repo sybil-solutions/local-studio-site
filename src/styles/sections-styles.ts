@@ -81,10 +81,7 @@ export const styles = stylex.create({
 			default: "78px",
 			"@media (max-width: 620px)": "44px",
 		},
-		letterSpacing: {
-			default: constants.headerTracking,
-			"@media (max-width: 620px)": "-0.022em",
-		},
+		letterSpacing: constants.heroTracking,
 		textWrap: "balance",
 		textShadow: `0 1px 2px ${colors.textShadowSoft}`,
 	},

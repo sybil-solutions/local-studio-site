@@ -1,5 +1,5 @@
 {
-	"hash": "9b62b33788b6f33b25beecad193ab3852433fcbf35cb0ecae11086bb5b5d513c",
+	"hash": "640ef1adba3bb5cf18d5562a228386b3646566bf1d0fcd3f02bb611df1413af7",
 	"routes": [
 		"/",
 		"/product",
@@ -132,7 +132,8 @@
 			"fontMonoName",
 			"fontSans",
 			"fontMono",
-			"headerTracking"
+			"headerTracking",
+			"heroTracking"
 		],
 		"demo": [
 			"demoWidth",

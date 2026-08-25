@@ -78,4 +78,5 @@ export const constants = stylex.defineConsts({
 	fontSans: '"Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 	fontMono: '"Geist Mono", ui-monospace, monospace',
 	headerTracking: "-0.02em",
+	heroTracking: "-0.03em",
 });
