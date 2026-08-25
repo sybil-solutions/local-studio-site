@@ -1,8 +1,8 @@
-const ENV_EFFECTIVE_HALF_WIDTH_RATIO = 0.22;
-const ENV_EFFECTIVE_HALF_HEIGHT_RATIO = 0.22;
-const ENV_VERTICAL_PHASE_SHIFT = Math.PI * 0.5;
-const ENV_ORBIT_TILT = 0.65;
-const ENV_DIRECT_PITCH = 0.2;
+const ENV_EFFECTIVE_HALF_WIDTH_RATIO = 0.5;
+const ENV_EFFECTIVE_HALF_HEIGHT_RATIO = 0.35;
+const ENV_DAY_YAW_RANGE = Math.PI * 0.72;
+const ENV_ORBIT_TILT = 0.45;
+const POINTER_ENV_YAW_RANGE = 0.12;
 
 function clampSigned(value: number) {
   return Math.max(-1, Math.min(1, value));
@@ -25,10 +25,10 @@ export function mapPointerToLocalEnvironment({
   const normalizedY = clampSigned(
     (clientY - centerY) / Math.max(1, rect.height * ENV_EFFECTIVE_HALF_HEIGHT_RATIO),
   );
-  const phase = normalizedX * Math.PI + normalizedY * ENV_VERTICAL_PHASE_SHIFT;
+  const dayPhase = normalizedY * ENV_DAY_YAW_RANGE;
   return {
-    envYaw: phase,
-    envPitch: Math.sin(phase) * ENV_ORBIT_TILT + normalizedY * ENV_DIRECT_PITCH,
+    envYaw: dayPhase + normalizedX * POINTER_ENV_YAW_RANGE,
+    envPitch: Math.sin(dayPhase) * ENV_ORBIT_TILT,
     normalizedX,
     normalizedY,
   };

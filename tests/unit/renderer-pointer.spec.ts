@@ -27,29 +27,29 @@ test("renderer environment interaction follows its own bounds", () => {
 	});
 });
 
-test("a small horizontal area scrubs a full lighting day", () => {
-	const left = mapAt(0.28, 0.5);
-	const right = mapAt(0.72, 0.5);
-	const farLeft = mapAt(-1, 0.5);
-	const farRight = mapAt(2, 0.5);
-	expect(left.envYaw).toBeCloseTo(-Math.PI);
-	expect(right.envYaw).toBeCloseTo(Math.PI);
-	expect(farLeft.envYaw).toBeCloseTo(left.envYaw);
-	expect(farLeft.envPitch).toBeCloseTo(left.envPitch);
-	expect(farRight.envYaw).toBeCloseTo(right.envYaw);
-	expect(farRight.envPitch).toBeCloseTo(right.envPitch);
+test("a local vertical band scrubs one smooth orbital day path", () => {
+	const above = mapAt(0.5, 0.15);
+	const below = mapAt(0.5, 0.85);
+	const farAbove = mapAt(0.5, -1);
+	const farBelow = mapAt(0.5, 2);
+	expect(above.normalizedY).toBe(-1);
+	expect(below.normalizedY).toBe(1);
+	expect(above.envYaw).toBeLessThan(-2);
+	expect(below.envYaw).toBeGreaterThan(2);
+	expect(above.envPitch).toBeLessThan(0);
+	expect(below.envPitch).toBeGreaterThan(0);
+	expect(farAbove).toEqual(above);
+	expect(farBelow).toEqual(below);
 });
 
-test("vertical position shifts the day phase and light elevation", () => {
-	const above = mapAt(0.5, 0.28);
-	const below = mapAt(0.5, 0.72);
-	const quarterCycle = mapAt(0.61, 0.5);
-	expect(above.envYaw).toBeCloseTo(-Math.PI / 2);
-	expect(above.envPitch).toBeCloseTo(-0.85);
-	expect(below.envYaw).toBeCloseTo(Math.PI / 2);
-	expect(below.envPitch).toBeCloseTo(0.85);
-	expect(quarterCycle.envYaw).toBeCloseTo(Math.PI / 2);
-	expect(quarterCycle.envPitch).toBeCloseTo(0.65);
+test("horizontal movement stays a small predictable parallax", () => {
+	const left = mapAt(0, 0.65);
+	const center = mapAt(0.5, 0.65);
+	const right = mapAt(1, 0.65);
+	expect(left.envPitch).toBe(center.envPitch);
+	expect(right.envPitch).toBe(center.envPitch);
+	expect(center.envYaw - left.envYaw).toBeCloseTo(0.12);
+	expect(right.envYaw - center.envYaw).toBeCloseTo(0.12);
 });
 
 test("degenerate renderer bounds keep finite interaction values", () => {

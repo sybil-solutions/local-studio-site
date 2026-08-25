@@ -17,7 +17,7 @@ import {
 } from "./canvas-sizing";
 import type { ControlsRef, HeroRuntimeState } from "./state";
 
-const ENV_ROTATION_LERP_SPEED = 8;
+const ENV_ROTATION_LERP_SPEED = 5;
 const ASCII_MOUSE_LERP_SPEED = 6;
 const PAINT_MOVEMENT_GRACE_MS = 72;
 const PAINT_SETTLE_DURATION_MS = 750;
