@@ -13,7 +13,10 @@ const styles = stylex.create({
 		position: "relative",
 		isolation: "isolate",
 		display: "grid",
-		gridTemplateColumns: "1fr auto",
+		gridTemplateColumns: {
+			default: "1fr auto",
+			"@media (max-width: 620px)": "minmax(0, 1fr)",
+		},
 		width: pageWidth,
 		alignItems: "end",
 		gap: "32px",
@@ -61,7 +64,10 @@ const styles = stylex.create({
 	},
 	link: {
 		display: "flex",
-		minHeight: "32px",
+		minHeight: {
+			default: "32px",
+			"@media (max-width: 620px)": "44px",
+		},
 		alignItems: "center",
 		padding: {
 			default: "4px 12px",

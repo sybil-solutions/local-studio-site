@@ -13,7 +13,8 @@ const styles = stylex.create({
 	frame: {
 		position: "relative",
 		margin: 0,
-		padding: "7px",
+		overflow: "hidden",
+		padding: { default: "7px", "@media (max-width: 620px)": "5px" },
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: colors.borderSoft,
@@ -36,7 +37,10 @@ const styles = stylex.create({
 	image: {
 		display: "block",
 		width: "100%",
-		height: "auto",
+		height: { default: "auto", "@media (max-width: 620px)": "auto" },
+		aspectRatio: { default: "auto", "@media (max-width: 620px)": "4 / 3" },
+		objectFit: { default: "fill", "@media (max-width: 620px)": "cover" },
+		objectPosition: "center",
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: colors.border,

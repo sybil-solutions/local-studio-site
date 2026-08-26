@@ -11,10 +11,10 @@ export const styles = stylex.create({
 		marginRight: "auto",
 	},
 	pageBottom: {
-		paddingBottom: 120,
+		paddingBottom: { default: 120, "@media (max-width: 620px)": 96 },
 	},
 	productHero: {
-		marginBottom: 120,
+		marginBottom: { default: 120, "@media (max-width: 620px)": 80 },
 	},
 	productArticle: {
 		display: "grid",
@@ -31,8 +31,8 @@ export const styles = stylex.create({
 			default: 120,
 			"@media (max-width: 900px)": 48,
 		},
-		paddingTop: 80,
-		paddingBottom: 80,
+		paddingTop: { default: 80, "@media (max-width: 620px)": 64 },
+		paddingBottom: { default: 80, "@media (max-width: 620px)": 64 },
 		gridTemplateColumns: {
 			"@media (max-width: 900px)": "minmax(0, 1fr)",
 		},
@@ -161,55 +161,16 @@ export const styles = stylex.create({
 		alignItems: "center",
 		justifyContent: "center",
 		columnGap: 8,
-		paddingRight: 16,
-		paddingLeft: 16,
-		borderTopWidth: 1,
-		borderRightWidth: 1,
-		borderBottomWidth: 1,
-		borderLeftWidth: 1,
-		borderTopStyle: "solid",
-		borderRightStyle: "solid",
-		borderBottomStyle: "solid",
-		borderLeftStyle: "solid",
-		borderTopColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				":hover": colors.foreground,
-			},
-		},
-		borderRightColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				":hover": colors.foreground,
-			},
-		},
-		borderBottomColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				":hover": colors.foreground,
-			},
-		},
-		borderLeftColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				":hover": colors.foreground,
-			},
-		},
-		borderTopLeftRadius: lengths.radiusControl,
-		borderTopRightRadius: lengths.radiusControl,
-		borderBottomRightRadius: lengths.radiusControl,
-		borderBottomLeftRadius: lengths.radiusControl,
+		paddingInline: 16,
+		borderWidth: 1,
+		borderStyle: "solid",
+		borderColor: colors.foreground,
+		borderRadius: lengths.radiusControl,
 		color: colors.buttonInk,
-		backgroundColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				":hover": colors.foreground,
-			},
-		},
+		backgroundColor: colors.foreground,
 		boxShadow: {
 			default: `0 10px 30px ${colors.shadowControl}, 0 2px 10px ${colors.shadowControlDirect}`,
 			"@media (hover: hover)": {
-				default: `0 10px 30px ${colors.shadowControl}, 0 2px 10px ${colors.shadowControlDirect}`,
 				":hover": `0 12px 34px ${colors.shadowControl}, 0 3px 14px ${colors.focusHalo}`,
 			},
 		},
@@ -218,9 +179,7 @@ export const styles = stylex.create({
 		transitionProperty: "color, background, border-color, box-shadow",
 		transitionDuration: times.fast,
 		transitionTimingFunction: "ease-out",
-		width: {
-			"@media (max-width: 620px)": "auto",
-		},
+		width: { "@media (max-width: 620px)": "auto" },
 	},
 	notFoundRoutes: {
 		display: "flex",
@@ -293,6 +252,10 @@ export const styles = stylex.create({
 		marginTop: 24,
 	},
 	machineRoute: {
+		display: "inline-flex",
+		minWidth: { default: 0, "@media (max-width: 620px)": "44px" },
+		minHeight: { default: "24px", "@media (max-width: 620px)": "44px" },
+		alignItems: "center",
 		color: colors.fine,
 		textDecoration: "none",
 	},
@@ -320,7 +283,7 @@ export const styles = stylex.create({
 		color: colors.fine,
 	},
 	machineBanner: {
-		display: "flex",
+		display: { default: "flex", "@media (max-width: 620px)": "none" },
 		width: "100%",
 		flexDirection: "column",
 		alignItems: "flex-start",
@@ -424,6 +387,8 @@ export const styles = stylex.create({
 	},
 	overviewLink: {
 		display: "inline-flex",
+		minWidth: { default: 0, "@media (max-width: 900px)": "44px" },
+		minHeight: { default: "24px", "@media (max-width: 900px)": "44px" },
 		justifySelf: "start",
 		alignItems: "center",
 		columnGap: 6,
@@ -450,6 +415,9 @@ export const styles = stylex.create({
 		color: colors.fine,
 	},
 	overviewTextLink: {
+		display: "inline-flex",
+		minHeight: { default: "24px", "@media (max-width: 900px)": "44px" },
+		alignItems: "center",
 		color: {
 			default: colors.foreground,
 			"@media (hover: hover)": {

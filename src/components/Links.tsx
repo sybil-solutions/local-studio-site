@@ -67,24 +67,11 @@ const styles = stylex.create({
 		borderStyle: 'solid',
 		borderRadius: lengths.radiusControl,
 		color: colors.buttonInk,
-		backgroundColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				default: colors.foreground,
-				":hover": colors.foreground,
-			},
-		},
-		borderColor: {
-			default: colors.foreground,
-			"@media (hover: hover)": {
-				default: colors.foreground,
-				":hover": colors.foreground,
-			},
-		},
+		backgroundColor: colors.foreground,
+		borderColor: colors.foreground,
 		boxShadow: {
 			default: `0 10px 30px ${colors.shadowControl}, 0 2px 10px ${colors.shadowControlDirect}`,
 			"@media (hover: hover)": {
-				default: `0 10px 30px ${colors.shadowControl}, 0 2px 10px ${colors.shadowControlDirect}`,
 				":hover": `0 12px 34px ${colors.shadowControl}, 0 3px 14px ${colors.focusHalo}`,
 			},
 		},
@@ -95,64 +82,40 @@ const styles = stylex.create({
 		transitionTimingFunction: "ease-out",
 	},
 	group: {
-		display: {
-			default: "inline-flex",
-			"@media (max-width: 620px)": "flex",
-		},
+		display: "inline-flex",
 		width: {
 			default: "auto",
 			"@media (max-width: 620px)": "100%",
 		},
 		maxWidth: "100%",
-		minWidth: {
-			default: "auto",
-			"@media (max-width: 620px)": 0,
-		},
-		flexDirection: {
-			default: "row",
-			"@media (max-width: 620px)": "column",
-		},
-		flexWrap: {
-			default: "nowrap",
-			"@media (max-width: 620px)": "wrap",
-		},
+		minWidth: 0,
+		flexDirection: "row",
+		flexWrap: "nowrap",
 		alignItems: "stretch",
-		gap: {
-			default: "8px",
-			"@media (max-width: 620px)": "12px",
-		},
+		gap: "8px",
 	},
 	groupItem: {
-		flex: {
-			default: "0 1 auto",
-			"@media (max-width: 620px)": "1 1 auto",
-		},
-		width: {
-			default: "auto",
-			"@media (max-width: 620px)": "100%",
-		},
-		minWidth: {
-			default: "auto",
-			"@media (max-width: 620px)": "max-content",
-		},
+		flexGrow: { default: 0, "@media (max-width: 620px)": 1 },
+		flexShrink: 1,
+		flexBasis: "auto",
+		width: "auto",
+		minWidth: 0,
 		height: "auto",
 		minHeight: {
 			default: "40px",
-			"@media (max-width: 620px)": "48px",
+			"@media (max-width: 620px)": "44px",
 		},
 		paddingInline: {
 			default: "16px",
-			"@media (max-width: 620px)": "12px",
-		},
-		paddingBlock: {
-			default: 0,
 			"@media (max-width: 620px)": "8px",
 		},
-		textAlign: "center",
-		lineHeight: {
-			default: "normal",
-			"@media (max-width: 620px)": "16px",
+		paddingBlock: 0,
+		fontSize: {
+			default: "16px",
+			"@media (max-width: 620px)": "14px",
 		},
+		textAlign: "center",
+		lineHeight: "20px",
 		whiteSpace: "nowrap",
 	},
 	secondary: {
@@ -199,7 +162,7 @@ export function DownloadButton({ sx }: { sx?: PublicStyle }) {
 
 export function CtaPair({ primary = downloadCta, secondary, sx }: CtaPairProps) {
 	return (
-		<div {...stylex.props(baseStyles.element, styles.group, sx)}>
+		<div data-cta-pair {...stylex.props(baseStyles.element, styles.group, sx)}>
 			<LocalLink sx={[styles.button, styles.groupItem]} href={primary.href}>
 				{primary.label}
 			</LocalLink>

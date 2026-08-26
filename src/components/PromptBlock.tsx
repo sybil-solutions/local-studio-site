@@ -73,7 +73,7 @@ const styles = stylex.create({
 		bottom: 0,
 		left: "50%",
 		display: "inline-flex",
-		minHeight: "40px",
+		minHeight: { default: "40px", "@media (max-width: 620px)": "44px" },
 		alignItems: "center",
 		paddingBlock: '0',
 		paddingInline: '20px',

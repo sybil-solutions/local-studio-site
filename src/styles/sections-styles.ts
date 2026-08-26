@@ -81,8 +81,8 @@ export const styles = stylex.create({
 	},
 	heroMarkButton: {
 		display: "inline-flex",
-		width: "0.78em",
-		height: "0.78em",
+		width: { default: "0.78em", "@media (max-width: 620px)": "44px" },
+		height: { default: "0.78em", "@media (max-width: 620px)": "44px" },
 		minWidth: 0,
 		minHeight: 0,
 		marginTop: 0,

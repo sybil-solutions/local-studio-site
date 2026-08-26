@@ -37,7 +37,7 @@ const styles = stylex.create({
 	},
 	list: {
 		display: "grid",
-		gap: "8px",
+		gap: { default: "8px", "@media (max-width: 900px)": 0 },
 		marginTop: "16px",
 		paddingTop: '0',
 		paddingRight: '0',
@@ -50,6 +50,9 @@ const styles = stylex.create({
 		lineHeight: "24px",
 	},
 	link: {
+		display: "flex",
+		minHeight: { default: "24px", "@media (max-width: 900px)": "44px" },
+		alignItems: "center",
 		color: {
 			default: colors.dim,
 			"@media (hover: hover)": {

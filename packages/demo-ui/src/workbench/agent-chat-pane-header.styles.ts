@@ -80,7 +80,7 @@ export const styles = stylex.create({
     paddingRight: "calc(0.25rem * 1.5)",
     paddingTop: "calc(0.25rem * 0.5)",
     paddingBottom: "calc(0.25rem * 0.5)",
-    fontSize: constants.fsMd,
+    fontSize: { default: constants.fsMd, [constants.mobile]: constants.fsLg },
     fontWeight: 500,
     color: tokens.fg,
     outlineStyle: "none",
