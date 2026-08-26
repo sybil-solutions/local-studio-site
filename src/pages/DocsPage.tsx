@@ -23,7 +23,6 @@ export function DocsPage() {
 		<PageShell>
 			<PageIntro
 				layout="left"
-				sx={styles.docsIntro}
 				id="docs-title"
 				title={routes[docsPath].heading}
 				description="Install the controller and desktop workspace, choose a runtime, launch a model, and verify local inference."

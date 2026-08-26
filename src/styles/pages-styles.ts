@@ -68,13 +68,6 @@ export const styles = stylex.create({
 		fontSize: 16,
 		lineHeight: "24px",
 	},
-	docsIntro: {
-		// Match the article edge after the 240px sidebar and 48px gap.
-		paddingLeft: {
-			default: 288,
-			"@media (max-width: 900px)": 0,
-		},
-	},
 	docsSection: {
 		marginTop: 80,
 		scrollMarginTop: 112,
