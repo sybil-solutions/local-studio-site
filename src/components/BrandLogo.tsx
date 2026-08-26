@@ -7,6 +7,10 @@ const styles = stylex.create({
 		display: "block",
 		width: "28px",
 		height: "28px",
+		filter: {
+			default: "none",
+			"@media (prefers-color-scheme: light)": "invert(1)",
+		},
 	},
 });
 

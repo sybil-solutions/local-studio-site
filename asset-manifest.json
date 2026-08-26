@@ -463,6 +463,14 @@
 			"sha256": "92cea3f2423d60c3c369b8983fa26610b6ea8b0556f34e3177ac2fd93a1c4167"
 		},
 		{
+			"path": "public/localai/day-sky-cubemap.jpg",
+			"role": "logo-mesh",
+			"type": "image/jpeg",
+			"dimensions": null,
+			"bytes": 76437,
+			"sha256": "9f5f04a8f3d46b8b5e96a257fd69f252fb4b7272a19aa3778f7ba38ad48a3036"
+		},
+		{
 			"path": "public/localai/localai-logo.bin",
 			"role": "logo-mesh",
 			"type": "application/octet-stream",
@@ -477,6 +485,14 @@
 			"dimensions": null,
 			"bytes": 1269,
 			"sha256": "ec3220296789cae5f2b6763ca8ef2db1aceef2652e4006640f183a1608bbc443"
+		},
+		{
+			"path": "public/localai/night-sky-cubemap.jpg",
+			"role": "logo-mesh",
+			"type": "image/jpeg",
+			"dimensions": null,
+			"bytes": 77539,
+			"sha256": "e20034786c1d9fd16bdab43a86d5bafe051d056fd0ea254172097b0fe246c577"
 		}
 	],
 	"duplicateGroups": []

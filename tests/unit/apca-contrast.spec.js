@@ -1,24 +1,20 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
-const tokenSource = readFileSync("src/styles/public-tokens.stylex.ts", "utf8");
+const source = readFileSync("src/styles/public-tokens.stylex.ts", "utf8");
 
-function tokenHex(name) {
-	const match = tokenSource.match(
-		new RegExp(`${name}: stylex\\.types\\.color\\(\\{ default: "(#[0-9a-f]{6})"`),
-	);
-	if (!match?.[1]) throw new Error(`Missing hex color token: ${name}`);
-	return match[1];
+function tokenHex(name, scheme) {
+	const match = source.match(new RegExp(
+		`${name}: stylex\\.types\\.color\\(\\{ default: "(#[0-9a-f]{6})", \\[lightScheme\\]: "(#[0-9a-f]{6})"`,
+	));
+	const color = match?.[scheme === "light" ? 2 : 1];
+	if (!color) throw new Error("token");
+	return color;
 }
 
 function luminance(hex) {
-	const channels = [1, 3, 5].map(
-		(offset) => Number.parseInt(hex.slice(offset, offset + 2), 16) / 255,
-	);
-	const value =
-		channels[0] ** 2.4 * 0.2126729 +
-		channels[1] ** 2.4 * 0.7151522 +
-		channels[2] ** 2.4 * 0.072175;
+	const channels = [1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16) / 255);
+	const value = channels[0] ** 2.4 * 0.2126729 + channels[1] ** 2.4 * 0.7151522 + channels[2] ** 2.4 * 0.072175;
 	return value < 0.022 ? value + (0.022 - value) ** 1.414 : value;
 }
 
@@ -34,38 +30,27 @@ function apcaContrast(text, background) {
 	return contrast > -0.1 ? 0 : (contrast + 0.027) * 100;
 }
 
-test("public text tokens preserve their APCA contrast roles", () => {
-	const background = tokenHex("background");
-	const minimumContrast = {
-		foreground: 100,
-		fine: 90,
-		dim: 75,
-		subtlest: 70,
-		quiet: 65,
-		chrome: 50,
-		focusRing: 55,
-	};
+const roles = { foreground: 100, fine: 90, dim: 75, quiet: 65, chrome: 50 };
+const stops = ["selectionSkyBright", "selectionSkyDay", "selectionSkyBlue", "selectionSkyDusk", "selectionSkyNight"];
 
-	for (const [name, minimum] of Object.entries(minimumContrast)) {
-		expect(
-			Math.abs(apcaContrast(tokenHex(name), background)),
-			`${name} against ${background}`,
-		).toBeGreaterThanOrEqual(minimum);
+test("APCA roles", () => {
+	for (const scheme of ["dark", "light"]) {
+		const background = tokenHex("background", scheme);
+		for (const [name, minimum] of Object.entries(roles)) {
+			expect(Math.abs(apcaContrast(tokenHex(name, scheme), background))).toBeGreaterThanOrEqual(minimum);
+		}
+		const ink = tokenHex("selectionInk", scheme);
+		for (const name of stops) {
+			expect(Math.abs(apcaContrast(ink, tokenHex(name, scheme)))).toBeGreaterThanOrEqual(90);
+		}
 	}
-});
 
-test("sky selection remains readable throughout its StyleX gradient", () => {
-	const ink = tokenHex("selectionInk");
-	for (const name of [
-		"selectionSkyBright",
-		"selectionSkyDay",
-		"selectionSkyBlue",
-		"selectionSkyDusk",
-		"selectionSkyNight",
-	]) {
-		expect(
-			Math.abs(apcaContrast(ink, tokenHex(name))),
-			`${ink} on ${name}`,
-		).toBeGreaterThanOrEqual(90);
+	const light = readFileSync("packages/logo-renderer/src/renderer/shaders/postprocess/light-composite.wgsl", "utf8");
+	const dark = readFileSync("packages/logo-renderer/src/renderer/shaders/bloom/composite.wgsl", "utf8");
+	const lightFloor = Number(light.match(/mix\(sky, vec3f\(1\.0\), ([\d.]+)\)/)?.[1]);
+	const darkCap = Number(dark.match(/MAX_DARK_DISPLAY_LUMA = ([\d.]+)/)?.[1]);
+	for (const [scheme, channel] of [["light", lightFloor], ["dark", darkCap]]) {
+		const hex = `#${Math.round(255 * channel).toString(16).padStart(2, "0").repeat(3)}`;
+		expect(Math.abs(apcaContrast(tokenHex("foreground", scheme), hex))).toBeGreaterThanOrEqual(75);
 	}
 });

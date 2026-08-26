@@ -71,14 +71,14 @@ const styles = stylex.create({
 			default: colors.foreground,
 			"@media (hover: hover)": {
 				default: colors.foreground,
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		borderColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
 				default: colors.foreground,
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		boxShadow: {

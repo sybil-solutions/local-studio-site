@@ -1,5 +1,5 @@
 {
-	"hash": "c13f2b060e691e079ce0683542b5fbf5bb6bf7d8673cb75ca98ce463a855eac2",
+	"hash": "0ee07d399b74555bb70101b381e2ef66bca2440bd1c4e9bf3ceaeb4669d66476",
 	"routes": [
 		"/",
 		"/product",
@@ -71,7 +71,9 @@
 		"fontSans",
 		"fontMono",
 		"logoMesh",
-		"logoMeshBin"
+		"logoMeshBin",
+		"dayEnv",
+		"nightEnv"
 	],
 	"motion": [
 		"ease",
@@ -84,7 +86,6 @@
 			"foreground",
 			"fine",
 			"dim",
-			"subtlest",
 			"quiet",
 			"chrome",
 			"border",
@@ -93,7 +94,6 @@
 			"borderStrongHover",
 			"hover",
 			"surfaceFaint",
-			"foregroundHover",
 			"buttonInk",
 			"mediaRingInner",
 			"mediaRingOuter",
@@ -101,19 +101,12 @@
 			"shadowDirect",
 			"shadowControl",
 			"shadowControlDirect",
-			"veilCore",
-			"veilEdge",
-			"textShadowSoft",
-			"textShadowStrong",
-			"depthShadowDemo",
-			"focusRing",
 			"focusHalo",
 			"selectionSkyBright",
 			"selectionSkyDay",
 			"selectionSkyBlue",
 			"selectionSkyDusk",
 			"selectionSkyNight",
-			"selection",
 			"selectionInk",
 			"pageWidth",
 			"pageGutter",
@@ -136,6 +129,10 @@
 			"heroTracking"
 		],
 		"demo": [
+			"highlight",
+			"near",
+			"far",
+			"hairline",
 			"demoWidth",
 			"demoHeight",
 			"composerWidth",

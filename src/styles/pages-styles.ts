@@ -174,25 +174,25 @@ export const styles = stylex.create({
 		borderTopColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		borderRightColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		borderBottomColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		borderLeftColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		borderTopLeftRadius: lengths.radiusControl,
@@ -203,7 +203,7 @@ export const styles = stylex.create({
 		backgroundColor: {
 			default: colors.foreground,
 			"@media (hover: hover)": {
-				":hover": colors.foregroundHover,
+				":hover": colors.foreground,
 			},
 		},
 		boxShadow: {

@@ -49,6 +49,8 @@ export const assets = {
 	fontMono: "/fonts/geist-mono.woff2",
 	logoMesh: "/localai/localai-logo.gltf",
 	logoMeshBin: "/localai/localai-logo.bin",
+	dayEnv: "/localai/day-sky-cubemap.jpg",
+	nightEnv: "/localai/night-sky-cubemap.jpg",
 } as const;
 
 const registered = new Set<string>(Object.values(assets));

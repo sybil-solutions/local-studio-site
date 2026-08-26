@@ -133,7 +133,7 @@ export const baseStyles = stylex.create({
 			":focus": {
 				default: null,
 				[stylex.when.ancestor("[data-keyboard='true']")]:
-					`0 0 0 2px ${colors.focusRing}, 0 0 0 5px ${colors.focusHalo}`,
+					`0 0 0 2px ${colors.foreground}, 0 0 0 5px ${colors.focusHalo}`,
 			},
 		},
 	},
@@ -184,13 +184,16 @@ export const baseStyles = stylex.create({
 		},
 		backgroundColor: {
 			default: colors.background,
-			"::selection": colors.selection,
+			"::selection": colors.selectionSkyBlue,
 		},
 		color: {
 			default: colors.foreground,
 			"::selection": colors.selectionInk,
 		},
-		colorScheme: "dark",
+		colorScheme: {
+			default: "dark",
+			"@media (prefers-color-scheme: light)": "light",
+		},
 		fontFamily: constants.fontSans,
 		fontSynthesis: "none",
 		textRendering: "optimizeLegibility",

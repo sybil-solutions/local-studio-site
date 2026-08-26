@@ -60,13 +60,6 @@ export const styles = stylex.create({
 		position: "relative",
 		zIndex: 2,
 		maxWidth: "790px",
-		"::before": {
-			content: '""',
-			inset: "-60% -80%",
-			backgroundImage:
-				`radial-gradient(50% 50% at 50% 50%, ${colors.veilCore}, ${colors.veilEdge} 55%, transparent 100%)`,
-			pointerEvents: "none",
-		},
 	},
 	heroHeading: {
 		marginTop: 0,
@@ -82,7 +75,6 @@ export const styles = stylex.create({
 		},
 		letterSpacing: constants.heroTracking,
 		textWrap: "balance",
-		textShadow: `0 1px 2px ${colors.textShadowSoft}`,
 	},
 	heroTitleEnd: {
 		whiteSpace: "nowrap",
@@ -107,6 +99,10 @@ export const styles = stylex.create({
 		display: "block",
 		width: "100%",
 		height: "100%",
+		filter: {
+			default: "none",
+			"@media (prefers-color-scheme: light)": "invert(1)",
+		},
 	},
 	heroThesis: {
 		marginTop: "12px",
@@ -115,7 +111,6 @@ export const styles = stylex.create({
 		fontSize: "16px",
 		fontWeight: 500,
 		lineHeight: "24px",
-		textShadow: `0 1px 4px ${colors.textShadowStrong}`,
 	},
 	heroActions: {
 		display: "flex",
@@ -204,6 +199,10 @@ export const styles = stylex.create({
 	sponsorImage: {
 		display: "block",
 		width: "auto",
+		filter: {
+			default: "none",
+			"@media (prefers-color-scheme: light)": "invert(1)",
+		},
 	},
 	sponsorImageSize: (width: number, height: number) => ({
 		width,
@@ -551,7 +550,10 @@ export const styles = stylex.create({
 			borderRadius: `calc(${lengths.radiusFrame} - 1px)`,
 			pointerEvents: "none",
 			backgroundColor: colors.surfaceFaint,
-			mixBlendMode: "screen",
+			mixBlendMode: {
+				default: "screen",
+				"@media (prefers-color-scheme: light)": "multiply",
+			},
 		},
 	},
 	kittyFeatureImage: {

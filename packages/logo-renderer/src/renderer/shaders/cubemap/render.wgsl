@@ -138,12 +138,6 @@ fn sky_radiance(dir: vec3f) -> vec3f {
   radiance += vec3f(1.0, 0.97, 0.92) * pow(max(cosSun, 0.0), 1400.0) * 26.0;
   radiance += vec3f(0.9, 0.95, 1.0) * pow(max(cosSun, 0.0), 9.0) * 0.18;
 
-  if (y < 0.0) {
-    // Below the horizon: near-black water/ground keeps reflection contrast.
-    let ground = mix(vec3f(0.020, 0.024, 0.032), vec3f(0.004, 0.005, 0.008), smoothstep(0.0, -0.45, y));
-    radiance = mix(radiance * 0.55, ground, smoothstep(0.0, -0.06, y));
-  }
-
   return radiance;
 }
 

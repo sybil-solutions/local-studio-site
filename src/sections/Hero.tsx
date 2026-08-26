@@ -69,14 +69,14 @@ export function Hero() {
 										aria-label="Machine-readable page"
 									>
 										<img
-											{...stylex.props(baseStyles.element, baseStyles.image, styles.heroMark)}
-											src={assets.mark}
-											alt=""
-											width="525"
-											height="525"
-											aria-hidden="true"
-											draggable={false}
-										/>
+										{...stylex.props(baseStyles.element, baseStyles.image, styles.heroMark)}
+										src={assets.mark}
+										alt=""
+										width="525"
+										height="525"
+										aria-hidden="true"
+										draggable={false}
+									/>
 									</LocalLink>
 								</span>
 							</h1>

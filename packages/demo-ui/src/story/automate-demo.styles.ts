@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { constants, tokens } from "../styles/tokens.stylex.ts";
+import { constants, depth, tokens } from "../styles/tokens.stylex.ts";
 
 export const styles = stylex.create({
 	div71: {
@@ -26,8 +26,7 @@ export const styles = stylex.create({
 		borderBottomColor: tokens.uiBorder,
 		borderLeftColor: tokens.uiBorder,
 		backgroundColor: tokens.uiBg,
-		boxShadow:
-			"1px 0 0 rgba(255, 255, 255, 0.018), 6px 0 16px rgba(0, 0, 0, 0.1)",
+		boxShadow: `1px 0 0 ${depth.hairline}, 6px 0 16px ${depth.far}`,
 	},
 	header73: {
 		display: "flex",

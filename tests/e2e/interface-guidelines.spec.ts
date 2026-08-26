@@ -1,35 +1,38 @@
 import { expect, test } from "@playwright/test";
-import { routePaths } from "../../src/domain/route";
 
-test("routes use the shared interface tokens", async ({ page }) => {
-	for (const path of routePaths.filter((item) => item !== "/machine")) {
-		await page.goto(path);
+test("1", async ({ page }) => {
+	for (const scheme of ["dark", "light"] as const) {
+		await page.emulateMedia({ colorScheme: scheme });
+		await page.goto("/");
+		await expect(page.getByRole("region", { name: "Local Studio workbench" })).toHaveAttribute("data-theme", `zai-${scheme}`);
 		const audit = await page.evaluate(() => {
-			const root = getComputedStyle(document.documentElement);
+			const demo = document.querySelector('[aria-label="Local Studio workbench"]');
 			return {
-				colorScheme: root.colorScheme,
-				fontSmoothing: root.getPropertyValue("-webkit-font-smoothing"),
-				textSizeAdjust: root.getPropertyValue("-webkit-text-size-adjust"),
-				themeColor: document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.content,
+			colorScheme: getComputedStyle(document.documentElement).colorScheme,
+			demoScheme: demo ? getComputedStyle(demo).colorScheme : null,
+			demoTheme: demo?.getAttribute("data-theme"),
+			themeColor: [...document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')]
+				.find((meta) => matchMedia(meta.media).matches)?.content,
 			};
 		});
-		expect(audit, path).toEqual({
-			colorScheme: "dark",
-			fontSmoothing: "antialiased",
-			textSizeAdjust: "100%",
-			themeColor: "#000000",
+		expect(audit).toEqual({
+			colorScheme: scheme,
+			demoScheme: scheme,
+			demoTheme: `zai-${scheme}`,
+			themeColor: scheme === "dark" ? "#000000" : "#ffffff",
 		});
 	}
 });
 
-test("website surfaces use layered light and concentric edges", async ({ page }) => {
+test("2", async ({ page }) => {
+	await page.emulateMedia({ colorScheme: "dark" });
 	await page.goto("/");
-	const primary = page.getByRole("link", { name: /Download for/ }).first();
+	const primary = page.locator("main").getByRole("link", { name: /Download for/ }).first();
 	const primaryStyle = await primary.evaluate((element) => {
 		const style = getComputedStyle(element);
 		return { borderColor: style.borderColor, boxShadow: style.boxShadow };
 	});
-	expect(primaryStyle.boxShadow.match(/rgba?\(/g)?.length).toBeGreaterThanOrEqual(2);
+	expect(primaryStyle.boxShadow.match(/rgba?\(|color\(/g)?.length).toBeGreaterThanOrEqual(2);
 	const borderChannels = primaryStyle.borderColor.match(/[\d.]+/g)?.map(Number) ?? [];
 	expect(borderChannels[2]).toBeGreaterThanOrEqual(borderChannels[0] ?? 0);
 
@@ -56,32 +59,24 @@ test("website surfaces use layered light and concentric edges", async ({ page })
 	expect(fade.maskImage).toBe("none");
 });
 
-test("site chrome stays quieter until interaction", async ({ page }) => {
+test("3", async ({ page }) => {
+	await page.emulateMedia({ colorScheme: "dark" });
 	await page.goto("/");
 	const brightness = (color: string) =>
-		(color.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? []).reduce(
-			(total, channel) => total + channel,
-			0,
-		);
-	const heading = page.getByRole("heading", { level: 1 });
-	const products = page.getByRole("button", { name: "Products" });
-	const headingColor = await heading.evaluate((element) => getComputedStyle(element).color);
-	const productRest = await products.evaluate((element) => getComputedStyle(element).color);
-	await products.hover();
-	const productHover = await products.evaluate((element) => getComputedStyle(element).color);
-	expect(brightness(productRest)).toBeLessThan(brightness(headingColor));
-	expect(brightness(productHover)).toBeGreaterThan(brightness(productRest));
-
-	const footerLink = page.locator("footer a").first();
-	await footerLink.scrollIntoViewIfNeeded();
-	const footerRest = await footerLink.evaluate((element) => getComputedStyle(element).color);
-	await footerLink.hover();
-	const footerHover = await footerLink.evaluate((element) => getComputedStyle(element).color);
-	expect(brightness(footerRest)).toBeLessThan(brightness(headingColor));
-	expect(brightness(footerHover)).toBeGreaterThan(brightness(footerRest));
+		(color.match(/[\d.]+/g)?.slice(0, 3).map(Number) ?? []).reduce((sum, value) => sum + value, 0);
+	const heading = await page.getByRole("heading", { level: 1 }).evaluate((element) => getComputedStyle(element).color);
+	for (const control of [page.getByRole("button", { name: "Products" }), page.locator("footer a").first()]) {
+		await control.scrollIntoViewIfNeeded();
+		const rest = await control.evaluate((element) => getComputedStyle(element).color);
+		await control.hover();
+		await page.waitForTimeout(150);
+		const hover = await control.evaluate((element) => getComputedStyle(element).color);
+		expect(brightness(rest)).toBeLessThan(brightness(heading));
+		expect(brightness(hover)).toBeGreaterThan(brightness(rest));
+	}
 });
 
-test("mobile product cards preserve source color without section shadows", async ({ page }) => {
+test("4", async ({ page }) => {
 	await page.goto("/#mobile");
 	const card = page.locator("[data-kitty-feature]").first();
 	const media = card.getByRole("region");

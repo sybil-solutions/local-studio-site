@@ -6,5 +6,7 @@ export default function LocalAiLogoShader() {
 	return createElement(LogoRenderer, {
 		modelUrl: assets.logoMesh,
 		fallbackUrl: assets.localaiDark,
+		dayUrl: assets.dayEnv,
+		nightUrl: assets.nightEnv,
 	});
 }

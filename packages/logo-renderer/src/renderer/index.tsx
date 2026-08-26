@@ -109,7 +109,10 @@ const rendererStyles = stylex.create({
 		paddingLeft: "9.5%",
 		objectFit: "contain",
 		opacity: 0,
-		filter: "invert(1)",
+		filter: {
+			default: "invert(1)",
+			"@media (prefers-color-scheme: light)": "none",
+		},
 		transitionProperty: "opacity",
 		transitionDuration: rendererTimes.fade,
 		transitionTimingFunction: "ease-out",
@@ -124,13 +127,18 @@ type RuntimeOwner = {
 export type LogoRendererAssets = {
 	modelUrl: string;
 	fallbackUrl: string;
+	dayUrl: string;
+	nightUrl: string;
 };
 
 export function LocalAiLogoShader({
 	modelUrl,
 	fallbackUrl,
+	dayUrl,
+	nightUrl,
 }: LogoRendererAssets) {
 	const prefersReducedMotion = usePrefersReducedMotion();
+	const prefersDarkScheme = useMediaQuery("(prefers-color-scheme: dark)");
 	const coarsePointer = useMediaQuery("(pointer: coarse)");
 	const containerRef = useRef<HTMLDivElement>(null);
 	const { size: containerSize } = useSize({ ref: containerRef });
@@ -341,11 +349,27 @@ export function LocalAiLogoShader({
 				app.device.destroy();
 				return;
 			}
-			const renderer = createEve5Renderer(app.device, format, mesh, {
-				theme: "dark",
+			let environmentAtlas: ImageBitmap | undefined;
+			try {
+				const environmentUrl = prefersDarkScheme ? nightUrl : dayUrl;
+				const response = await fetch(environmentUrl);
+				if (response.ok) environmentAtlas = await createImageBitmap(await response.blob());
+			} catch {
+				// The generated cubemap remains available when the image cannot load.
+			}
+			if (state.cancelled) {
+				environmentAtlas?.close();
+				app.device.destroy();
+				return;
+			}
+			const rendererOptions: NonNullable<Parameters<typeof createEve5Renderer>[3]> = {
+				theme: prefersDarkScheme ? "dark" : "light",
 				bloom: true,
 				backRefraction: false,
-			});
+			};
+			if (environmentAtlas) rendererOptions.environmentAtlas = environmentAtlas;
+			const renderer = createEve5Renderer(app.device, format, mesh, rendererOptions);
+			environmentAtlas?.close();
 			let disposed = false;
 			const runtime: RuntimeOwner = {};
 			state.previousFrameTime = performance.now();
@@ -405,7 +429,10 @@ export function LocalAiLogoShader({
 		};
 	}, [
 		prefersReducedMotion,
+		prefersDarkScheme,
 		modelUrl,
+		dayUrl,
+		nightUrl,
 		coarsePointerRef,
 		handleCanvasRevealed,
 		handleFallback,

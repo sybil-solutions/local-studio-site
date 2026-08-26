@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { constants, tokens } from "../styles/tokens.stylex.ts";
+import { constants, depth, tokens } from "../styles/tokens.stylex.ts";
 
 export const styles = stylex.create({
   demo: {
@@ -343,8 +343,7 @@ export const styles = stylex.create({
     borderBottomColor: tokens.border,
     borderLeftColor: tokens.border,
     backgroundColor: tokens.colorPanel,
-    boxShadow:
-      "-1px 0 0 rgba(255, 255, 255, 0.018), -8px 0 20px rgba(0, 0, 0, 0.11)",
+    boxShadow: `-1px 0 0 ${depth.hairline}, -8px 0 20px ${depth.far}`,
   },
   div738: {
     display: { default: null, "::-webkit-scrollbar": "none" },
