@@ -23,12 +23,12 @@ export const colors = stylex.defineVars({
 	shadowControl: stylex.types.color({ default: "rgba(0,0,0,0.48)", [lightScheme]: "rgba(0,0,0,0.14)" }),
 	shadowControlDirect: stylex.types.color({ default: "rgba(0,0,0,0.32)", [lightScheme]: "rgba(0,0,0,0.08)" }),
 	focusHalo: stylex.types.color({ default: "rgba(255,255,255,0.18)", [lightScheme]: "rgba(0,0,0,0.18)" }),
-	selectionSkyBright: stylex.types.color({ default: "#ffffff", [lightScheme]: "#111111" }),
-	selectionSkyDay: stylex.types.color({ default: "#f7f8f8", [lightScheme]: "#171717" }),
-	selectionSkyBlue: stylex.types.color({ default: "#eff0f0", [lightScheme]: "#1d1d1d" }),
-	selectionSkyDusk: stylex.types.color({ default: "#e7e8e8", [lightScheme]: "#242424" }),
-	selectionSkyNight: stylex.types.color({ default: "#ededed", [lightScheme]: "#2a2a2a" }),
-	selectionInk: stylex.types.color({ default: "#000000", [lightScheme]: "#ffffff" }),
+	selectionSkyBright: stylex.types.color({ default: "#307cb7", [lightScheme]: "#f3eee3" }),
+	selectionSkyDay: stylex.types.color({ default: "#2a6c9f", [lightScheme]: "#ebe5d8" }),
+	selectionSkyBlue: stylex.types.color({ default: "#245b87", [lightScheme]: "#e3dccd" }),
+	selectionSkyDusk: stylex.types.color({ default: "#1d4262", [lightScheme]: "#dbd3c2" }),
+	selectionSkyNight: stylex.types.color({ default: "#161e31", [lightScheme]: "#d4ccb4" }),
+	selectionInk: stylex.types.color({ default: "#ffffff", [lightScheme]: "#000000" }),
 });
 
 export const lengths = stylex.defineVars({

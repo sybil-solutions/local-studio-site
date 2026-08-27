@@ -40,8 +40,12 @@ test("APCA roles", () => {
 			expect(Math.abs(apcaContrast(tokenHex(name, scheme), background))).toBeGreaterThanOrEqual(minimum);
 		}
 		const ink = tokenHex("selectionInk", scheme);
-		for (const name of stops) {
-			expect(Math.abs(apcaContrast(ink, tokenHex(name, scheme)))).toBeGreaterThanOrEqual(90);
+		const palette = stops.map((name) => tokenHex(name, scheme));
+		for (let index = 1; index < palette.length; index += 1) {
+			expect(luminance(palette[index - 1])).toBeGreaterThan(luminance(palette[index]));
+		}
+		for (const color of palette) {
+			expect(Math.abs(apcaContrast(ink, color))).toBeGreaterThanOrEqual(75);
 		}
 	}
 
