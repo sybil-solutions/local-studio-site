@@ -187,6 +187,7 @@ export const demoStyles = stylex.create({
 		borderLeftWidth: 0,
 		color: tokens.fg,
 		colorScheme: "dark",
+		cursor: "default",
 		boxShadow:
 			"0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 24px 80px rgba(0, 0, 0, 0.32), 0 8px 24px rgba(0, 0, 0, 0.18)",
 		fontFamily: constants.fontSans,
@@ -393,6 +394,7 @@ export const demoStyles = stylex.create({
 		borderLeftColor: tokens.border,
 		backgroundColor: "transparent",
 		color: "inherit",
+		cursor: "default",
 		fontFamily: "inherit",
 		fontSize: "inherit",
 		fontWeight: "inherit",
