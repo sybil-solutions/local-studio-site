@@ -9,7 +9,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
+import { LazyMotion, domAnimation, useReducedMotion } from "motion/react";
 import { animate } from "motion";
 import { motion } from "../domain/motion";
 import { styles } from "../styles/sections-styles";
@@ -100,7 +100,6 @@ const FeatureCard = memo(function FeatureCard({
 	index,
 	active,
 	revealed,
-	reducedMotion,
 	onActivate,
 	onRequestVisible,
 }: {
@@ -108,7 +107,6 @@ const FeatureCard = memo(function FeatureCard({
 	index: number;
 	active: boolean;
 	revealed: boolean;
-	reducedMotion: boolean;
 	onActivate: (index: number | null) => void;
 	onRequestVisible: (index: number, center?: boolean) => void;
 }) {
@@ -173,19 +171,12 @@ const FeatureCard = memo(function FeatureCard({
 			>
 				<span data-kitty-feature-trigger {...stylex.props(baseStyles.element, styles.kittyFeatureTrigger)}>{feature.title}</span>
 				{descriptionVisible ? (
-					<m.div
+					<div
 						data-kitty-feature-description
 						{...stylex.props(baseStyles.element, styles.kittyFeatureDescription)}
-						initial={
-							reducedMotion
-								? false
-								: { opacity: 0, y: 6 }
-						}
-						animate={{ opacity: 1, y: 0 }}
-						transition={reducedMotion ? { duration: 0 } : motion.featureSwap}
 					>
 						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.kittyFeatureDescriptionText)}>{feature.text}</p>
-					</m.div>
+					</div>
 				) : null}
 			</div>
 		</article>
@@ -465,7 +456,6 @@ export function KittyLitter() {
 								index={index}
 								active={active === index}
 								revealed={index < carouselIndex + visibleFeatures}
-								reducedMotion={reducedMotion ?? false}
 								onActivate={highlightCard}
 								onRequestVisible={animateToIndex}
 								key={feature.title}
