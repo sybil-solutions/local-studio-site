@@ -157,7 +157,7 @@ export const styles = stylex.create({
 		boxShadow: constants.recessedElevation,
 		paddingLeft: "calc(0.25rem * 9)",
 		paddingRight: "calc(0.25rem * 3)",
-		fontSize: { default: constants.fsSm, [constants.mobile]: constants.fsLg },
+		fontSize: { default: constants.fsSm, ["@media (max-width: 640px)"]: constants.fsLg },
 		outlineStyle: "none",
 	},
 	div101: {
@@ -389,7 +389,7 @@ export const styles = stylex.create({
 		boxShadow: constants.recessedElevation,
 		paddingLeft: "calc(0.25rem * 3)",
 		paddingRight: "calc(0.25rem * 3)",
-		fontSize: { default: constants.fsSm, [constants.mobile]: constants.fsLg },
+		fontSize: { default: constants.fsSm, ["@media (max-width: 640px)"]: constants.fsLg },
 		fontWeight: 400,
 	},
 	textarea194: {
@@ -416,7 +416,7 @@ export const styles = stylex.create({
 		paddingRight: "calc(0.25rem * 3)",
 		paddingTop: "calc(0.25rem * 2)",
 		paddingBottom: "calc(0.25rem * 2)",
-		fontSize: { default: constants.fsSm, [constants.mobile]: constants.fsLg },
+		fontSize: { default: constants.fsSm, ["@media (max-width: 640px)"]: constants.fsLg },
 		fontWeight: 400,
 		lineHeight: "calc(0.25rem * 5)",
 	},

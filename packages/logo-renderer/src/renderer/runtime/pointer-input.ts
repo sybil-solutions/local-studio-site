@@ -9,7 +9,7 @@ import {
 import type { ControlsRef, HeroRuntimeState } from "./state";
 import { mapPointerToLocalEnvironment } from "./environment-input";
 
-// Owns browser pointer input for env yaw and paint brush updates.
+// Owns browser pointer input for camera orbit, environment yaw, and paint updates.
 // INVARIANT: coarse-pointer mode disables paint and switches to env auto-rotate.
 // Imported only by index.tsx's single effect.
 

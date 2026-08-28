@@ -99,18 +99,15 @@ const FeatureCard = memo(function FeatureCard({
 	feature,
 	index,
 	active,
-	revealed,
 	onActivate,
 	onRequestVisible,
 }: {
 	feature: KittyFeature;
 	index: number;
 	active: boolean;
-	revealed: boolean;
 	onActivate: (index: number | null) => void;
 	onRequestVisible: (index: number, center?: boolean) => void;
 }) {
-	const descriptionVisible = revealed || active;
 	return (
 		<article
 			{...stylex.props(baseStyles.element, styles.kittyFeature)}
@@ -148,36 +145,16 @@ const FeatureCard = memo(function FeatureCard({
 				/>
 			</div>
 			<div
-				{...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.kittyFeatureBody)}
+				{...stylex.props(baseStyles.element, styles.kittyFeatureBody)}
 				data-kitty-drag-interactive=""
-				role="button"
-				tabIndex={0}
-				aria-expanded={descriptionVisible}
-				onMouseEnter={() => onActivate(index)}
-				onMouseLeave={() => onActivate(null)}
-				onFocusCapture={() => onActivate(index)}
-				onKeyDown={(event) => {
-					if (event.key !== "Enter" && event.key !== " ") return;
-					event.preventDefault();
-					onActivate(active ? null : index);
-				}}
-				onClick={() => onActivate(active ? null : index)}
-				onBlurCapture={(event) => {
-					const next = event.relatedTarget;
-					if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
-						onActivate(null);
-					}
-				}}
 			>
 				<span data-kitty-feature-trigger {...stylex.props(baseStyles.element, styles.kittyFeatureTrigger)}>{feature.title}</span>
-				{descriptionVisible ? (
-					<div
-						data-kitty-feature-description
-						{...stylex.props(baseStyles.element, styles.kittyFeatureDescription)}
-					>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.kittyFeatureDescriptionText)}>{feature.text}</p>
-					</div>
-				) : null}
+				<div
+					data-kitty-feature-description
+					{...stylex.props(baseStyles.element, styles.kittyFeatureDescription)}
+				>
+					<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.kittyFeatureDescriptionText)}>{feature.text}</p>
+				</div>
 			</div>
 		</article>
 	);
@@ -189,10 +166,6 @@ function measureCarousel(carousel: HTMLDivElement) {
 	if (!card || !grid) return null;
 	const gap = Number.parseFloat(getComputedStyle(grid).columnGap) || 0;
 	const stride = card.getBoundingClientRect().width + gap;
-	const visible = Math.max(
-		1,
-		Math.floor((carousel.clientWidth + gap) / stride),
-	);
 	const cards = Array.from(
 		grid.querySelectorAll<HTMLElement>("[data-kitty-feature]"),
 	);
@@ -218,7 +191,6 @@ function measureCarousel(carousel: HTMLDivElement) {
 		centerTargets,
 		stride,
 		targets,
-		visible,
 	};
 }
 
@@ -249,7 +221,6 @@ export function KittyLitter() {
 	const [active, setActive] = useState<number | null>(null);
 	const [dragging, setDragging] = useState(false);
 	const [carouselIndex, setCarouselIndex] = useState(0);
-	const [visibleFeatures, setVisibleFeatures] = useState(3);
 	const carouselRef = useRef<HTMLDivElement>(null);
 	const carouselAnimation = useRef<{ stop: () => void } | null>(null);
 	const dragOrigin = useRef<HTMLElement | null>(null);
@@ -289,7 +260,6 @@ export function KittyLitter() {
 	const syncFromScroll = useCallback((carousel: HTMLDivElement) => {
 		const metrics = measureCarousel(carousel);
 		if (!metrics) return;
-		setVisibleFeatures(metrics.visible);
 		setCarouselIndex(nearestTargetIndex(metrics.targets, carousel.scrollLeft));
 	}, []);
 
@@ -455,7 +425,6 @@ export function KittyLitter() {
 								feature={feature}
 								index={index}
 								active={active === index}
-								revealed={index < carouselIndex + visibleFeatures}
 								onActivate={highlightCard}
 								onRequestVisible={animateToIndex}
 								key={feature.title}

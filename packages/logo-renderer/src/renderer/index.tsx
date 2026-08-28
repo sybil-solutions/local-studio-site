@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { App, Device, type VGPUAdapter } from "@vgpu/core";
+import { init, surface } from "vgpu";
 import {
 	createDevicePixelRatio,
 	prefersReducedMotion as prefersReducedMotionSync,
@@ -15,6 +15,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import {
 	DEFAULT_CAMERA_FOV,
+	DEFAULT_OBJECT_YAW,
 	DEFAULT_IMPRINT_GRID_SCALE_MULTIPLIER,
 	cameraRadiusForBounds,
 	cameraRadiusForFov,
@@ -31,26 +32,18 @@ import {
 } from "./runtime/pointer-input";
 import type { HeroRuntimeState } from "./runtime/state";
 
-class BrowserAdapter implements VGPUAdapter {
-	async requestDevice(): Promise<Device> {
-		const adapter = await navigator.gpu?.requestAdapter();
-		if (!adapter) throw new Error("WebGPU adapter unavailable");
-		return new Device(await adapter.requestDevice(), null);
-	}
-}
-
 const LOGO_VIEWPORT_ASPECT = 1.52;
 
 const DEFAULT_CONTROLS: RenderControls = {
-	yaw: 0,
+	yaw: DEFAULT_OBJECT_YAW,
 	pitch: 0,
 	radius: cameraRadiusForFov(DEFAULT_CAMERA_FOV),
 	fov: DEFAULT_CAMERA_FOV,
 	envYaw: 0,
 	envPitch: 0,
-	insideRendering: false,
+	insideRendering: true,
 	outsideRendering: true,
-	material: "metallic",
+	material: "glass",
 	wireframe: false,
 	showEnv: false,
 };
@@ -308,12 +301,6 @@ export function LocalAiLogoShader({
 				handleFallback();
 				return;
 			}
-			const context = activeCanvas.getContext("webgpu");
-			if (!context || !("configure" in context)) {
-				handleFallback();
-				return;
-			}
-
 			const mesh = await loadMesh(modelUrl);
 			if (state.cancelled) return;
 			state.activeMesh = mesh;
@@ -333,22 +320,16 @@ export function LocalAiLogoShader({
 			);
 			resizeCanvas(activeCanvas, canvasLayoutRef, devicePixelRatioRef);
 
-			const app = await App.create({ adapter: new BrowserAdapter() });
+			const gpu = await init();
 			if (state.cancelled) {
-				app.device.destroy();
+				gpu.dispose();
 				return;
 			}
-
-			const format = navigator.gpu.getPreferredCanvasFormat();
-			context.configure({
-				device: app.device.gpu,
-				format,
+			const canvasSurface = surface(gpu, activeCanvas, {
+				autoResize: false,
+				size: [activeCanvas.width, activeCanvas.height],
 				alphaMode: "premultiplied",
 			});
-			if (state.cancelled) {
-				app.device.destroy();
-				return;
-			}
 			let environmentAtlas: ImageBitmap | undefined;
 			try {
 				const environmentUrl = prefersDarkScheme ? nightUrl : dayUrl;
@@ -359,18 +340,21 @@ export function LocalAiLogoShader({
 			}
 			if (state.cancelled) {
 				environmentAtlas?.close();
-				app.device.destroy();
+				gpu.dispose();
 				return;
 			}
-			const rendererOptions: NonNullable<Parameters<typeof createEve5Renderer>[3]> = {
-				theme: prefersDarkScheme ? "dark" : "light",
+			const rendererOptions: NonNullable<Parameters<typeof createEve5Renderer>[2]> = {
+				// The hero surface is always dark. Day/night only selects the cubemap;
+				// it must not switch to the pale light-mode mask composite.
+				theme: "dark",
 				bloom: true,
-				backRefraction: false,
+				backRefraction: true,
 			};
 			if (environmentAtlas) rendererOptions.environmentAtlas = environmentAtlas;
-			const renderer = createEve5Renderer(app.device, format, mesh, rendererOptions);
+			const renderer = createEve5Renderer(gpu, mesh, rendererOptions);
 			environmentAtlas?.close();
 			let disposed = false;
+			let unsubscribeGpuError = () => {};
 			const runtime: RuntimeOwner = {};
 			state.previousFrameTime = performance.now();
 			state.autoRotateStartTime = state.previousFrameTime;
@@ -381,16 +365,24 @@ export function LocalAiLogoShader({
 				drawLoopRef.current = null;
 				fatalErrorRef.current = null;
 				runtime.drawLoopDispose?.();
+				unsubscribeGpuError();
 				// No handleFallback here: fatal paths (device lost, render throw)
 				// call it explicitly before dispose, and on remount a re-shown
 				// placeholder would flash SVG -> render again.
 				renderer.dispose();
-				app.device.destroy();
+				canvasSurface.dispose();
+				gpu.dispose();
 				disposeRuntime = undefined;
 			};
 			disposeRuntime = dispose;
+			unsubscribeGpuError = gpu.onError(() => {
+				if (state.cancelled || disposed) return;
+				handleFallback();
+				state.cancelled = true;
+				dispose();
+			});
 
-			void app.device.gpu.lost.then((info) => {
+			void gpu.gpu.lost.then((info) => {
 				if (state.cancelled || disposed || info?.reason === "destroyed") return;
 				handleFallback();
 				state.cancelled = true;
@@ -400,7 +392,7 @@ export function LocalAiLogoShader({
 			const drawLoop = createDrawLoop({
 				state,
 				canvas: activeCanvas,
-				context,
+				surface: canvasSurface,
 				renderer,
 				controlsRef,
 				canvasLayoutRef,

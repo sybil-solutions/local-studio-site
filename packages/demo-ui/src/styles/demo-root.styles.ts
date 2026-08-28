@@ -319,7 +319,7 @@ export const demoStyles = stylex.create({
 		marginBottom: 0,
 	},
 	threadShell: {
-		width: { default: "90%", [constants.mobile]: "100%" },
+		width: { default: "90%", ["@media (max-width: 640px)"]: "100%" },
 		maxWidth: "calc(42rem * 0.9)",
 		userSelect: "text",
 	},
@@ -345,16 +345,16 @@ export const demoStyles = stylex.create({
 		containerType: "inline-size",
 	},
 	shimmerText: {
-		color: { default: "transparent", [constants.reducedMotion]: tokens.dim },
+		color: { default: "transparent", ["@media (prefers-reduced-motion: reduce)"]: tokens.dim },
 		backgroundImage: {
 			default: `linear-gradient(90deg, ${tokens.animatedGradientSoft} 0%, ${tokens.animatedGradientSoft} 35%, ${tokens.animatedGradientStrong} 50%, ${tokens.animatedGradientSoft} 65%, ${tokens.animatedGradientSoft} 100%)`,
-			[constants.reducedMotion]: "none",
+			["@media (prefers-reduced-motion: reduce)"]: "none",
 		},
 		backgroundSize: "250% 100%",
 		backgroundPosition: "100% 0",
 		backgroundClip: "text",
 		WebkitBackgroundClip: "text",
-		animationName: { default: shimmerSweep, [constants.reducedMotion]: "none" },
+		animationName: { default: shimmerSweep, ["@media (prefers-reduced-motion: reduce)"]: "none" },
 		animationDuration: "1.2s",
 		animationTimingFunction: "steps(48, end)",
 		animationIterationCount: "infinite",

@@ -1,6 +1,8 @@
+import type { Surface } from "vgpu";
 import { clamp01, lerp } from "phase/ease";
 import { evePointerInteractionMode, mobileAutoEnvYaw } from "../mobile-motion";
 import {
+  DEFAULT_OBJECT_YAW,
   DEFAULT_PAINT_BRUSH_RADIUS,
   DEFAULT_PAINT_BRUSH_STRENGTH,
   DEFAULT_PAINT_DECAY_PER_FRAME_120,
@@ -27,10 +29,14 @@ const CANVAS_REVEAL_RENDER_COUNT = 3;
 const MAX_FRAME_DELTA_SECONDS = 0.05;
 const MOBILE_AUTO_ROTATE_DURATION_MS = 2000;
 const SETTLE_EPSILON = 0.0005;
+const POINTER_OBJECT_YAW_RANGE = 0.42;
+const POINTER_OBJECT_PITCH_RANGE = 0.2;
+const MOBILE_OBJECT_YAW_RANGE = 0.28;
+const MOBILE_OBJECT_PITCH_RANGE = 0.08;
 
 type Renderer = {
   render: (
-    target: GPUTextureView,
+    target: Surface,
     controls: RenderControls,
     logicalWidth: number,
     logicalHeight: number,
@@ -48,7 +54,7 @@ export type DrawLoop = {
 export function createDrawLoop({
   state,
   canvas,
-  context,
+  surface: canvasSurface,
   renderer,
   controlsRef,
   canvasLayoutRef,
@@ -59,7 +65,7 @@ export function createDrawLoop({
 }: {
   state: HeroRuntimeState;
   canvas: HTMLCanvasElement;
-  context: GPUCanvasContext;
+  surface: Surface;
   renderer: Renderer;
   controlsRef: ControlsRef;
   canvasLayoutRef: CanvasLayoutRef;
@@ -128,8 +134,19 @@ export function createDrawLoop({
     state.brushActive = state.targetBrushActive && state.hasBrushCell;
     controlsRef.current.envYaw = state.mouseEnvYaw;
     controlsRef.current.envPitch = state.mouseEnvPitch;
+    if (evePointerInteractionMode(state.isCoarsePointer).autoRotateEnvYaw) {
+      controlsRef.current.yaw =
+        DEFAULT_OBJECT_YAW + Math.sin(state.mouseEnvYaw) * MOBILE_OBJECT_YAW_RANGE;
+      controlsRef.current.pitch =
+        Math.cos(state.mouseEnvYaw * 0.7) * MOBILE_OBJECT_PITCH_RANGE;
+    } else {
+      controlsRef.current.yaw =
+        DEFAULT_OBJECT_YAW + state.asciiMouseX * POINTER_OBJECT_YAW_RANGE;
+      controlsRef.current.pitch = -state.asciiMouseY * POINTER_OBJECT_PITCH_RANGE;
+    }
 
     const devicePixelRatio = resizeCanvas(canvas, canvasLayoutRef, devicePixelRatioRef);
+    canvasSurface.resize([canvas.width, canvas.height]);
     const { logicalWidth, logicalHeight } = getCanvasLogicalSize(canvas, devicePixelRatio);
 
     try {
@@ -140,7 +157,7 @@ export function createDrawLoop({
         state.brushActive && frameTime - state.lastBrushMoveTime <= PAINT_MOVEMENT_GRACE_MS;
       state.paintGridScaleMultiplier = IMPRINT_GRID_SCALE_MULTIPLIER;
       renderer.render(
-        context.getCurrentTexture().createView(),
+        canvasSurface,
         controlsRef.current,
         logicalWidth,
         logicalHeight,

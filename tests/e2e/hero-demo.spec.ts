@@ -127,7 +127,7 @@ test("hero demo has no dead sidebar destinations", async ({ page }) => {
 	await expect(page.getByRole("heading", { name: "This page is not local" })).toHaveCount(0);
 });
 
-test("KittyLitter image hover reveals context without moving images or links", async ({ page }) => {
+test("KittyLitter keeps context visible while images and links stay fixed", async ({ page }) => {
 	await page.setViewportSize({ width: 1440, height: 1000 });
 	await page.goto("/?demoClock=fast");
 	const cards = page.locator("[data-kitty-feature]");
@@ -144,7 +144,7 @@ test("KittyLitter image hover reveals context without moving images or links", a
 		"More tools",
 		"Codex in your pocket",
 	]);
-	await expect(page.locator("[data-kitty-feature-description]")).toHaveCount(2);
+	await expect(page.locator("[data-kitty-feature-description]")).toHaveCount(10);
 	const images = cards.getByRole("region");
 	const before = await images.evaluateAll((elements) =>
 		elements.map((element) => element.getBoundingClientRect().top + window.scrollY),

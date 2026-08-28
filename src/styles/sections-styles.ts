@@ -502,7 +502,6 @@ export const styles = stylex.create({
 		paddingRight: 0,
 		paddingBottom: "16px",
 		paddingLeft: 0,
-		cursor: "pointer",
 	},
 	kittyFeatureTrigger: {
 		display: "block",
@@ -517,7 +516,6 @@ export const styles = stylex.create({
 		fontWeight: 500,
 		lineHeight: "24px",
 		textAlign: "left",
-		cursor: "pointer",
 	},
 	kittyFeatureDescription: {
 		overflow: "hidden",

@@ -5,6 +5,7 @@
 //
 // Usage: pnpm --filter @local-ai/logo-renderer generate
 
+import ClipperLib from "clipper-lib";
 import earcut from "earcut";
 import fs from "node:fs";
 import path from "node:path";
@@ -23,10 +24,15 @@ const CLOUD_PATH_DATA =
 // Model-space targets matching the previous Blender export so camera framing is unchanged.
 const TARGET_HEIGHT = 0.147861;
 const HALF_THICKNESS = 0.0115;
-const FILLET_RADIUS = 0.0055;
+// The cloud has six narrow concave joins. Insets above 0.0013 self-intersect
+// there, so keep the analytic fillet below that measured clearance.
+const FILLET_RADIUS = 0.0012;
 const FILLET_STEPS = 10;
 const FLATTEN_TOLERANCE = 0.06; // svg units; silhouette smoothness budget
 const MAX_BEZIER_DEPTH = 24;
+const CLIPPER_SCALE = 100_000_000;
+const CONTACT_CLOSE_RADIUS = 0.001;
+const CONTACT_ARC_TOLERANCE = 0.00002;
 
 function parseSubpath(data) {
   // Supports the subset used by the brand path: relative m, c, l and Z.
@@ -136,58 +142,147 @@ function contourNormals(points) {
   return normals;
 }
 
-function buildMesh() {
-  const contours = parseSubpath(CLOUD_PATH_DATA).map(dedupeContour);
-  const contour = contours.reduce((longest, current) =>
-    current.length > longest.length ? current : longest,
-  );
-  if (!contour.length) throw new Error("No usable contour found in path data");
-
-  // Work in y-up CCW space (SVG is y-down).
-  for (let i = 0; i < contour.length; i += 1) {
-    contour[i] = [contour[i][0], -contour[i][1]];
+function assertSimpleContour(points, label) {
+  const cross = (a, b, c) =>
+    (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+  for (let i = 0; i < points.length; i += 1) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    for (let j = i + 2; j < points.length; j += 1) {
+      if (i === 0 && j === points.length - 1) continue;
+      const c = points[j];
+      const d = points[(j + 1) % points.length];
+      const abC = cross(a, b, c);
+      const abD = cross(a, b, d);
+      const cdA = cross(c, d, a);
+      const cdB = cross(c, d, b);
+      if (abC * abD < -1e-14 && cdA * cdB < -1e-14)
+        throw new Error(`${label} self-intersects at segments ${i} and ${j}`);
+    }
   }
-  if (signedArea(contour) < 0) contour.reverse();
+}
 
-  // Fit into model space: height TARGET_HEIGHT, centered on the bbox center.
+function assertDisjointContours(contours, label) {
+  const cross = (a, b, c) =>
+    (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+  for (let first = 0; first < contours.length; first += 1) {
+    for (let second = first + 1; second < contours.length; second += 1) {
+      const a = contours[first];
+      const b = contours[second];
+      for (let i = 0; i < a.length; i += 1) {
+        for (let j = 0; j < b.length; j += 1) {
+          const abC = cross(a[i], a[(i + 1) % a.length], b[j]);
+          const abD = cross(a[i], a[(i + 1) % a.length], b[(j + 1) % b.length]);
+          const cdA = cross(b[j], b[(j + 1) % b.length], a[i]);
+          const cdB = cross(b[j], b[(j + 1) % b.length], a[(i + 1) % a.length]);
+          if (abC * abD < -1e-14 && cdA * cdB < -1e-14)
+            throw new Error(`${label} contours ${first} and ${second} intersect`);
+        }
+      }
+    }
+  }
+}
+
+function closePointContacts(outline) {
+  const path = outline.map(([x, y]) => ({
+    X: Math.round(x * CLIPPER_SCALE),
+    Y: Math.round(y * CLIPPER_SCALE),
+  }));
+  const offset = new ClipperLib.ClipperOffset(
+    2,
+    Math.round(CONTACT_ARC_TOLERANCE * CLIPPER_SCALE),
+  );
+  offset.AddPath(
+    path,
+    ClipperLib.JoinType.jtRound,
+    ClipperLib.EndType.etClosedPolygon,
+  );
+  const solution = [];
+  offset.Execute(solution, Math.round(CONTACT_CLOSE_RADIUS * CLIPPER_SCALE));
+  if (solution.length < 2)
+    throw new Error("Logo contact closing did not preserve its negative spaces");
+
+  const contours = solution
+    .map((result) => result.map(({ X, Y }) => [X / CLIPPER_SCALE, Y / CLIPPER_SCALE]))
+    .sort((a, b) => Math.abs(signedArea(b)) - Math.abs(signedArea(a)));
+  for (let i = 0; i < contours.length; i += 1) {
+    const shouldBePositive = i === 0;
+    if ((signedArea(contours[i]) > 0) !== shouldBePositive) contours[i].reverse();
+  }
+
   let minX = Infinity;
   let maxX = -Infinity;
   let minY = Infinity;
   let maxY = -Infinity;
-  for (const [x, y] of contour) {
+  for (const contour of contours) {
+    for (const [x, y] of contour) {
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  const scale = TARGET_HEIGHT / (maxY - minY);
+  const cx = (minX + maxX) / 2;
+  const cy = (minY + maxY) / 2;
+  return contours.map((contour) =>
+    contour.map(([x, y]) => [(x - cx) * scale, (y - cy) * scale]),
+  );
+}
+
+function buildMesh() {
+  const parsed = parseSubpath(CLOUD_PATH_DATA).map(dedupeContour);
+  const source = parsed.reduce((longest, current) =>
+    current.length > longest.length ? current : longest,
+  );
+  if (!source.length) throw new Error("No usable contour found in path data");
+
+  for (let i = 0; i < source.length; i += 1)
+    source[i] = [source[i][0], -source[i][1]];
+  if (signedArea(source) < 0) source.reverse();
+
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const [x, y] of source) {
     minX = Math.min(minX, x);
     maxX = Math.max(maxX, x);
     minY = Math.min(minY, y);
     maxY = Math.max(maxY, y);
   }
-  const scale = TARGET_HEIGHT / (maxY - minY);
-  const cx = (minX + maxX) / 2;
-  const cy = (minY + maxY) / 2;
-  const outline = contour.map(([x, y]) => [(x - cx) * scale, (y - cy) * scale]);
-  const n = outline.length;
-  const normals2d = contourNormals(outline);
+  const sourceScale = TARGET_HEIGHT / (maxY - minY);
+  const sourceCenterX = (minX + maxX) / 2;
+  const sourceCenterY = (minY + maxY) / 2;
+  const sourceOutline = dedupeContour(
+    source.map(([x, y]) => [
+      (x - sourceCenterX) * sourceScale,
+      (y - sourceCenterY) * sourceScale,
+    ]),
+  );
+  // The SVG uses three point contacts to bridge its holes into one fill path.
+  // Give those joins finite width before extrusion so every 3D edge is smooth.
+  const contours = closePointContacts(sourceOutline);
+  const contourNormals2d = contours.map(contourNormals);
+  const bevelContours = contours.map((contour, contourIndex) =>
+    contour.map((point, i) => [
+      point[0] - contourNormals2d[contourIndex][i][0] * FILLET_RADIUS,
+      point[1] - contourNormals2d[contourIndex][i][1] * FILLET_RADIUS,
+    ]),
+  );
+  contours.forEach((contour, i) => assertSimpleContour(contour, `logo contour ${i}`));
+  bevelContours.forEach((contour, i) =>
+    assertSimpleContour(contour, `logo bevel inset ${i}`),
+  );
+  assertDisjointContours(bevelContours, "logo bevel inset");
 
   const positions = [];
   const normals = [];
   const indices = [];
-  const ringStarts = []; // per ring: first vertex index, rings have n vertices
-
-  const pushRing = (inset, z, normalFor) => {
-    const start = positions.length / 3;
-    for (let i = 0; i < n; i += 1) {
-      const p = outline[i];
-      const nrm = normals2d[i];
-      positions.push(p[0] - nrm[0] * inset, p[1] - nrm[1] * inset, z);
-      const [rnx, rny, rnz] = normalFor(i);
-      normals.push(rnx, rny, rnz);
-    }
-    ringStarts.push(start);
-    return start;
-  };
-
-  // Ring order: front cap rim (+T) -> front fillet k=1..K -> wall bottom ->
-  // back fillet k=K-1..1 -> back cap rim (-T). The fillet k=K ring coincides
-  // with the wall top, so the wall reuses the front fillet K ring.
+  const capCoordinates = [];
+  const holeStarts = [];
+  const frontCapVertices = [];
+  const backCapVertices = [];
   const T = HALF_THICKNESS;
   const r = FILLET_RADIUS;
   const K = FILLET_STEPS;
@@ -196,84 +291,101 @@ function buildMesh() {
     return { inset: r * Math.sin(alpha), z: T - r + r * Math.cos(alpha) };
   };
 
-  const frontCap = pushRing(0, T, () => [0, 0, 1]);
-  const frontRings = [];
-  for (let k = 1; k <= K; k += 1) {
-    const { inset, z } = fillet(k);
-    const alpha = (k / K) * (Math.PI / 2);
-    const sinA = Math.sin(alpha);
-    const cosA = Math.cos(alpha);
-    frontRings.push(
-      pushRing(inset, z, (i) => {
-        const nrm = normals2d[i];
-        return [nrm[0] * sinA, nrm[1] * sinA, cosA];
-      }),
-    );
-  }
-  const wallTop = frontRings[frontRings.length - 1];
-  const wallBottom = pushRing(r, -(T - r), (i) => {
-    const nrm = normals2d[i];
-    return [nrm[0], nrm[1], 0];
-  });
-  const backRings = [];
-  for (let k = K - 1; k >= 1; k -= 1) {
-    const { inset, z } = fillet(k);
-    const alpha = (k / K) * (Math.PI / 2);
-    const sinA = Math.sin(alpha);
-    const cosA = Math.cos(alpha);
-    backRings.push(
-      pushRing(inset, -z, (i) => {
-        const nrm = normals2d[i];
-        return [nrm[0] * sinA, nrm[1] * sinA, -cosA];
-      }),
-    );
-  }
-  const backCap = pushRing(0, -T, () => [0, 0, -1]);
+  for (let contourIndex = 0; contourIndex < contours.length; contourIndex += 1) {
+    const outline = contours[contourIndex];
+    const n = outline.length;
+    const normals2d = contourNormals2d[contourIndex];
+    if (contourIndex > 0) holeStarts.push(capCoordinates.length / 2);
+    for (const point of outline) capCoordinates.push(...point);
 
-  const linkRings = (a, b) => {
-    // `a` is the upper ring (closer to +z), `b` the lower one. With the outline
-    // CCW in y-up space, this order faces the triangles outward.
-    for (let i = 0; i < n; i += 1) {
-      const j = (i + 1) % n;
-      const a0 = a + i;
-      const a1 = a + j;
-      const b0 = b + i;
-      const b1 = b + j;
-      indices.push(a0, b0, b1, a0, b1, a1);
+    const pushRing = (inset, z, normalFor) => {
+      const start = positions.length / 3;
+      for (let i = 0; i < n; i += 1) {
+        const point = outline[i];
+        const normal2d = normals2d[i];
+        positions.push(
+          point[0] - normal2d[0] * inset,
+          point[1] - normal2d[1] * inset,
+          z,
+        );
+        normals.push(...normalFor(i));
+      }
+      return start;
+    };
+    const linkRings = (a, b) => {
+      for (let i = 0; i < n; i += 1) {
+        const j = (i + 1) % n;
+        indices.push(a + i, b + i, b + j, a + i, b + j, a + j);
+      }
+    };
+
+    const frontCap = pushRing(0, T, () => [0, 0, 1]);
+    for (let i = 0; i < n; i += 1) frontCapVertices.push(frontCap + i);
+    const frontRings = [];
+    for (let k = 1; k <= K; k += 1) {
+      const { inset, z } = fillet(k);
+      const alpha = (k / K) * (Math.PI / 2);
+      frontRings.push(
+        pushRing(inset, z, (i) => [
+          normals2d[i][0] * Math.sin(alpha),
+          normals2d[i][1] * Math.sin(alpha),
+          Math.cos(alpha),
+        ]),
+      );
     }
-  };
+    const wallTop = frontRings[frontRings.length - 1];
+    const wallBottom = pushRing(r, -(T - r), (i) => [
+      normals2d[i][0],
+      normals2d[i][1],
+      0,
+    ]);
+    const backRings = [];
+    for (let k = K - 1; k >= 1; k -= 1) {
+      const { inset, z } = fillet(k);
+      const alpha = (k / K) * (Math.PI / 2);
+      backRings.push(
+        pushRing(inset, -z, (i) => [
+          normals2d[i][0] * Math.sin(alpha),
+          normals2d[i][1] * Math.sin(alpha),
+          -Math.cos(alpha),
+        ]),
+      );
+    }
+    const backCap = pushRing(0, -T, () => [0, 0, -1]);
+    for (let i = 0; i < n; i += 1) backCapVertices.push(backCap + i);
 
-  let upper = frontCap;
-  for (const ring of frontRings) {
-    linkRings(upper, ring);
-    upper = ring;
+    let upper = frontCap;
+    for (const ring of frontRings) {
+      linkRings(upper, ring);
+      upper = ring;
+    }
+    linkRings(wallTop, wallBottom);
+    upper = wallBottom;
+    for (const ring of backRings) {
+      linkRings(upper, ring);
+      upper = ring;
+    }
+    linkRings(upper, backCap);
   }
-  linkRings(wallTop, wallBottom);
-  upper = wallBottom;
-  for (const ring of backRings) {
-    linkRings(upper, ring);
-    upper = ring;
-  }
-  linkRings(upper, backCap);
 
-  // Caps.
-  const capTriangulation = earcut(outline.flat());
+  const capTriangulation = earcut(capCoordinates, holeStarts, 2);
   for (let i = 0; i < capTriangulation.length; i += 3) {
-    // Front cap faces +z: CCW in xy is CCW viewed from +z.
     indices.push(
-      frontCap + capTriangulation[i],
-      frontCap + capTriangulation[i + 1],
-      frontCap + capTriangulation[i + 2],
-    );
-    // Back cap faces -z: reverse winding.
-    indices.push(
-      backCap + capTriangulation[i + 2],
-      backCap + capTriangulation[i + 1],
-      backCap + capTriangulation[i],
+      frontCapVertices[capTriangulation[i]],
+      frontCapVertices[capTriangulation[i + 1]],
+      frontCapVertices[capTriangulation[i + 2]],
+      backCapVertices[capTriangulation[i + 2]],
+      backCapVertices[capTriangulation[i + 1]],
+      backCapVertices[capTriangulation[i]],
     );
   }
 
-  return { positions: new Float32Array(positions), normals: new Float32Array(normals), indices: new Uint32Array(indices), outlineCount: n };
+  return {
+    positions: new Float32Array(positions),
+    normals: new Float32Array(normals),
+    indices: new Uint32Array(indices),
+    outlineCount: contours.reduce((sum, contour) => sum + contour.length, 0),
+  };
 }
 
 function writeGltf(mesh) {

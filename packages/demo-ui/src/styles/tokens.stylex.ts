@@ -17,10 +17,6 @@ export const constants = stylex.defineConsts({
 		'"Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 	fontMono:
 		'ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
-	mobile: "@media (max-width: 640px)",
-	compact: "@media (max-width: 768px)",
-	reducedMotion: "@media (prefers-reduced-motion: reduce)",
-	narrowComposer: "@container (max-width: 27rem)",
 	fs2xs: "10px",
 	fsXs: "11px",
 	fsSm: "12px",
