@@ -1,5 +1,5 @@
 {
-	"hash": "0ee07d399b74555bb70101b381e2ef66bca2440bd1c4e9bf3ceaeb4669d66476",
+	"hash": "0f762e81622c946acaf113fd17a60cd12cff8712c8457fb0518c92a1a06f7509",
 	"routes": [
 		"/",
 		"/product",
@@ -73,7 +73,9 @@
 		"logoMesh",
 		"logoMeshBin",
 		"dayEnv",
-		"nightEnv"
+		"nightEnv",
+		"heroRenderDay",
+		"heroRenderNight"
 	],
 	"motion": [
 		"ease",
@@ -138,10 +140,6 @@
 			"composerWidth",
 			"fontSans",
 			"fontMono",
-			"mobile",
-			"compact",
-			"reducedMotion",
-			"narrowComposer",
 			"fs2xs",
 			"fsXs",
 			"fsSm",

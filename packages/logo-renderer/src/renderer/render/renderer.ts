@@ -5,6 +5,7 @@ import {
   BLOOM_STRENGTH_ON,
   bloomRadiusForDevicePixelRatio,
 } from "./constants";
+import type { StudioCubemapAtlas } from "./cubemap";
 import { clampUnit, mix } from "./math";
 import { createPaintSystem } from "./paint-system";
 import { renderBackDepth, renderBackMaterial } from "./passes/back-pass";
@@ -27,7 +28,7 @@ export function createEve5Renderer(
     paddingRadius?: number;
     bloom?: boolean;
     backRefraction?: boolean;
-    environmentAtlas?: ImageBitmap;
+    environmentAtlas?: StudioCubemapAtlas;
   } = {},
 ) {
   const r = createResources(gpu, mesh, options),

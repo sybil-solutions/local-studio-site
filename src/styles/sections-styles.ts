@@ -66,10 +66,7 @@ export const styles = stylex.create({
 		inset: { default: null, "::before": "-18% -22%" },
 		backgroundImage: {
 			default: null,
-			"::before": [
-				`radial-gradient(ellipse 68% 62% at 50% 44%, ${scrimAmbient}, transparent 72%)`,
-				`radial-gradient(ellipse 44% 46% at 50% 40%, ${scrimDirect}, transparent 70%)`,
-			].join(", "),
+			"::before": `radial-gradient(ellipse 68% 62% at 50% 44%, ${scrimAmbient}, transparent 72%), radial-gradient(ellipse 44% 46% at 50% 40%, ${scrimDirect}, transparent 70%)`,
 		},
 		pointerEvents: { default: null, "::before": "none" },
 	},

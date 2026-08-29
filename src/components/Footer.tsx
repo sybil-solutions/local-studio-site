@@ -28,9 +28,9 @@ const styles = stylex.create({
 		paddingLeft: '0',
 		color: colors.chrome,
 		fontFamily: constants.fontSans,
-		fontSize: "14px",
+		fontSize: "16px",
 		fontWeight: 400,
-		lineHeight: "20px",
+		lineHeight: "24px",
 	},
 	copyright: {
 		order: {

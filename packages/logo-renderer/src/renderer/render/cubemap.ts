@@ -34,11 +34,37 @@ export function createStudioCubemap(
   };
 }
 
+export type StudioCubemapAtlas =
+  | ImageBitmap
+  // Node snapshot builds pass pre-converted rgba16float linear pixels.
+  | {
+      readonly width: number;
+      readonly atlasHeight: number;
+      readonly facesRGBA16Linear: Uint16Array;
+    };
+
 export function uploadStudioCubemapAtlas(
   gpu: Gpu,
   cubemap: StudioCubemap,
-  atlas: ImageBitmap,
+  atlas: StudioCubemapAtlas,
 ) {
+  if ("facesRGBA16Linear" in atlas) {
+    if (atlas.width < CUBE_SIZE || atlas.atlasHeight < CUBE_SIZE * CUBE_FACE_COUNT)
+      throw new Error("Cloud cubemap atlas dimensions do not match the renderer");
+    if (atlas.facesRGBA16Linear.length !== atlas.width * atlas.atlasHeight * 4)
+      throw new Error("Studio cubemap atlas pixel data does not match its dimensions");
+    const faceHeight = atlas.atlasHeight / CUBE_FACE_COUNT;
+    const facePixels = atlas.width * faceHeight * 4;
+    for (let face = 0; face < CUBE_FACE_COUNT; face++) {
+      gpu.gpu.queue.writeTexture(
+        { texture: cubemap.texture.gpu, origin: { x: 0, y: 0, z: face } },
+        atlas.facesRGBA16Linear.subarray(face * facePixels, (face + 1) * facePixels),
+        { bytesPerRow: atlas.width * 8, rowsPerImage: faceHeight },
+        { width: atlas.width, height: faceHeight, depthOrArrayLayers: 1 },
+      );
+    }
+    return;
+  }
   if (atlas.width < CUBE_SIZE || atlas.height < CUBE_SIZE * CUBE_FACE_COUNT)
     throw new Error("Cloud cubemap atlas dimensions do not match the renderer");
   for (let face = 0; face < CUBE_FACE_COUNT; face++)

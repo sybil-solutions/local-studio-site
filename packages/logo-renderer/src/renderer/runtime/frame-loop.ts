@@ -21,6 +21,9 @@ import type { ControlsRef, HeroRuntimeState } from "./state";
 
 const ENV_ROTATION_LERP_SPEED = 2.5;
 const ASCII_MOUSE_LERP_SPEED = 6;
+const RIPPLE_DURATION_SECONDS = 1.0;
+const RIPPLE_STRENGTH = 18.0;
+const RIPPLE_IDLE_INTERVAL_MS = 2400;
 const PAINT_MOVEMENT_GRACE_MS = 72;
 const PAINT_SETTLE_DURATION_MS = 750;
 const IMPRINT_GRID_SCALE_MULTIPLIER = 0.9;
@@ -89,12 +92,28 @@ export function createDrawLoop({
       evePointerInteractionMode(state.isCoarsePointer).autoRotateEnvYaw &&
       frameTime - state.autoRotateStartTime < MOBILE_AUTO_ROTATE_DURATION_MS;
     const paintSettling = frameTime - state.lastBrushMoveTime < PAINT_SETTLE_DURATION_MS;
+    const idleRippleDue =
+      state.pointerInsideCanvas &&
+      state.hasBrushCell &&
+      frameTime - state.lastBrushMoveTime > RIPPLE_IDLE_INTERVAL_MS &&
+      frameTime - state.lastRippleSpawnTime > RIPPLE_IDLE_INTERVAL_MS;
+    if (idleRippleDue) {
+      state.rippleCellX = state.brushCellX;
+      state.rippleCellY = state.brushCellY;
+      state.rippleStartTime = frameTime;
+      state.lastRippleSpawnTime = frameTime;
+    }
+    const rippleAge = (frameTime - state.rippleStartTime) / 1000;
+    const rippleActive = rippleAge >= 0 && rippleAge < RIPPLE_DURATION_SECONDS;
     if (
       successfulRenderCount >= CANVAS_REVEAL_RENDER_COUNT &&
       !state.renderRequested &&
       !pointerSettling &&
       !autoRotating &&
-      !paintSettling
+      !paintSettling &&
+      !rippleActive &&
+      // Hovering keeps the loop alive: idle ripples and the shimmer animate.
+      !state.pointerInsideCanvas
     ) {
       state.previousFrameTime = frameTime;
       return false;
@@ -140,9 +159,12 @@ export function createDrawLoop({
       controlsRef.current.pitch =
         Math.cos(state.mouseEnvYaw * 0.7) * MOBILE_OBJECT_PITCH_RANGE;
     } else {
+      // Orbit-follow: positive yaw/pitch move the camera right/up, so the face
+      // reads as turning away from the pointer. Invert both so the mark tracks
+      // the cursor: cursor right -> face right, cursor up -> face up.
       controlsRef.current.yaw =
-        DEFAULT_OBJECT_YAW + state.asciiMouseX * POINTER_OBJECT_YAW_RANGE;
-      controlsRef.current.pitch = -state.asciiMouseY * POINTER_OBJECT_PITCH_RANGE;
+        DEFAULT_OBJECT_YAW - state.asciiMouseX * POINTER_OBJECT_YAW_RANGE;
+      controlsRef.current.pitch = state.asciiMouseY * POINTER_OBJECT_PITCH_RANGE;
     }
 
     const devicePixelRatio = resizeCanvas(canvas, canvasLayoutRef, devicePixelRatioRef);
@@ -178,6 +200,13 @@ export function createDrawLoop({
             decayRate: DEFAULT_PAINT_DECAY_PER_FRAME_120 * 120,
             diffusionRate: DEFAULT_PAINT_DIFFUSION_RATE,
             diffusionJitter: DEFAULT_PAINT_DIFFUSION_JITTER,
+            ripple: rippleActive
+              ? {
+                  center: [state.rippleCellX, state.rippleCellY],
+                  age: rippleAge,
+                  strength: RIPPLE_STRENGTH,
+                }
+              : undefined,
           },
         },
       );

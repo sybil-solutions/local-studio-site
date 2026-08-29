@@ -20,6 +20,7 @@ export function syncPointerInteractionMode(state: HeroRuntimeState, isCoarsePoin
   state.renderRequested = true;
   if (evePointerInteractionMode(state.isCoarsePointer).autoRotateEnvYaw) {
     state.targetBrushActive = false;
+    state.pointerInsideCanvas = false;
     state.targetMouseEnvPitch = 0;
     state.targetAsciiMouseX = 0;
     state.targetAsciiMouseY = 0;
@@ -78,8 +79,12 @@ export function createPointerController({
     const rect = getCanvasRect();
     if (!rect) return;
     const mapped = mapPointerToLocalEnvironment({ clientX, clientY, rect });
-    state.targetMouseEnvYaw = mapped.envYaw;
-    state.targetMouseEnvPitch = mapped.envPitch;
+    // staticPose keeps the canonical environment (a rotated cubemap reads dull
+    // for decorative instances) while the object still tracks the cursor.
+    if (!state.staticPose) {
+      state.targetMouseEnvYaw = mapped.envYaw;
+      state.targetMouseEnvPitch = mapped.envPitch;
+    }
     state.targetAsciiMouseX = mapped.normalizedX;
     state.targetAsciiMouseY = mapped.normalizedY;
     requestRender();
@@ -87,6 +92,7 @@ export function createPointerController({
 
   const deactivateBrush = () => {
     state.targetBrushActive = false;
+    state.pointerInsideCanvas = false;
     requestRender();
     state.hasBrushCell = false;
     state.hasRenderedBrushCell = false;
@@ -160,9 +166,36 @@ export function createPointerController({
     requestRender();
   };
 
+  const pointerInsideRect = (clientX: number, clientY: number) => {
+    const rect = getCanvasRect();
+    if (!rect) return false;
+    return (
+      clientX >= rect.left &&
+      clientX <= rect.left + rect.width &&
+      clientY >= rect.top &&
+      clientY <= rect.top + rect.height
+    );
+  };
+
+  const spawnRippleAtBrushCell = () => {
+    // Without a resolved brush cell (fast entry, first frame) the ripple would
+    // fire from a stale cell, so only spawn once the brush mapped a position.
+    if (!state.hasBrushCell) return;
+    state.rippleCellX = state.brushCellX;
+    state.rippleCellY = state.brushCellY;
+    state.rippleStartTime = performance.now();
+    state.lastRippleSpawnTime = state.rippleStartTime;
+    requestRender();
+  };
+
   const onPointerMove = (event: PointerEvent) => {
     updateEnvRotation(event.clientX, event.clientY);
     updatePaintBrush(event);
+    const inside = event.pointerType === "mouse" && pointerInsideRect(event.clientX, event.clientY);
+    if (inside && !state.pointerInsideCanvas && evePointerInteractionMode(state.isCoarsePointer).paintEnabled) {
+      spawnRippleAtBrushCell();
+    }
+    state.pointerInsideCanvas = inside;
   };
 
   syncPointerInteractionMode(state, coarsePointerRef.current);

@@ -49,8 +49,6 @@ const DEFAULT_CONTROLS: RenderControls = {
 };
 
 const INITIAL_CANVAS_LAYOUT: CanvasLayout = { width: 1, height: 1 };
-// The flat SVG only appears when the render takes noticeably long; a quick
-// first frame goes straight to the 3D mark with no placeholder flash.
 const FALLBACK_PLACEHOLDER_DELAY_MS = 700;
 
 const rendererStyles = stylex.create({
@@ -87,12 +85,8 @@ const rendererStyles = stylex.create({
 		height: "100%",
 	},
 	canvas: {
-		opacity: 0,
-		transitionProperty: "opacity",
-		transitionDuration: rendererTimes.fade,
-		transitionTimingFunction: "ease-out",
+		opacity: 1,
 	},
-	canvasReady: { opacity: 1 },
 	fallback: {
 		maxWidth: "100%",
 		userSelect: "none",
@@ -111,6 +105,11 @@ const rendererStyles = stylex.create({
 		transitionTimingFunction: "ease-out",
 	},
 	fallbackVisible: { opacity: 0.16 },
+	posterImage: {
+		display: "block",
+		width: "100%",
+		height: "100%",
+	},
 });
 
 type RuntimeOwner = {
@@ -124,12 +123,49 @@ export type LogoRendererAssets = {
 	nightUrl: string;
 };
 
+// Static first-frame poster on the exact canvas stage. The site shows it until
+// the live renderer reports its first frame (see onFirstFrame).
+export function LogoPoster({ dayUrl, nightUrl }: { dayUrl: string; nightUrl: string }) {
+	return (
+		<div {...stylex.props(rendererStyles.element, rendererStyles.container)}>
+			<picture {...stylex.props(rendererStyles.element, rendererStyles.layer)}>
+				<source media="(prefers-color-scheme: dark)" srcSet={nightUrl} />
+				<img
+					{...stylex.props(rendererStyles.element, rendererStyles.posterImage)}
+					src={dayUrl}
+					alt=""
+					width="1880"
+					height="1237"
+					draggable={false}
+					decoding="sync"
+					fetchPriority="high"
+				/>
+			</picture>
+		</div>
+	);
+}
+
+export type LocalAiLogoShaderProps = LogoRendererAssets & {
+	/** Fires once when the live canvas has produced its first frame. */
+	onFirstFrame?: () => void;
+	/** Stage layout override (position/size) applied after the default stage. */
+	sx?: Parameters<typeof stylex.props>[0] | undefined;
+	/** Camera framing aspect; defaults to the hero stage's 1.52. */
+	viewportAspect?: number | undefined;
+	/** Locks the canonical environment for decorative instances; the object still follows the cursor. */
+	staticPose?: boolean | undefined;
+};
+
 export function LocalAiLogoShader({
 	modelUrl,
 	fallbackUrl,
 	dayUrl,
 	nightUrl,
-}: LogoRendererAssets) {
+	onFirstFrame,
+	sx,
+	viewportAspect = LOGO_VIEWPORT_ASPECT,
+	staticPose = false,
+}: LocalAiLogoShaderProps) {
 	const prefersReducedMotion = usePrefersReducedMotion();
 	const prefersDarkScheme = useMediaQuery("(prefers-color-scheme: dark)");
 	const coarsePointer = useMediaQuery("(pointer: coarse)");
@@ -142,7 +178,6 @@ export function LocalAiLogoShader({
 	const coarsePointerRef = useSyncedRef(coarsePointer);
 	const stateRef = useRef<HeroRuntimeState | null>(null);
 	const drawLoopRef = useRef<DrawLoop | null>(null);
-	const [canvasReady, setCanvasReady] = useState(false);
 	const [fallbackVisible, setFallbackVisible] = useState(false);
 	const fallbackPlaceholderTimerRef = useRef(0);
 	const runLoopRef = useRef(() => {});
@@ -154,17 +189,15 @@ export function LocalAiLogoShader({
 	const handleCanvasRevealed = useStableCallback(() => {
 		window.clearTimeout(fallbackPlaceholderTimerRef.current);
 		if (!stateRef.current?.cancelled) {
-			setCanvasReady(true);
 			setFallbackVisible(false);
+			onFirstFrame?.();
 		}
 	});
 	const handleFallback = useStableCallback(() => {
 		window.clearTimeout(fallbackPlaceholderTimerRef.current);
-		setCanvasReady(false);
 		setFallbackVisible(true);
 	});
 	const resetLayers = useStableCallback(() => {
-		setCanvasReady(false);
 		setFallbackVisible(false);
 	});
 	const fatalErrorRef = useRef<(() => void) | null>(null);
@@ -241,6 +274,12 @@ export function LocalAiLogoShader({
 			lastBrushMoveTime: Number.NEGATIVE_INFINITY,
 			lastPointerClientX: undefined,
 			lastPointerClientY: undefined,
+			staticPose,
+			rippleCellX: 0,
+			rippleCellY: 0,
+			rippleStartTime: Number.NEGATIVE_INFINITY,
+			lastRippleSpawnTime: Number.NEGATIVE_INFINITY,
+			pointerInsideCanvas: false,
 			isCoarsePointer: coarsePointerRef.current,
 		};
 		stateRef.current = state;
@@ -313,7 +352,7 @@ export function LocalAiLogoShader({
 			controlsRef.current.radius = cameraRadiusForBounds(
 				DEFAULT_CAMERA_FOV,
 				mesh.bounds,
-				LOGO_VIEWPORT_ASPECT,
+				viewportAspect,
 			);
 			await new Promise<void>((resolve) =>
 				requestAnimationFrame(() => resolve()),
@@ -436,7 +475,7 @@ export function LocalAiLogoShader({
 	return (
 		<div
 			ref={containerRef}
-			{...stylex.props(rendererStyles.element, rendererStyles.container)}
+			{...stylex.props(rendererStyles.element, rendererStyles.container, sx)}
 			aria-hidden="true"
 		>
 			<img
@@ -458,7 +497,6 @@ export function LocalAiLogoShader({
 					rendererStyles.element,
 					rendererStyles.layer,
 					rendererStyles.canvas,
-					canvasReady && rendererStyles.canvasReady,
 				)}
 			/>
 		</div>

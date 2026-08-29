@@ -7,6 +7,7 @@ import {
   VORONOI_NOISE_FORMAT,
 } from "./constants";
 import {
+  type StudioCubemapAtlas,
   createStudioCubemap,
   renderStudioCubemap,
   uploadStudioCubemapAtlas,
@@ -25,7 +26,7 @@ export function createResources(
     theme?: "light" | "dark";
     paddingRadius?: number;
     bloom?: boolean;
-    environmentAtlas?: ImageBitmap;
+    environmentAtlas?: StudioCubemapAtlas;
   } = {},
 ) {
   const studioCubemap = createStudioCubemap(gpu);

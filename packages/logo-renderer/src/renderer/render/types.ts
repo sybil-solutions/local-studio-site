@@ -54,6 +54,7 @@ export type PaintRenderOptions = {
   diffusionJitter?: number;
   stroke?: PaintStroke | undefined;
   decaySteps?: number | undefined;
+  ripple?: { readonly center: readonly [number, number]; readonly age: number; readonly strength: number } | undefined;
 };
 
 export type ImprintRenderOptions = {

@@ -182,6 +182,9 @@ export function createPaintSystem(
         dt: Math.min(Math.max(p.dt ?? DEFAULT_PAINT_DT, 0), 0.1),
         brushActive: p.brushActive ? 1 : 0,
         _pad: 0,
+        rippleCenter: p.ripple?.center ?? [-1e6, -1e6],
+        rippleAge: p.ripple?.age ?? Number.POSITIVE_INFINITY,
+        rippleStrength: p.ripple?.strength ?? 0,
       },
     });
     f.pass(t.paint.write, decayEffect);

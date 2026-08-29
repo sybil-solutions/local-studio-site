@@ -51,6 +51,9 @@ export const assets = {
 	logoMeshBin: "/localai/localai-logo.bin",
 	dayEnv: "/localai/day-sky-cubemap.jpg",
 	nightEnv: "/localai/night-sky-cubemap.jpg",
+	heroRenderDay: "/localai/hero-render-day.png",
+	ctaMark: "/localai/cta-mark.gltf",
+	heroRenderNight: "/localai/hero-render-night.png",
 } as const;
 
 const registered = new Set<string>(Object.values(assets));

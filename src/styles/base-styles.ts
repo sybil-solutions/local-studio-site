@@ -170,6 +170,7 @@ export const baseStyles = stylex.create({
 		minWidth: "320px",
 		minHeight: "100%",
 		overflowX: "clip",
+		scrollbarGutter: "stable",
 		overflowY: {
 			default: "visible",
 			":is([data-nav-open='true'])": "hidden",
