@@ -18,6 +18,8 @@ const storyDemoEnter = stylex.keyframes({
 const pageWidth = `min(${lengths.pageWidth}, calc(100% - ${lengths.pageGutter}))`;
 const heroStagePadding = `calc((100% - ${pageWidth}) / 2)`;
 const heroStageClippedWidth = `calc(100% - ${heroStagePadding})`;
+const scrimAmbient = `color-mix(in oklab, ${colors.background} 48%, transparent)`;
+const scrimDirect = `color-mix(in oklab, ${colors.background} 32%, transparent)`;
 const kittyCarouselGutter = `max(24px, calc((100vw - ${lengths.pageWidth}) / 2))`;
 const kittyCardWidth = "min(620px, calc(100vw - 48px))";
 
@@ -57,9 +59,19 @@ export const styles = stylex.create({
 		textAlign: "center",
 	},
 	heroCopy: {
-		position: "relative",
-		zIndex: 2,
+		position: { default: "relative", "::before": "absolute" },
+		zIndex: { default: 2, "::before": -1 },
 		maxWidth: "790px",
+		content: { default: null, "::before": '""' },
+		inset: { default: null, "::before": "-18% -22%" },
+		backgroundImage: {
+			default: null,
+			"::before": [
+				`radial-gradient(ellipse 68% 62% at 50% 44%, ${scrimAmbient}, transparent 72%)`,
+				`radial-gradient(ellipse 44% 46% at 50% 40%, ${scrimDirect}, transparent 70%)`,
+			].join(", "),
+		},
+		pointerEvents: { default: null, "::before": "none" },
 	},
 	heroHeading: {
 		marginTop: 0,

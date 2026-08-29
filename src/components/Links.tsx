@@ -70,9 +70,9 @@ const styles = stylex.create({
 		backgroundColor: colors.foreground,
 		borderColor: colors.foreground,
 		boxShadow: {
-			default: `0 10px 30px ${colors.shadowControl}, 0 2px 10px ${colors.shadowControlDirect}`,
+			default: `0 6px 20px ${colors.shadowControl}, 0 1px 6px ${colors.shadowControlDirect}`,
 			"@media (hover: hover)": {
-				":hover": `0 12px 34px ${colors.shadowControl}, 0 3px 14px ${colors.focusHalo}`,
+				":hover": `0 8px 24px ${colors.shadowControl}, 0 2px 8px ${colors.focusHalo}`,
 			},
 		},
 		fontWeight: 500,
