@@ -118,7 +118,7 @@ export const styles = stylex.create({
 		color: colors.foreground,
 		fontFamily: constants.fontSans,
 		fontSize: "16px",
-		fontWeight: 500,
+		fontWeight: 400,
 		lineHeight: "24px",
 	},
 	heroActions: {

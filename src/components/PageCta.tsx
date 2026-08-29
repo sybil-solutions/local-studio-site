@@ -3,8 +3,6 @@ import * as stylex from "@stylexjs/stylex";
 import { constants, lengths } from "../styles/public-tokens.stylex";
 import type { ReactNode } from "react";
 import { setupPath } from "../domain/route";
-import { assets } from "../domain/asset";
-import { LocalAiLogoShader as LogoMark } from "@local-ai/logo-renderer/react";
 import { CtaPair } from "./Links";
 
 const pageWidth =
@@ -17,14 +15,14 @@ const styles = stylex.create({
 		width: pageWidth,
 		minWidth: 0,
 		flexDirection: "column",
-		alignItems: "center",
+		alignItems: "flex-end",
 		justifyContent: "center",
 		marginInline: "auto",
 		padding: {
 			default: "150px 0",
 			"@media (max-width: 620px)": "100px 0",
 		},
-		textAlign: "center",
+		textAlign: "right",
 	},
 	home: {
 		minHeight: "650px",
@@ -37,7 +35,8 @@ const styles = stylex.create({
 	},
 	title: {
 		marginBlock: '0',
-		marginInline: 'auto',
+		marginRight: '0',
+		marginLeft: 'auto',
 		fontFamily: constants.fontSans,
 		fontSize: {
 			default: "42px",
@@ -66,18 +65,10 @@ const styles = stylex.create({
 	actions: {
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "flex-end",
 		gap: "12px",
 		marginTop: "36px",
 	},
-	mark: {
-		top: "50%",
-		left: "50%",
-		width: "clamp(340px, 68vw, 880px)",
-		aspectRatio: "2.2",
-		transform: "translate(-50%,-50%)",
-	},
-	aboveMark: { position: "relative", zIndex: 2 },
 });
 
 export function PageCta({
@@ -100,14 +91,13 @@ export function PageCta({
 			{...stylex.props(baseStyles.element, home && baseStyles.sectionAnchor, styles.root, home && styles.home, sx)}
 			aria-labelledby={id}
 		>
-			<LogoMark modelUrl={assets.ctaMark} fallbackUrl={assets.localaiDark} dayUrl={assets.dayEnv} nightUrl={assets.nightEnv} viewportAspect={2.2} staticPose sx={styles.mark} />
 			<h2
 				id={id}
-				{...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.child, styles.title, home && styles.homeTitle, styles.aboveMark)}
+				{...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.child, styles.title, home && styles.homeTitle)}
 			>
 				{title}
 			</h2>
-			<div {...stylex.props(baseStyles.element, styles.child, styles.actions, styles.aboveMark)}>
+			<div {...stylex.props(baseStyles.element, styles.child, styles.actions)}>
 				{actions ?? (
 					<CtaPair secondary={{ href: setupPath, label: "Setup Prompt" }} />
 				)}
