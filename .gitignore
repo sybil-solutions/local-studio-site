@@ -5,3 +5,6 @@ out
 *.log
 *.tsbuildinfo
 .vercel
+
+.open-next
+.wrangler

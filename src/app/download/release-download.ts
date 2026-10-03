@@ -69,11 +69,18 @@ function unavailable(label: string, reason: string, status = 503): NextResponse 
   );
 }
 
-async function githubJson<T>(url: string, revalidate?: number): Promise<T> {
-  const response = await fetch(url, {
-    ...(revalidate ? { next: { revalidate } } : { cache: "no-store" as const }),
-    headers: { accept: "application/vnd.github+json" },
-  });
+async function githubJson<T>(url: string, revalidate = 60): Promise<T> {
+  const token = url.startsWith("https://api.github.com/") ? process.env.GITHUB_TOKEN : undefined;
+  const init: RequestInit & { cf?: { cacheTtl: number; cacheEverything: boolean } } = {
+    next: { revalidate },
+    cf: { cacheTtl: revalidate, cacheEverything: true },
+    headers: {
+      accept: "application/vnd.github+json",
+      "user-agent": "localstudio.ai",
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
+  };
+  const response = await fetch(url, init);
   if (!response.ok) throw new Error(`${url} returned ${response.status}`);
   return (await response.json()) as T;
 }
