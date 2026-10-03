@@ -52,6 +52,11 @@ export const screenshots: Screenshot[] = [
 
 const GITHUB_REPO = "https://github.com/sybil-solutions/local-studio";
 const DOWNLOAD_DMG = "/download/macos";
+const OTHER_DOWNLOADS = [
+  { href: "/download#windows", label: "Windows" },
+  { href: "/download#linux", label: "Linux" },
+  { href: "/download", label: "All downloads" },
+] as const;
 
 export function LandingNav() {
   return (
@@ -69,6 +74,7 @@ export function LandingNav() {
       <nav className={styles.navLinks} aria-label="Landing navigation">
         <Link className={styles.navOptionalSmall} href="/#product">Product</Link>
         <Link className={styles.navMobilePrimary} href="/mobile">Mobile</Link>
+        <Link className={styles.navDocs} href="/download">Download</Link>
         <Link className={styles.navDocs} href="/docs">Docs</Link>
         <Link className={styles.navSetup} href="/prompt">Setup</Link>
         <Link className={styles.navOptional} href="/#media">Media</Link>
@@ -303,6 +309,18 @@ export function LandingPage() {
             <DownloadCloud size={18} aria-hidden="true" />
             Download for macOS
           </Link>
+          {OTHER_DOWNLOADS.map((download) => (
+            <Link
+              key={download.href}
+              className={styles.minimalLink}
+              href={download.href}
+              prefetch={false}
+              rel="noopener noreferrer"
+            >
+              {download.label}
+              <span aria-hidden="true">↓</span>
+            </Link>
+          ))}
           <Link
             className={styles.minimalLink}
             href={GITHUB_REPO}
