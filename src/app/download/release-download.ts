@@ -186,6 +186,7 @@ export type PublishedRelease = {
   version: string;
   publishedAt: string;
   pageUrl: string;
+  sumsUrl: string | undefined;
   assets: PublishedAsset[];
 };
 
@@ -210,6 +211,7 @@ export async function latestPublishedRelease(): Promise<PublishedRelease | undef
         version,
         publishedAt: release.published_at ?? "",
         pageUrl: release.html_url ?? `https://github.com/sybil-solutions/local-studio/releases/tag/v${version}`,
+        sumsUrl: findAsset(release, "SHA256SUMS")?.browser_download_url,
         assets,
       };
     } catch {

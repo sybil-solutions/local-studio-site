@@ -117,7 +117,6 @@ export function DownloadsPage({
   platform: Platform | undefined;
 }) {
   const assetFor = (row: Row) => release?.assets.find((asset) => row.match.test(asset.name));
-  const sums = release?.assets.find((asset) => asset.name === "SHA256SUMS");
   const groups = [...GROUPS].sort((a, b) => Number(b.id === platform) - Number(a.id === platform));
 
   return (
@@ -135,10 +134,10 @@ export function DownloadsPage({
             <Link href={release.pageUrl} prefetch={false} target="_blank" rel="noopener noreferrer">
               Release notes ↗
             </Link>
-            {sums ? (
+            {release.sumsUrl ? (
               <>
                 {" · "}
-                <Link href={sums.url} prefetch={false}>
+                <Link href={release.sumsUrl} prefetch={false}>
                   SHA256SUMS
                 </Link>
               </>
