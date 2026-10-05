@@ -26,13 +26,13 @@
     "bundle:report": "node scripts/bundle.mjs report",
     "test:unit": "playwright test --config playwright.unit.config.ts",
     "test:visual": "playwright test --config playwright.visual.config.ts",
-    "vercel:manifest": "node --experimental-strip-types scripts/vercel.mjs write",
-    "vercel:check": "node --experimental-strip-types scripts/vercel.mjs check",
     "index:html": "node --experimental-strip-types scripts/index-html.mjs write",
     "index:html:check": "node --experimental-strip-types scripts/index-html.mjs check",
     "packages:check": "pnpm --filter './packages/*' typecheck&&pnpm -C packages/logo-renderer shader:check",
     "logo:check": "pnpm --filter @local-ai/logo-renderer check",
-    "stylex:check": "node scripts/stylex-check.mjs"
+    "stylex:check": "node scripts/stylex-check.mjs",
+    "deploy:preview": "pnpm build && pnpm dlx wrangler@4.147.0 deploy",
+    "deploy:production": "pnpm build && pnpm dlx wrangler@4.147.0 deploy --env production"
   },
   "dependencies": {
     "@stylexjs/stylex": "0.19.0",

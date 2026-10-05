@@ -34,8 +34,6 @@ const GENERATED_FILES = new Set([
 	"asset-manifest.json",
 	"design-manifest.json",
 	"index.html",
-	"middleware.js",
-	"vercel.json",
 ]);
 const EXCLUDED_CATEGORIES = new Set([
 	"copied-product",
@@ -44,11 +42,6 @@ const EXCLUDED_CATEGORIES = new Set([
 	"vendored-tooling",
 ]);
 const WORKSPACE_PACKAGES = [
-	{
-		root: "packages/demo-ui",
-		category: "copied-product",
-		manifest: "packages/demo-ui/package.json",
-	},
 	{
 		root: "packages/logo-renderer",
 		category: "logo-renderer",
@@ -163,6 +156,7 @@ function classify(rel) {
 	if (rel.startsWith("tests/")) return "tests";
 	if (
 		rel.startsWith("scripts/") ||
+		rel.startsWith("src/worker/") ||
 		rel.startsWith("tools/") ||
 		rel.startsWith(".github/") ||
 		[
@@ -171,11 +165,10 @@ function classify(rel) {
 			"oxlint.config.ts",
 			"playwright.config.ts",
 			"agent-ready.plugin.ts",
-			"middleware.js",
+			"wrangler.jsonc",
 			"tsconfig.json",
 			"tsconfig.app.json",
 			"tsconfig.node.json",
-			"vercel.json",
 			"src/wgsl.d.ts",
 		].includes(rel)
 	) {

@@ -1,25 +1,14 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import mcpHandler from "../../api/mcp.js";
-import productsHandler from "../../api/v1/products.js";
-import statusHandler from "../../api/v1/status.js";
-import notFoundHandler from "../../api/[...path].js";
+import worker from "../../src/worker/index.ts";
 import { agentDocument } from "../../src/agent/documents";
 
-function responseRecorder() {
-	return {
-		statusCode: 200,
-		headers: {},
-		body: "",
-		setHeader(name, value) { this.headers[name.toLowerCase()] = value; },
-		end(body = "") { this.body = body; },
-	};
-}
+const env = { ASSETS: { fetch: async () => new Response("asset") } };
 
-function call(handler, request) {
-	const response = responseRecorder();
-	handler(request, response);
-	return response;
+async function call(path, request) {
+	const init = request.body ? { method: request.method, body: JSON.stringify(request.body) } : { method: request.method };
+	const response = await worker.fetch(new Request(`https://localstudio.ai${path}`, init), env);
+	return { statusCode: response.status, headers: { "content-type": response.headers.get("content-type") }, body: await response.text() };
 }
 
 test("homepage shell has complete metadata and no raw style block", () => {
@@ -63,27 +52,27 @@ test("trust and developer pages are substantial server documents", () => {
 	}
 });
 
-test("REST handlers return typed success and JSON errors", () => {
-	const status = call(statusHandler, { method: "GET" });
+test("REST handlers return typed success and JSON errors", async () => {
+	const status = await call("/api/v1/status", { method: "GET" });
 	expect(status.statusCode).toBe(200);
 	expect(status.headers["content-type"]).toContain("application/json");
 	expect(JSON.parse(status.body).status).toBe("ok");
-	const products = call(productsHandler, { method: "GET" });
-	expect(JSON.parse(products.body).products).toHaveLength(3);
-	const method = call(statusHandler, { method: "POST" });
+	const products = await call("/api/v1/products", { method: "GET" });
+	expect(JSON.parse(products.body).products).toHaveLength(2);
+	const method = await call("/api/v1/status", { method: "POST" });
 	expect(method.statusCode).toBe(405);
 	expect(JSON.parse(method.body).error.resolution).toBeTruthy();
-	const missing = call(notFoundHandler, { method: "GET" });
+	const missing = await call("/api/v1/missing", { method: "GET" });
 	expect(missing.statusCode).toBe(404);
 	expect(JSON.parse(missing.body).error.code).toBe("not_found");
 });
 
-test("MCP supports initialize, tools/list, and tools/call", () => {
-	const initialize = call(mcpHandler, { method: "POST", body: { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "1" } } } });
+test("MCP supports initialize, tools/list, and tools/call", async () => {
+	const initialize = await call("/api/mcp", { method: "POST", body: { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "1" } } } });
 	expect(initialize.statusCode).toBe(200);
 	expect(JSON.parse(initialize.body).result.protocolVersion).toBe("2025-06-18");
-	const list = call(mcpHandler, { method: "POST", body: { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} } });
+	const list = await call("/api/mcp", { method: "POST", body: { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} } });
 	expect(JSON.parse(list.body).result.tools.map((tool) => tool.name)).toContain("list_products");
-	const invoke = call(mcpHandler, { method: "POST", body: { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "list_products", arguments: {} } } });
-	expect(JSON.parse(invoke.body).result.structuredContent.products).toHaveLength(3);
+	const invoke = await call("/api/mcp", { method: "POST", body: { jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "list_products", arguments: {} } } });
+	expect(JSON.parse(invoke.body).result.structuredContent.products).toHaveLength(2);
 });
