@@ -129,23 +129,10 @@ export const styles = stylex.create({
 		borderColor: colors.borderSoft,
 		borderRadius: lengths.radiusCompact,
 	},
-	downloadIntro: {
-		minHeight: 0,
-		paddingTop: {
-			default: "calc(72px + clamp(140px, 18svh, 208px) + 24px)",
-			"@media (max-width: 620px)": 100,
-		},
-	},
-	downloadCta: {
-		width: {
-			default: "100%",
-			"@media (min-width: 621px)": 340,
-		},
-	},
 	downloadMeta: {
 		display: "flex",
 		flexWrap: "wrap",
-		justifyContent: "center",
+		alignItems: "center",
 		columnGap: 16,
 		rowGap: 8,
 		marginTop: 16,
@@ -154,6 +141,43 @@ export const styles = stylex.create({
 		fontSize: 16,
 		fontWeight: 400,
 		lineHeight: "24px",
+	},
+	downloadBadge: {
+		marginLeft: 12,
+		paddingBlock: 2,
+		paddingInline: 8,
+		borderWidth: 1,
+		borderStyle: "solid",
+		borderColor: colors.borderStrong,
+		borderRadius: lengths.radiusControl,
+		color: colors.dim,
+		fontFamily: constants.fontSans,
+		fontSize: 13,
+		fontWeight: 400,
+		lineHeight: "20px",
+		letterSpacing: 0,
+		verticalAlign: "middle",
+	},
+	downloadInlineLink: {
+		color: {
+			default: colors.foreground,
+			"@media (hover: hover)": {
+				default: colors.foreground,
+				":hover": colors.dim,
+			},
+		},
+		textDecoration: "underline",
+		textUnderlineOffset: "3px",
+	},
+	downloadDetail: {
+		display: "block",
+		color: colors.chrome,
+		fontWeight: 400,
+	},
+	downloadFile: {
+		display: "grid",
+		rowGap: 2,
+		minWidth: 0,
 	},
 	button: {
 		display: "inline-flex",
