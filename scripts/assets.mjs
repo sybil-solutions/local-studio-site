@@ -18,6 +18,7 @@ const ROLE_BY_EXT = {
 	".woff2": "font",
 	".bin": "mesh",
 	".gltf": "mesh",
+	".mp4": "video",
 };
 
 const TYPE_BY_EXT = {
@@ -30,6 +31,7 @@ const TYPE_BY_EXT = {
 	".woff2": "font/woff2",
 	".bin": "application/octet-stream",
 	".gltf": "model/gltf+json",
+	".mp4": "video/mp4",
 };
 
 function dimensionsFor(rel, raw) {
@@ -76,7 +78,7 @@ function walk(directory) {
 
 function roleFor(rel) {
 	if (rel.startsWith("public/fonts/")) return "font";
-	if (rel.startsWith("public/localai/")) return "logo-mesh";
+	if (rel.startsWith("public/localai/") && !rel.endsWith(".png")) return "logo-mesh";
 	if (rel.includes("/sponsors/")) return "sponsor";
 	if (rel.includes("favicon")) return "icon";
 	return ROLE_BY_EXT[extname(rel).toLowerCase()] ?? "binary";

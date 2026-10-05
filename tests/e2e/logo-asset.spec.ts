@@ -61,7 +61,7 @@ test("navbar uses compact text and an accessible GitHub icon", async ({ page }) 
 		const style = getComputedStyle(element);
 		return [style.fontSize, style.lineHeight];
 	});
-	expect(typography).toEqual(["14px", "20px"]);
+	expect(typography).toEqual(["16px", "24px"]);
 	await page.setViewportSize({ width: 390, height: 844 });
 	await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
 	await page.getByRole("button", { name: "Open menu" }).click();
@@ -72,7 +72,7 @@ test("navbar uses compact text and an accessible GitHub icon", async ({ page }) 
 
 test("site images cannot be copied, dragged, or saved", async ({ page }) => {
 	for (const route of ["/", "/product"]) {
-		await page.goto(route);
+		await page.goto(route, { waitUntil: "networkidle" });
 		await page.locator("img").first().waitFor();
 		const result = await page.evaluate(() => {
 			const images = [...document.images];

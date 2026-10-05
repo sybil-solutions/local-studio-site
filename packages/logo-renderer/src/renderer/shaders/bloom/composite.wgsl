@@ -21,7 +21,7 @@ struct CompositeParams {
 @group(0) @binding(3) var<uniform> params: CompositeParams;
 
 const BLOOM_RADIAL_FULL_RADIUS = 0.55;
-const MAX_DARK_DISPLAY_LUMA = 0.58;
+const MAX_DARK_DISPLAY_LUMA = 0.42;
 
 @vertex
 fn vs_main(@builtin(vertex_index) vertexIndex: u32) -> VertexOutput {
