@@ -1,234 +1,159 @@
 import { baseStyles } from "../styles/base-styles";
 import * as stylex from "@stylexjs/stylex";
-import { docsPath, routes, setupPath } from "../domain/route";
+import type { ReactNode } from "react";
+import { docsPath, downloadPath, routes, setupPath } from "../domain/route";
 import { CtaPair } from "../components/Links";
 import { DocsLayout } from "../components/DocsLayout";
+import { LocalLink } from "../components/LocalLink";
 import { PageIntro } from "../components/PageIntro";
 import { PageShell } from "../components/PageShell";
+import { agentNames, controllerRoutes, upstreamCredit } from "../content/facts";
 import { site } from "../domain/site";
 import { styles } from "../styles/pages-styles";
 
 const toc = [
-	["Prerequisites", "prerequisites"],
-	["Quick Start", "quick-start"],
-	["Setup Wizard", "setup-wizard"],
-	["Runtime Backends", "runtime-backends"],
-	["Agent Runtime", "agent-runtime"],
-	["Remote / LAN", "remote-lan"],
-	["Validation", "validation"],
+	["Install", "install"],
+	["Agents", "agents"],
+	["Local Models", "local-models"],
+	["Fleet", "fleet"],
+	["Registry", "registry"],
+	["Phone", "phone"],
+	["Controller API", "controller-api"],
+	["Upgrading from 2.x", "upgrading"],
 ] as const;
 
+function Code({ children }: { children: ReactNode }) {
+	return <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>{children}</code>;
+}
+
+function Section({ id, title, lead, children }: { id: string; title: string; lead: ReactNode; children?: ReactNode }) {
+	return (
+		<section id={id} {...stylex.props(baseStyles.element, styles.docsSection)}>
+			<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>{title}</h2>
+			<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>{lead}</p>
+			{children}
+		</section>
+	);
+}
+
+function List({ items }: { items: readonly ReactNode[] }) {
+	return (
+		<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.marginTop16, styles.docsList)}>
+			{items.map((item, index) => (
+				<li key={index} {...stylex.props(baseStyles.element, styles.docsListItem)}>{item}</li>
+			))}
+		</ul>
+	);
+}
+
+function Pre({ children }: { children: string }) {
+	return <pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>{children}</pre>;
+}
+
 export function DocsPage() {
+	const name = site.products.localStudio.name;
 	return (
 		<PageShell>
 			<PageIntro
 				layout="left"
 				id="docs-title"
 				title={routes[docsPath].heading}
-				description="Install the controller and desktop workspace, choose a runtime, launch a model, and verify local inference."
-				actions={
-					<CtaPair
-						secondary={{ href: setupPath, label: "Setup Prompt" }}
-					/>
-				}
+				description="Install the app, connect your agents, serve local models, link your machines and pair a phone."
+				actions={<CtaPair secondary={{ href: setupPath, label: "Setup Prompt" }} />}
 			/>
 			<DocsLayout toc={toc} path={docsPath} label="Documentation sections">
-					<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
-						<span translate="no" {...stylex.props(baseStyles.element)}>{site.products.localStudio.name}</span> is a local-first
-						workstation for running, managing, and using self-hosted LLM
-						backends. Two modules share one controller API: a{" "}
-						<span translate="no" {...stylex.props(baseStyles.element)}>Bun</span>/Hono backend and a Next.js + React
-						frontend with an Electron desktop shell.
-					</p>
-					<section id="prerequisites" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Prerequisites</h2>
-						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.docsSectionLead, styles.docsList)}>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									<span translate="no" {...stylex.props(baseStyles.element)}>Bun</span> 1.x
-								</strong>{" "}
-								for the controller.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>Node.js 20+ and npm</strong> for the frontend.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>Python 3.10+ on PATH.</strong> Engine installs use{" "}
-								<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>uv</code> when present, pip otherwise.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>Git.</strong>
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									NVIDIA driver + <span translate="no" {...stylex.props(baseStyles.element)}>CUDA</span>
-								</strong>{" "}
-								for vLLM/SGLang on Linux. Apple Silicon uses the{" "}
-								<span translate="no" {...stylex.props(baseStyles.element)}>MLX</span> backend.
-							</li>
-						</ul>
-					</section>
-
-					<section id="quick-start" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Quick Start</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							Run the preflight check first. It verifies toolchain, ports,
-							directories, and network:
-						</p>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>npm run doctor</pre>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
-							Start the controller (listens on <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>127.0.0.1:8080</code>; data
-							dir and SQLite are created automatically, model weights live in{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>LOCAL_STUDIO_MODELS_DIR</code>, default <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>/models</code>
-							):
-						</p>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>
-							cd controller &amp;&amp; bun install &amp;&amp; bun src/main.ts
-						</pre>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
-							Start the frontend in a second terminal, then open{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>http://localhost:3000/setup</code>:
-						</p>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>
-							cd frontend &amp;&amp; npm ci &amp;&amp; npm run dev
-						</pre>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsNotice)}>
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>npm ci</code> runs a postinstall patch against{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>@earendil-works/pi-ai</code>. If that step prints a warning,
-							agent streaming may misrender. Re-run <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>npm ci</code> to fix
-							it.
-						</p>
-					</section>
-
-					<section id="setup-wizard" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Setup Wizard</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							The first-run <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>/setup</code> wizard walks through choosing a
-							models directory, installing an engine, downloading a model,
-							launching it, and benchmarking. Engine installs (vLLM/SGLang/MLX)
-							land in{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>&lt;data dir&gt;/runtime/venvs/&lt;backend&gt;-latest</code>
-							.
-						</p>
-					</section>
-
-					<section id="runtime-backends" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Runtime Backends</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							Recipes launch through the controller runtime layer. Wired backend
-							families:
-						</p>
-						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.marginTop16, styles.docsList)}>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									<span translate="no" {...stylex.props(baseStyles.element)}>vLLM</span>
-								</strong>{" "}
-								- CUDA throughput serving through configured, discovered,
-								system, Docker, or bundled targets.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									<span translate="no" {...stylex.props(baseStyles.element)}>SGLang</span>
-								</strong>{" "}
-								- Structured and multi-turn serving through discovered or
-								configured Python targets.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									<span translate="no" {...stylex.props(baseStyles.element)}>llama.cpp</span>
-								</strong>{" "}
-								- GGUF models through the llama-server binary. Great for CPU and
-								modest hardware.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								<strong {...stylex.props(baseStyles.element, styles.docsStrong)}>
-									<span translate="no" {...stylex.props(baseStyles.element)}>MLX</span>
-								</strong>{" "}
-								- Apple Silicon serving through mlx_lm.server. The default path
-								on Mac.
-							</li>
-						</ul>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
-							Runtime target discovery is surfaced in Settings; selections
-							persist in the controller data directory.
-						</p>
-					</section>
-
-					<section id="agent-runtime" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Agent Runtime</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							The agent surface lives at <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>/agent</code> in the frontend. It
-							uses <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>@earendil-works/pi-coding-agent</code> through the
-							frontend runtime rather than shelling out to a separate agent
-							process. Agent skills and extensions are loaded by the frontend
-							runtime and surfaced in the session UI.
-						</p>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.marginTop16)}>
-							Agent file operations are local-only, stored under{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>data/agentfs</code>.
-						</p>
-					</section>
-
-					<section id="remote-lan" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Remote / LAN Deployment</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							The controller binds <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>127.0.0.1</code> by default. Binding a
-							non-loopback host (e.g. <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>LOCAL_STUDIO_HOST=0.0.0.0</code>)
-							requires <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>LOCAL_STUDIO_API_KEY</code>. Startup throws
-							without it. On a trusted LAN you may instead set{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>LOCAL_STUDIO_ALLOW_UNAUTHENTICATED=true</code> to opt out of
-							authentication.
-						</p>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.marginTop16)}>
-							Point the frontend at a remote controller with{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>BACKEND_URL</code> or <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>NEXT_PUBLIC_API_URL</code>{" "}
-							(default <code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>http://localhost:8080</code>). Configure{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>.env.local</code> first:
-						</p>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>
-							REMOTE_HOST=192.168.x.x REMOTE_USER=username
-							REMOTE_PATH=/home/user/project{`\n`}# Optional: REMOTE_SSH_KEY
-							(defaults to ~/.ssh/id_ed25519)
-						</pre>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>
-							./scripts/deploy-remote.sh controller # sync + build + restart
-							controller{`\n`}./scripts/deploy-remote.sh frontend # sync + build
-							+ restart frontend{`\n`}./scripts/deploy-remote.sh status #
-							inspect remote processes
-						</pre>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
-							Local daemon helper:{" "}
-							<code {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsInlineCode)}>./scripts/daemon.sh &#123;start|stop|status&#125;</code>.
-						</p>
-					</section>
-
-					<section id="validation" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Validation</h2>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>After setup, confirm the stack is healthy:</p>
-						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.marginTop16, styles.docsList)}>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								Settings switches controllers and the runtime state updates.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								System shows installed engines and the active service topology.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								A model launches through a recipe and /status reflects it.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								/v1/chat/completions works locally and through a provider route.
-							</li>
-							<li {...stylex.props(baseStyles.element, styles.docsListItem)}>
-								/agent completes a turn using the selected model and local
-								tools.
-							</li>
-						</ul>
-						<pre {...stylex.props(baseStyles.element, baseStyles.monospace, styles.docsCode)}>
-							npm run check # contracts + structure + frontend quality +
-							controller typecheck{`\n`}npm run test:integration # controller
-							integration + frontend regression
-						</pre>
-					</section>
+				<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
+					<span translate="no" {...stylex.props(baseStyles.element)}>{name}</span> is a desktop app that runs every coding agent
+					on your own models. {upstreamCredit} The{" "}
+					<a {...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.overviewTextLink)} href={site.upstream.repository} target="_blank" rel="noreferrer">
+						upstream documentation
+					</a>{" "}
+					still describes most of the app.
+				</p>
+				<Section
+					id="install"
+					title="Install"
+					lead={<>Get the installer for your system from the <LocalLink sx={styles.overviewTextLink} href={downloadPath}>download page</LocalLink>.</>}
+				>
+					<List
+						items={[
+							<>macOS: open the DMG and drag {name} into Applications. Builds are signed and notarized, and the app updates itself.</>,
+							<>Windows: the installer is not code-signed yet. If SmartScreen appears, choose More info, then Run anyway.</>,
+							<>Linux: <Code>chmod +x</Code> the AppImage and run it, or <Code>sudo apt install ./Local-Studio-*.deb</Code>.</>,
+						]}
+					/>
+				</Section>
+				<Section
+					id="agents"
+					title="Agents"
+					lead={<>Install and log in to at least one agent CLI before first use: {agentNames.join(", ")}. Pi needs <Code>pi</Code> and Oh My Pi needs <Code>omp</Code>; both use their own configured models and credentials.</>}
+				>
+					<List
+						items={[
+							"Pi and Oh My Pi stream text, reasoning and tool calls, and support steering, interrupt, compaction, rollback, and model and thinking selection.",
+							"Existing Pi and Oh My Pi sessions can be imported during onboarding.",
+						]}
+					/>
+				</Section>
+				<Section
+					id="local-models"
+					title="Local Models"
+					lead={<>The app starts its bundled controller on <Code>127.0.0.1:18091</Code> unless one is already running. It discovers vLLM, SGLang, llama.cpp, LM Studio and anything serving <Code>/v1/models</Code>.</>}
+				>
+					<List
+						items={[
+							<>One gateway: <Code>/v1/chat/completions</Code>, <Code>/v1/completions</Code>, <Code>/v1/messages</Code> and <Code>/v1/responses</Code>. Streams and errors pass through.</>,
+							<>The model id <Code>auto</Code> picks the live model with the most successful requests.</>,
+							"Pinned registry recipes launch on free NVIDIA GPUs and never evict running engines.",
+							<>Configuration lives in <Code>~/.local-studio-t3/config.json</Code> (mode 0600): machine name, URL, <Code>fleetKey</Code> and peers.</>,
+						]}
+					/>
+				</Section>
+				<Section
+					id="fleet"
+					title="Fleet"
+					lead="Settings → Local shows every connected machine with its GPUs, memory, live models, launchable recipes and usage. Scan tailnet lists the Linux and macOS machines on your Tailscale network."
+				>
+					<List
+						items={[
+							"Connect links a machine that already runs a controller.",
+							"Install sets one up over ssh as a systemd or launchd user service, bound to the machine's Tailscale address, with your fleet key. It needs key-based ssh access and never overwrites an existing controller.",
+							"Keep the fleet key private. Every controller route except /api/health requires it.",
+						]}
+					/>
+				</Section>
+				<Section
+					id="registry"
+					title="Registry"
+					lead="Settings → Local matches your GPUs, or your Apple chip and its unified memory, against local-ai-registry hardware records."
+				>
+					<List
+						items={[
+							"All hardware browses every registry model, grouped by model with the best variant first.",
+							"Inspect shows the records, Use config copies the launch command and Download weights fetches the pinned revision.",
+							"Share turns a running server into registry records, removes credentials, paths, hostnames and private addresses, and opens a pull request with your own gh login after you confirm.",
+						]}
+					/>
+				</Section>
+				<Section
+					id="phone"
+					title="Phone"
+					lead={<>{name} is a {site.upstream.name} server. Pair the {site.upstream.name} mobile app or a mobile browser from Settings → Connections, over your LAN or Tailscale.</>}
+				/>
+				<Section
+					id="controller-api"
+					title="Controller API"
+					lead={<>Send the fleet key as <Code>Authorization: Bearer</Code> on every route except <Code>/api/health</Code>. The <a {...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.overviewTextLink)} href="/agents.md">agent sheet</a> has the full list.</>}
+				>
+					<List items={controllerRoutes.map(([route, purpose]) => <><Code>{route}</Code> {purpose}</>)} />
+					<Pre>{`KEY=$(jq -r .fleetKey ~/.local-studio-t3/config.json)
+curl -s -H "Authorization: Bearer $KEY" http://127.0.0.1:18091/v1/models`}</Pre>
+				</Section>
+				<Section
+					id="upgrading"
+					title="Upgrading from 2.x"
+					lead={<>3.x is a new app with a new data folder; your 2.x data is left untouched. Installing on macOS replaces the 2.x app, and 2.x does not auto-update to 3.x. A 2.x controller on a GPU machine can keep running beside the 3.x controller.</>}
+				/>
 			</DocsLayout>
 		</PageShell>
 	);

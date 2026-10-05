@@ -4,21 +4,13 @@ test("1", async ({ page }) => {
 	for (const scheme of ["dark", "light"] as const) {
 		await page.emulateMedia({ colorScheme: scheme });
 		await page.goto("/");
-		await expect(page.getByRole("region", { name: "Local Studio workbench" })).toHaveAttribute("data-theme", `zai-${scheme}`);
-		const audit = await page.evaluate(() => {
-			const demo = document.querySelector('[aria-label="Local Studio workbench"]');
-			return {
+		const audit = await page.evaluate(() => ({
 			colorScheme: getComputedStyle(document.documentElement).colorScheme,
-			demoScheme: demo ? getComputedStyle(demo).colorScheme : null,
-			demoTheme: demo?.getAttribute("data-theme"),
 			themeColor: [...document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')]
 				.find((meta) => matchMedia(meta.media).matches)?.content,
-			};
-		});
+		}));
 		expect(audit).toEqual({
 			colorScheme: scheme,
-			demoScheme: scheme,
-			demoTheme: `zai-${scheme}`,
 			themeColor: scheme === "dark" ? "#000000" : "#ffffff",
 		});
 	}
@@ -27,7 +19,7 @@ test("1", async ({ page }) => {
 test("2", async ({ page }) => {
 	await page.emulateMedia({ colorScheme: "dark" });
 	await page.goto("/");
-	const primary = page.locator("main").getByRole("link", { name: /Download for/ }).first();
+	const primary = page.locator("main").getByRole("link", { name: /Download Local Studio/ }).first();
 	const primaryStyle = await primary.evaluate((element) => {
 		const style = getComputedStyle(element);
 		return { borderColor: style.borderColor, boxShadow: style.boxShadow };
@@ -78,7 +70,7 @@ test("3", async ({ page }) => {
 
 test("4", async ({ page }) => {
 	await page.goto("/#mobile");
-	const card = page.locator("[data-kitty-feature]").first();
+	const card = page.locator("[data-phone-feature]").first();
 	const media = card.getByRole("region");
 	const image = card.locator("img");
 	const treatment = await media.evaluate((element) => ({

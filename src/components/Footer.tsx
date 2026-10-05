@@ -62,6 +62,17 @@ const styles = stylex.create({
 		},
 		rowGap: 0,
 	},
+	credit: {
+		color: {
+			default: colors.chrome,
+			"@media (hover: hover)": {
+				default: colors.chrome,
+				":hover": colors.foreground,
+			},
+		},
+		textDecoration: "underline",
+		textUnderlineOffset: "3px",
+	},
 	link: {
 		display: "flex",
 		minHeight: {
@@ -103,6 +114,11 @@ export function Footer({ sx }: { sx?: PublicStyle }) {
 			<span {...stylex.props(baseStyles.element, styles.copyright)}>
 				© {site.copyrightYear}{" "}
 				<span translate="no" {...stylex.props(baseStyles.element)}>{site.products.localStudio.name}</span>
+				{" · Built on "}
+				<a {...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.credit)} href={site.upstream.repository} target="_blank" rel="noreferrer">
+					{site.upstream.name}
+				</a>
+				{` (${site.upstream.license})`}
 			</span>
 		</footer>
 	);

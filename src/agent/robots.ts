@@ -29,7 +29,7 @@ export function robotsTxt(): string {
 	const blocks = [
 		`# Site: ${site.origin}/`,
 		`# Company: ${site.company.name} - ${site.company.url}`,
-		`# Products: ${site.products.localStudio.name}, ${site.products.kittyLitter.name}, ${site.products.codexShim.name}`,
+		`# Products: ${site.products.localStudio.name}, ${site.products.codexShim.name}`,
 		`# LLM reference: ${site.origin}/llms.txt`,
 		`# Machine index: ${site.origin}/machine`,
 		"#",

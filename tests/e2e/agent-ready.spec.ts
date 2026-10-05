@@ -81,7 +81,7 @@ test("markdown twins and discovery files are served as markdown or catalog types
 	expect(markdown.headers()["content-type"]).toMatch(/text\/markdown/);
 	const llms = await markdown.text();
 	expect(llms).toContain("Local Studio");
-	expect(llms).toContain("KittyLitter");
+	expect(llms).toContain("T3 Code");
 	expect(llms).toContain("Codex Shim");
 
 	const catalog = await request.get("/.well-known/api-catalog");
@@ -94,19 +94,19 @@ test("markdown twins and discovery files are served as markdown or catalog types
 	expect(await card.text()).toContain("Sybil Solutions");
 });
 
-test("machine page names the company and both featured products", async ({
+test("machine page names the company, products, and upstream", async ({
 	page,
 }) => {
 	await page.goto("/machine");
 	const text = await page.locator("[data-page-focus]").innerText();
 	expect(text).toContain("Sybil Solutions");
 	expect(text).toContain("Local Studio");
-	expect(text).toContain("KittyLitter");
+	expect(text).toContain("T3 Code");
 	expect(text).toContain("Codex Shim");
 	expect(text).toContain("https://www.sybilsolutions.ai/");
 	expect(text).toContain("https://github.com/sybil-solutions/local-studio");
-	expect(text).toContain("https://kittylitter.app");
-	expect(text).toContain("Alleycat");
+	expect(text).toContain("https://github.com/pingdotgg/t3code");
+	expect(text).toContain("Tailscale");
 	expect(text).toContain("vLLM");
 });
 
@@ -148,7 +148,7 @@ test("OpenAPI and public REST endpoints are reachable", async ({ request }) => {
 	expect(status.status()).toBe(200);
 	expect((await status.json()).status).toBe("ok");
 	const products = await request.get("/api/v1/products");
-	expect((await products.json()).products).toHaveLength(3);
+	expect((await products.json()).products).toHaveLength(2);
 	const missing = await request.get("/api/v1/missing");
 	expect(missing.status()).toBe(404);
 	expect((await missing.json()).error.resolution).toBeTruthy();

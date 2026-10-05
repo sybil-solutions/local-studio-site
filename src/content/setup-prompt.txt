@@ -1,88 +1,60 @@
-Set up Local Studio completely on the machine you are operating now.
+Set up Local Studio 3 completely on the machine you are operating now.
 
+Download page: {{LOCAL_STUDIO_DOWNLOAD}}
 Repository: {{LOCAL_STUDIO_REPOSITORY}}
 
-Work autonomously. Do not give me a tutorial or stop after listing commands. Inspect the machine, make the safest sensible choices, install and configure the software, launch it, and verify that it works. Ask only if you reach a genuine credential, destructive-action, or hardware blocker.
+Work autonomously. Do not give me a tutorial or stop after listing commands. Inspect the machine, make the safest sensible choices, install the app, and prove that a model answers through the Local Studio controller. Ask only if you reach a genuine credential, destructive-action, or hardware blocker.
 
 Operating rules
 
-1. If the repository already exists, use it. Preserve uncommitted work and never reset, overwrite, or delete user changes.
-2. Read AGENTS.md and README.md before changing or running anything. Follow repository instructions exactly.
-3. Never print, commit, or expose secrets. Store machine-specific values in .env.local.
-4. Do not bypass hooks or security checks. With vLLM or SGLang, never disable CUDA graphs and never use enforce eager.
-5. Prefer supported, reproducible installation paths. Do not silently substitute a different product or inference stack.
-6. You must figure it out. No quitting. It is not done until one functional, proper model is running that fits the user's hardware (preferably Qwen3.6 or Gemma-4), and the recipe is saved.
-7. Test the entire app with agent-browser: use the site end to end and confirm all functionality is proper. Inform the user when done by opening a visual-explainer HTML file in their default browser.
+1. Never print, commit, or expose secrets. The controller fleet key in ~/.local-studio-t3/config.json is a secret: read it into a variable, never echo it.
+2. Do not bypass security checks, code signing prompts, or ssh host-key verification.
+3. Never cap generation length with max_tokens. With vLLM or SGLang, never disable CUDA graphs and never force eager mode.
+4. Do not replace or stop an inference server or controller that is already running. Local Studio 2.x data and controllers can stay where they are.
+5. Use the official installers from the download page. Do not build from source unless I ask.
 
 Phase 1 - inspect
 
-Determine and report the operating system, CPU architecture, available RAM, free disk space, GPU model and memory or Apple unified memory, existing model directories, and whether ports 3000 and 8080 are available. Check Git, Node.js 20+, npm, Bun 1.x, Python 3.10+, uv, Docker, NVIDIA driver/CUDA, and relevant existing inference runtimes. Do not install anything until this inventory is complete.
+Report the operating system and version, CPU architecture, RAM, free disk space, GPU model and memory or Apple unified memory, whether Tailscale is installed and connected, and which agent CLIs are installed and logged in: Codex, Claude Code, Cursor, Grok, OpenCode, Antigravity, Pi (pi) and Oh My Pi (omp). List every process already listening on a local port that answers GET /v1/models. Check whether anything answers on 127.0.0.1:18091.
 
-Phase 2 - acquire and preflight
+Phase 2 - download and verify
 
-Clone the repository into a normal user-owned project directory if it is absent. If it exists, inspect its current branch and worktree before updating it. Install only missing prerequisites using the platform's normal package manager. From the repository root, run npm run doctor and resolve every actionable failure.
+Pick the installer for this machine:
 
-Phase 3 - choose the correct runtime
+- macOS Apple silicon: {{LOCAL_STUDIO_DOWNLOAD}}/macos-arm64
+- macOS Intel: {{LOCAL_STUDIO_DOWNLOAD}}/macos-x64
+- Windows x64: {{LOCAL_STUDIO_DOWNLOAD}}/windows
+- Linux x64: {{LOCAL_STUDIO_DOWNLOAD}}/linux (AppImage; .deb packages are listed on the download page)
+- Linux arm64: {{LOCAL_STUDIO_DOWNLOAD}}/linux-arm64
 
-- Apple Silicon macOS: prefer MLX for model serving.
-- Linux with a supported NVIDIA GPU: choose vLLM or SGLang based on the installed stack and model requirements.
-- CPU-only or broad GGUF compatibility: choose llama.cpp.
-- Windows: use WSL2 for the controller and web frontend unless the repository explicitly documents a supported native path.
-- A remote GPU host is allowed. Keep the UI local if that is the cleaner architecture and connect it to the remote controller.
+Each link redirects to the newest verified GitHub release asset and sends x-local-studio-version and x-local-studio-sha256 headers. Download with redirects followed, then check the file with shasum -a 256 (or Get-FileHash on Windows) against that header and against SHA256SUMS from the same release. Stop if they differ.
 
-Explain the choice in one short paragraph, including the hardware constraint that drove it.
+Phase 3 - install
 
-Phase 4 - install Local Studio
+- macOS: mount the DMG, copy Local Studio.app into /Applications, and open it. The build is signed and notarized.
+- Windows: run the installer. It is not code-signed yet, so SmartScreen asks for confirmation; tell me to choose More info, then Run anyway.
+- Linux: chmod +x the AppImage and run it, or install the .deb with sudo apt install ./Local-Studio-*.deb.
 
-Install controller dependencies with:
+If no agent CLI is logged in, install and log in to the one I prefer, or Pi (pi) if I have no preference. Pi and Oh My Pi use their own configured models and credentials.
 
-cd controller && bun install
+Phase 4 - make sure a model is served
 
-Install frontend dependencies with:
+If an OpenAI-compatible server (vLLM, SGLang, llama.cpp, LM Studio, or anything serving /v1/models) is already running, use it. Otherwise start the smallest sensible model for this hardware with the runtime that fits: llama.cpp or LM Studio on Apple silicon and CPU-only machines, vLLM or SGLang on Linux with NVIDIA GPUs. Prefer a model from the local-ai-registry recommendations shown in Settings → Local when they match this hardware.
 
-cd frontend && npm ci
+Phase 5 - prove it works through the controller
 
-Choose a model directory with enough free space. Configure LOCAL_STUDIO_MODELS_DIR when the default /models path is unsuitable. Let Local Studio manage runtime environments under its data directory unless an existing verified runtime should be reused.
+The app starts its bundled controller on 127.0.0.1:18091. Read the fleet key from ~/.local-studio-t3/config.json into a variable without printing it, then check:
 
-For local-only use, keep the controller bound to 127.0.0.1. For LAN or remote access, bind intentionally and require LOCAL_STUDIO_API_KEY. Use LOCAL_STUDIO_ALLOW_UNAUTHENTICATED=true only when the user explicitly accepts unauthenticated access on a trusted LAN.
-
-Point the frontend at the controller with BACKEND_URL or NEXT_PUBLIC_API_URL when it is not using http://localhost:8080.
-
-Phase 5 - launch
-
-Start the controller with bun src/main.ts from controller/. Start the frontend in a second process. For initial interactive setup, use npm run dev from frontend/ and open http://localhost:3000/setup. For a durable production run, use npm run build followed by npm run start; never use plain next start.
-
-On macOS, build the Electron desktop app only after the web and controller paths are healthy. Use the repository's documented desktop build and installation commands rather than inventing a bundle path.
-
-Phase 6 - prove it works
-
-Do not claim success until all applicable checks pass:
-
-- The controller health endpoint returns HTTP 200.
-- The frontend returns HTTP 200 and the setup page loads.
-- The UI can read controller status, system information, and runtime targets.
-- At least one appropriate inference engine is detected or installed.
-- A hardware-appropriate small model is downloaded or an existing local model is registered.
-- The model launches without disabling CUDA graphs or forcing eager execution.
-- GET /v1/models shows the served model.
-- A real OpenAI-compatible chat completion succeeds.
-- Usage accounting records the request.
-- The agent surface opens and can see the configured provider when supported.
+- GET http://127.0.0.1:18091/api/health returns HTTP 200.
+- GET /v1/models with Authorization: Bearer <fleet key> lists the served model.
+- POST /v1/chat/completions with model set to that id (or auto) returns a real answer.
+- Settings → Local in the app shows this machine and the live model.
+- One agent thread in the app completes a turn on that model.
 
 If a check fails, diagnose and fix it, then rerun the check. Do not hide degraded behavior.
 
-Phase 7 - handoff
+Phase 6 - handoff
 
-Leave the required processes running. If appropriate, create a reversible launchd or systemd service only after the manual path is proven. Finish with a compact handoff containing:
+Finish with a compact report: installed version and file checksum, app location, controller URL, the served model and runtime, the agent CLI used, HTTP status and answer for each check, and any remaining human-only step (for example Tailscale login, pairing a phone from Settings → Connections, or SmartScreen confirmation).
 
-- Local Studio path and git revision
-- UI URL
-- Controller URL
-- Selected runtime and why
-- Model directory and active model
-- Exact start, stop, and status commands
-- Authentication status without revealing the key
-- Verification results with HTTP status and inference outcome
-- Any remaining limitation or human-only step
-
-The final state must be a working Local Studio installation, not a plan.
+The final state must be a working Local Studio installation with a model answering through the controller, not a plan.

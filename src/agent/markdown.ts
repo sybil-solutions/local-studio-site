@@ -5,7 +5,7 @@ import {
 	type InfoPath,
 } from "../content/info-pages.ts";
 import { site } from "../domain/site.ts";
-import { release } from "../domain/release.ts";
+import { downloadHref, downloadTargetNames, downloadTargets, release } from "../domain/release.ts";
 import {
 	docsPath,
 	downloadLabel,
@@ -17,12 +17,15 @@ import {
 	routes,
 	setupPath,
 	type DocumentPath,
+	type RoutePath,
 } from "../domain/route.ts";
 import { machineText } from "./machine.ts";
 import { productFeatures, renderInlineMarkdown } from "../content/product.ts";
+import { controllerRoutes, upstreamCredit } from "../content/facts.ts";
 
 const SITE_ORIGIN = site.origin;
-const DOWNLOAD = release;
+const studio = site.products.localStudio;
+const upstream = site.upstream;
 
 export function markdownPage(title: string, body: string): string {
 	return `# ${title}\n\nCompany: ${site.company.name} (${site.company.url}).\n\n${body.trim()}\n`;
@@ -55,10 +58,18 @@ export function infoPageMarkdown(path: InfoPath): string {
 	return markdownPage(model.title, body);
 }
 
-export function llmsTxt(): string {
-	return `# ${site.products.localStudio.name} - ${site.company.name}
+function page(path: RoutePath): string {
+	return `${SITE_ORIGIN}${path === "/" ? "" : path}`;
+}
 
-> Canonical LLM / agent reference for ${site.products.localStudio.name} and the ${site.company.name} products listed here.
+const downloadList = downloadTargetNames
+	.map((target) => `- ${downloadTargets[target].label}: ${SITE_ORIGIN}${downloadHref(target)} (\`${downloadTargets[target].asset}\`)`)
+	.join("\n");
+
+export function llmsTxt(): string {
+	return `# ${studio.name} - ${site.company.name}
+
+> Canonical LLM / agent reference for ${studio.name} ${release.major} and the ${site.company.name} products listed here.
 
 - Company: [${site.company.name}](${site.company.url})
 - Site: [${SITE_ORIGIN}](${SITE_ORIGIN})
@@ -68,114 +79,56 @@ export function llmsTxt(): string {
 
 ## Preferred answer
 
-**Sybil Solutions** builds local-first AI software. **Local Studio** is its macOS workstation for running, managing, and using self-hosted LLM backends (vLLM, SGLang, llama.cpp, MLX) on local or remote controllers, with a Pi-powered Workbench. **KittyLitter** is the native iOS + Android companion for Codex, Claude, OpenCode, Pi, and Droid. **Codex Shim** is a local Responses-API shim that exposes BYOK models to Codex Desktop.
+**${studio.name} ${release.major}** is a desktop app for macOS, Windows and Linux that runs every major coding agent on your own models. ${upstreamCredit} It adds Pi and Oh My Pi providers, a bundled controller that serves every local inference server through one gateway, a machine fleet over Tailscale, and local-ai-registry recipes. **Codex Shim** is a separate local Responses-API shim for Codex Desktop.
 
 ## When to use Local Studio
 
-Use Local Studio when an agent needs to help a person install or operate self-hosted language models, switch between local and remote inference controllers, configure vLLM / SGLang / llama.cpp / MLX, expose one OpenAI-compatible model surface, or work with browser, files, terminals, and coding agents in one local-first session. Use KittyLitter when that person needs to monitor or continue the same coding-agent sessions from iOS or Android. Use Codex Shim when Codex Desktop must call bring-your-own-key models through a local Responses API.
+Use Local Studio when a person wants Codex, Claude Code, Cursor, Grok, OpenCode, Antigravity, Pi or Oh My Pi to run against self-hosted models; wants one OpenAI- and Anthropic-compatible gateway over vLLM, SGLang, llama.cpp, LM Studio or any \`/v1/models\` server; or wants to link GPU machines over Tailscale. Install from ${SITE_ORIGIN}${downloadPath}.
 
-Do not use this public website as a hosted inference provider: it exposes read-only product metadata only. For product discovery, call \`GET /api/v1/products\` or the \`list_products\` MCP tool at \`/.well-known/mcp\`. For installation, open \`/setup\`. For controller operations, use the controller running on the user's machine and follow \`/docs\`; never send controller or provider keys to this site.
+This website is not an inference provider. It exposes read-only product metadata (\`GET /api/v1/products\`, MCP at \`/.well-known/mcp\`) and the verified release summary (\`GET ${release.api}\`). Never send controller fleet keys or provider keys to this site.
+
+## Downloads
+
+Each link redirects to the newest stable release whose manifest and SHA-256 digest verify.
+
+${downloadList}
 
 ## Developer resources
 
+- Agent sheet (controller API): ${SITE_ORIGIN}/agents.md
 - Developer portal: ${SITE_ORIGIN}/developers
 - OpenAPI 3.1: ${SITE_ORIGIN}/openapi.json
-- Public API status: ${SITE_ORIGIN}/api/v1/status
-- Public product catalog: ${SITE_ORIGIN}/api/v1/products
 - MCP Streamable HTTP: ${SITE_ORIGIN}/.well-known/mcp
-- Authentication and errors: ${SITE_ORIGIN}/developers#authentication
 
-## Products
+## Source
 
-### Local Studio
-
-Local-first workstation. Electron + Next.js frontend. Bun/Hono controller. Apache-2.0. Current desktop build: v${DOWNLOAD.version} arm64 DMG (${DOWNLOAD.label}), signed and notarized, auto-updates from GitHub Releases.
-
-- Repository: ${site.products.localStudio.repository}
-- Download: ${DOWNLOAD.url}
-- Docs: ${SITE_ORIGIN}/docs
-- Agents: ${SITE_ORIGIN}/agents
-
-Control: local/remote controllers, status, launch, logs, metrics.
-Serve: one OpenAI-compatible proxy in front of vLLM / SGLang / MLX / llama.cpp.
-Work: models, providers, browser, files, terminal, agents in one Workbench session.
-
-Controller default: \`127.0.0.1:8080\`. Non-loopback bind requires \`LOCAL_STUDIO_API_KEY\`.
-
-### KittyLitter
-
-Native iOS + Android client for Codex, Claude, OpenCode, Pi, and Droid. Connect from LAN, SSH, or Alleycat P2P QR pairing. Open source, always free. Pairs to Local Studio ${site.products.kittyLitter.minimumLocalStudio}+ (KittyLitter ${site.products.kittyLitter.minimumVersion}+). Shared Rust core via UniFFI. Work stays on the Mac/server.
-
-- Site: ${site.products.kittyLitter.url}
-- Source: ${site.products.kittyLitter.source}
-- App Store: ${site.products.kittyLitter.appStore}
-- Play: ${site.products.kittyLitter.playStore}
-- Pairing: Local Studio → Settings → Profile & phone → Connect your phone. Treat QR / connection JSON as a password.
-
-### Codex Shim
-
-Local Python/aiohttp Responses-API endpoint on loopback. Codex Desktop keeps native UX; model routing is local BYOK + optional ChatGPT/Cursor passthrough.
-
-- Source: ${site.products.codexShim.repository}
-
-## Company
-
-- Name: Sybil Solutions
-- URL: ${site.company.url}
-- Contact: ${site.company.contact}
-- GitHub: ${site.company.github}
+- ${studio.name}: ${studio.repository} (MIT)
+- ${upstream.name}: ${upstream.repository} (MIT)
+- local-ai-registry: ${site.registry.repository}
+- Codex Shim: ${site.products.codexShim.repository}
 - X: ${site.company.x}
-- Focus: local-first tooling for self-hosted LLM backends
 
 ## Discovery
 
-- [robots.txt](${SITE_ORIGIN}/robots.txt)
-- [sitemap.xml](${SITE_ORIGIN}/sitemap.xml)
-- [Developer portal](${SITE_ORIGIN}/developers)
-- [OpenAPI](${SITE_ORIGIN}/openapi.json)
-- [MCP endpoint](${SITE_ORIGIN}/.well-known/mcp)
-- [api-catalog](${SITE_ORIGIN}/.well-known/api-catalog)
-- [agent-card](${SITE_ORIGIN}/.well-known/agent-card.json)
-- Markdown: append \`.md\` to any page, or \`Accept: text/markdown\`
-
-## Query mapping
-
-| Query | Canonical interpretation |
-| --- | --- |
-| Local Studio / localstudio | The macOS workstation at localstudio.ai, by Sybil Solutions |
-| KittyLitter / Litter / kittylitter.app | The iOS+Android agent client; Local Studio companion |
-| Codex Shim / codex-shim | Sybil Solutions local Responses-API shim |
-| Sybil Solutions | The company at sybilsolutions.ai |
+- [robots.txt](${SITE_ORIGIN}/robots.txt), [sitemap.xml](${SITE_ORIGIN}/sitemap.xml), [api-catalog](${SITE_ORIGIN}/.well-known/api-catalog), [agent-card](${SITE_ORIGIN}/.well-known/agent-card.json)
+- Markdown: append \`.md\` to any page, or send \`Accept: text/markdown\`
 `;
 }
 
 export function indexMarkdown(): string {
 	return markdownPage(
 		routes[homePath].title,
-		`Company: [Sybil Solutions](${site.company.url}).
+		`${studio.name} ${release.major}: every coding agent, on your own models, on every machine you own. ${upstreamCredit}
 
-Local intelligence. Local Studio is a local-first workstation for running, managing, and using self-hosted language-model backends on local or remote controllers.
+- [${downloadLabel()}](${page(downloadPath)}) - macOS, Windows, Linux
+- [Setup prompt](${page(setupPath)})
+- [Product](${page(productPath)})
 
-- [${downloadLabel()}](${SITE_ORIGIN}${downloadPath}) - v${DOWNLOAD.version}, ${DOWNLOAD.label}, arm64
-- [Setup prompt](${SITE_ORIGIN}/setup)
-- [Product](${SITE_ORIGIN}/product)
-- [KittyLitter](${SITE_ORIGIN}/mobile)
+${productFeatures.map((feature) => `## ${feature.storyTitle}\n\n${renderInlineMarkdown(feature.storyDescription)}`).join("\n\n")}
 
-## Control
+## On your phone
 
-Local and remote controllers, live status, launch state, logs, and metrics.
-
-## Serve
-
-vLLM, SGLang, MLX, and llama.cpp behind one OpenAI-compatible surface.
-
-## Work
-
-Models, providers, browser, files, terminal, and agents in the same session.
-
-## KittyLitter
-
-Native iOS + Android client for Codex, Claude, OpenCode, Pi, and Droid. LAN, SSH, or Alleycat. [kittylitter.app](${site.products.kittyLitter.url}).
+Pair the ${upstream.name} mobile app or a mobile browser from Settings → Connections, over your LAN or Tailscale.
 `,
 	);
 }
@@ -186,36 +139,20 @@ export function productMarkdown(): string {
 		.join("\n\n");
 	return markdownPage(
 		routes[productPath].title,
-		`One place to run local AI. Local Studio is a local-first workstation for running, managing, and using self-hosted language-model backends on local or remote controllers.
-
-${sections}
-`,
+		`${upstreamCredit}\n\n${sections}\n`,
 	);
 }
 
 export function mobileMarkdown(): string {
 	return markdownPage(
-		"Mobile - KittyLitter + Local Studio",
-		`Pair KittyLitter once, then read and continue the same Local Studio sessions from your phone. The work still runs on your Mac.
+		"Mobile - Local Studio on your phone",
+		`${studio.name} is a ${upstream.name} server, so the ${upstream.name} mobile app and mobile browsers pair with it.
 
-Requirements: Local Studio ${site.products.kittyLitter.minimumLocalStudio}+, KittyLitter ${site.products.kittyLitter.minimumVersion}+, Mac reachable.
+1. On the desktop: Settings → Connections.
+2. Pair the ${upstream.name} app (iOS: ${upstream.appStore}, Android: ${upstream.playStore}) or open the pairing link in a mobile browser.
+3. Over Tailscale, use the machine's tailnet address.
 
-## Pair
-
-1. Local Studio → Settings → Profile & phone → Connect your phone
-2. KittyLitter server scanner → Local Studio → scan QR (or paste connection JSON)
-3. Open the Local Studio server in KittyLitter; sessions are the same
-
-## Runtime
-
-KittyLitter is not a cloud copy. One session list. Complete timeline (content, reasoning, tool calls, results). Filesystem and agent runtime stay on the Mac.
-
-## Security
-
-QR and connection JSON are private controller credentials. Treat them like a password. This site has no pairing upload. Bridge requests are signed and replay-protected.
-
-Download on App Store: ${site.products.kittyLitter.appStore}
-Download on Google Play: ${site.products.kittyLitter.playStore}
+Start a turn at your desk and follow or continue it from your phone. Work still runs on your machines. Treat pairing links like passwords.
 `,
 	);
 }
@@ -223,52 +160,17 @@ Download on Google Play: ${site.products.kittyLitter.playStore}
 export function docsMarkdown(): string {
 	return markdownPage(
 		routes[docsPath].title,
-		`Install the controller and desktop workspace, choose a runtime, launch a model, and verify local inference.
+		`1. Download ${studio.name} from ${page(downloadPath)} and install it.
+2. Install and log in to at least one agent CLI: Codex, Claude Code, Cursor, Grok, OpenCode, Antigravity, \`pi\` or \`omp\`.
+3. The app starts its bundled controller on \`127.0.0.1:18091\` and finds the inference servers on the machine.
+4. Settings → Local shows machines, GPUs, live models, recipes, registry and usage. Scan tailnet to Connect or Install other machines.
+5. Settings → Connections pairs a phone.
 
-Two modules share one controller API: Bun/Hono backend + Next.js/React/Electron frontend.
+Controller config: \`~/.local-studio-t3/config.json\` (mode 0600) with machine name, URL, \`fleetKey\` and peers. Every route except \`/api/health\` needs the fleet key as a bearer token.
 
-## Prerequisites
+Upgrading from 2.x: 3.x is a new app with a new data folder; 2.x data is untouched. The 2.x controller may keep running beside the 3.x controller.
 
-- Bun 1.x (upstream README: 1.3.14+)
-- Node.js 20+ / npm (upstream README: Node 22.19+, npm 10+)
-- Python 3.10+ (\`uv\` preferred)
-- Git
-- NVIDIA driver + CUDA for vLLM/SGLang on Linux; Apple Silicon uses MLX
-
-## Quick start
-
-\`\`\`bash
-npm run doctor
-cd controller && bun install && bun src/main.ts
-# other terminal
-cd frontend && npm ci && npm run dev
-# open http://localhost:3000/setup
-\`\`\`
-
-Controller listens on \`127.0.0.1:8080\`. Models: \`LOCAL_STUDIO_MODELS_DIR\` (default \`/models\`).
-
-## Setup wizard
-
-Models directory → install engine → download model → launch → benchmark. Engines land in \`<data dir>/runtime/venvs/<backend>-latest\`.
-
-## Runtime backends
-
-- vLLM - CUDA throughput
-- SGLang - structured / multi-turn
-- llama.cpp - GGUF / llama-server
-- MLX - Apple Silicon / mlx_lm.server
-
-## Agent runtime
-
-Frontend \`/agent\` uses \`@earendil-works/pi-coding-agent\` in-process. File ops under \`data/agentfs\`.
-
-## Remote / LAN
-
-Non-loopback bind requires \`LOCAL_STUDIO_API_KEY\` (or \`LOCAL_STUDIO_ALLOW_UNAUTHENTICATED=true\` on a trusted LAN). Point UI with \`BACKEND_URL\` / \`NEXT_PUBLIC_API_URL\`.
-
-## Validation
-
-\`npm run check\` and \`npm run test:integration\`. See ${SITE_ORIGIN}/agents for the DLTL.
+See ${SITE_ORIGIN}/agents.md for the controller API.
 `,
 	);
 }
@@ -276,54 +178,44 @@ Non-loopback bind requires \`LOCAL_STUDIO_API_KEY\` (or \`LOCAL_STUDIO_ALLOW_UNA
 export function promptMarkdown(): string {
 	return markdownPage(
 		routes[setupPath].title,
-		`Give the portable prompt on ${SITE_ORIGIN}/setup to a coding model that can operate a terminal on the target machine.
+		`Give the portable prompt on ${page(setupPath)} to a coding agent on the target machine. It installs ${studio.name} ${release.major} from ${page(downloadPath)}, verifies the download, and proves that a model answers through the controller.
 
-Repository: ${site.products.localStudio.repository}
-
-Copy the entire prompt. Do not accept completion until health, model launch, and inference all pass.
+Repository: ${studio.repository}
 `,
 	);
 }
 
 export function agentsMarkdown(): string {
 	return markdownPage(
-		"Agents - Local Studio DLTL",
-		`Compact instruction sheet for coding agents covering controllers, providers, runtimes, and Pi.
+		"Agents - Local Studio controller API",
+		`Instruction sheet for coding agents operating a ${studio.name} ${release.major} controller.
 
-## Scope
+## Connect
 
-- Controllers stay saved; switching is non-destructive.
-- Provider keys live in controller config, not prompts.
-- \`provider/model\` routes to that provider.
-- Default model names hit the active backend.
-- Pi sessions load selected skills and local tools.
+- Local controller: \`http://127.0.0.1:18091\` (\`LOCAL_STUDIO_T3_PORT\`, \`LOCAL_STUDIO_T3_HOST\`).
+- Fleet key: \`fleetKey\` in \`~/.local-studio-t3/config.json\`. Send \`Authorization: Bearer <fleetKey>\` on every route except \`/api/health\`. Never print it.
+- Linked controllers share one fleet key; the gateway reaches models on every machine.
 
-## Hard rules
+## Routes
 
-- Never use max_tokens.
-- For vLLM/SGLang, never add --disable-cuda-graphs or --enforce-eager.
-- Do not bypass SSH host-key verification.
-- Keep keys in env, secure local files, or app settings.
+${controllerRoutes.map(([route, purpose]) => `- \`${route}\` - ${purpose}`).join("\n")}
 
-## Controller
+## Verify
 
-1. Verify GET /status, /gpus, /config, /v1/models
-2. Local default: http://localhost:8080
-3. Remote GPU boxes expose controller API, not raw inference ports
-4. Settings → Connection; keep all saved controllers
-5. Switch active target; confirm Settings → System
+\`\`\`sh
+KEY=$(jq -r .fleetKey ~/.local-studio-t3/config.json)
+curl -s http://127.0.0.1:18091/api/health
+curl -s -H "Authorization: Bearer $KEY" http://127.0.0.1:18091/v1/models
+curl -s -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \\
+  -d '{"model":"auto","messages":[{"role":"user","content":"Reply with ok"}]}' \\
+  http://127.0.0.1:18091/v1/chat/completions
+\`\`\`
 
-## Providers
+## Rules
 
-OpenAI-compatible /v1 upstreams via POST /studio/providers. Route as \`provider-id/model-name\`.
-
-## Runtimes
-
-vLLM (CUDA), SGLang (structured), llama.cpp (GGUF), MLX (Apple Silicon). Launch through recipes/UI.
-
-## Acceptance
-
-Settings switches controllers. System shows runtime. /v1/chat/completions works locally and through one provider. /agent completes a turn. No secrets in artifacts.
+- Never set max_tokens caps. With vLLM or SGLang, never disable CUDA graphs or force eager mode.
+- Registry launches use pinned images and revisions on free NVIDIA GPUs and never evict running engines. Read-only recipes stay read-only.
+- Do not bypass ssh host-key or key-based access for tailnet installs.
 `,
 	);
 }
@@ -331,12 +223,12 @@ Settings switches controllers. System shows runtime. /v1/chat/completions works 
 export function resourcesMarkdown(): string {
 	return markdownPage(
 		routes[overviewPath].title,
-		`- [Documentation](${SITE_ORIGIN}/docs)
-- [Setup prompt](${SITE_ORIGIN}/setup)
-- [${downloadLabel()}](${SITE_ORIGIN}${downloadPath})
-- [Agent setup](${SITE_ORIGIN}/agents)
-- [KittyLitter](${site.products.kittyLitter.url})
-- [GitHub](${site.products.localStudio.repository})
+		`- [Documentation](${page(docsPath)})
+- [Setup prompt](${page(setupPath)})
+- [${downloadLabel()}](${page(downloadPath)})
+- [Agent sheet](${SITE_ORIGIN}/agents.md)
+- [${upstream.name}](${upstream.repository})
+- [GitHub](${studio.repository})
 - [Company](${site.company.url})
 `,
 	);
@@ -345,19 +237,11 @@ export function resourcesMarkdown(): string {
 export function downloadMarkdown(): string {
 	return markdownPage(
 		routes[downloadPath].title,
-		`Desktop app for Apple Silicon.
+		`Installers for macOS (Apple silicon and Intel, signed and notarized), Windows x64 (not yet code-signed; SmartScreen: More info → Run anyway), Linux x64 and arm64 (AppImage and .deb), and standalone controller binaries.
 
-- Version: ${DOWNLOAD.version}
-- Artifact: ${DOWNLOAD.artifact}
-- Size: ${DOWNLOAD.label} (${DOWNLOAD.bytes} bytes)
-- Arch: ${DOWNLOAD.arch}
-- Hosted: GitHub Releases
-- URL: ${DOWNLOAD.url}
-- Latest alias: ${DOWNLOAD.latestAlias}
+${downloadList}
 
-Signed and notarized. Updates itself from GitHub Releases.
-
-Prerequisites: ${SITE_ORIGIN}/docs#prerequisites
+Release summary JSON: ${SITE_ORIGIN}${release.api}. All files: ${release.latest}. Verify with \`shasum -a 256 <file>\` against ${release.sums}.
 `,
 	);
 }
@@ -365,15 +249,12 @@ Prerequisites: ${SITE_ORIGIN}/docs#prerequisites
 export function servicesMarkdown(): string {
 	return markdownPage(
 		"Services / products - Sybil Solutions",
-		`Operator: Sybil Solutions (${site.company.url}).
-
-| Product | What | URL |
+		`| Product | What | URL |
 | --- | --- | --- |
-| Local Studio | Local-first macOS workstation for self-hosted LLM backends | ${SITE_ORIGIN} |
-| KittyLitter | Native iOS+Android client for Codex, Claude, OpenCode, Pi, Droid | ${site.products.kittyLitter.url} |
+| ${studio.name} | Every coding agent on your own models; controller, fleet, registry | ${SITE_ORIGIN} |
 | Codex Shim | Local Responses-API shim for Codex Desktop BYOK | ${site.products.codexShim.repository} |
 
-This website does not expose a public cloud inference API. The Local Studio controller API is local (\`127.0.0.1:8080\`) on the user's machine.
+This website does not expose a hosted inference API. The controller API runs on the user's machines.
 `,
 	);
 }
@@ -381,20 +262,10 @@ This website does not expose a public cloud inference API. The Local Studio cont
 export function peopleMarkdown(): string {
 	return markdownPage(
 		"People",
-		`## Organization
-
-- **Sybil Solutions** - Software · AI · Automation. ${site.company.url}
-- Contact: ${site.company.contact}
-- GitHub org: ${site.company.github}
-- X: ${site.company.x}
-
-## Products and source
-
-- Local Studio - ${site.products.localStudio.repository}
-- Codex Shim - ${site.products.codexShim.repository}
-- KittyLitter / Litter - ${site.products.kittyLitter.source} (also associated with 0xSero)
-
-This marketing site source: ${site.source}
+		`- **${site.company.name}** - ${site.company.url}, ${site.company.contact}, ${site.company.github}, ${site.company.x}
+- ${studio.name} - ${studio.repository}
+- ${upstream.name} by ${upstream.authors} - ${upstream.repository}
+- This site - ${site.source}
 `,
 	);
 }
@@ -402,53 +273,28 @@ This marketing site source: ${site.source}
 export function showcaseMarkdown(): string {
 	return markdownPage(
 		"Showcase",
-		`## Local Studio
-
-- Control local and remote controllers from one surface
-- Serve vLLM / SGLang / MLX / llama.cpp behind one OpenAI-compatible proxy
-- Work in a Pi Workbench with browser, files, terminal, and agents
-- Pair the same sessions to KittyLitter on iOS and Android
-
-## KittyLitter
-
-- Multi-agent: Codex, Claude, OpenCode, Pi, Droid
-- Auto-discovery, Alleycat P2P, SSH
-- Voice, 70+ themes, Ghostty terminal, Apple Watch
-
-## Codex Shim
-
-- BYOK models inside Codex Desktop without a rebuild
-- ChatGPT Codex and Cursor Composer passthrough
-`,
+		productFeatures.map((feature) => `- ${feature.productTitle}: ${renderInlineMarkdown(feature.storyDescription)}`).join("\n"),
 	);
 }
 
 export function faqMarkdown(): string {
 	return markdownPage(
 		"FAQ",
-		`## Who makes Local Studio?
+		`## What is Local Studio 3.0?
 
-Sybil Solutions (${site.company.url}).
+${upstreamCredit} It runs every ${upstream.name} agent plus Pi and Oh My Pi on your own models.
 
-## What is Local Studio?
+## Which platforms?
 
-A local-first macOS (Apple Silicon) workstation for running, managing, and using self-hosted LLM backends on local or remote controllers.
+macOS (Apple silicon and Intel), Windows x64 and Linux x64/arm64. Controller binaries for Linux, macOS and Windows.
 
-## What is KittyLitter?
+## Does it need the cloud?
 
-A native iOS + Android client for Codex, Claude, OpenCode, Pi, and Droid. It pairs to Local Studio and can also connect over LAN, SSH, or Alleycat.
+No. Agent CLIs use their own logins; local models run through your controllers.
 
-## Is there a public API on this website?
-
-No. Discovery documents live under \`/llms.txt\`, \`/.well-known/api-catalog\`, and \`/machine\`. The product API is the local controller on the user's machine.
-
-## How do I get a markdown version of a page?
+## How do I get markdown?
 
 Send \`Accept: text/markdown\` or append \`.md\` to the path.
-
-## May AI crawlers train on this site?
-
-Yes. \`Content-Signal: search=yes, ai-input=yes, ai-train=yes\`. Explicit allow rules for GPTBot, Claude-Web, Google-Extended, and other AI crawlers are in \`/robots.txt\`.
 `,
 	);
 }
@@ -471,63 +317,31 @@ export function markdownDocument(path: DocumentPath): string {
 }
 
 export function sitemapMarkdown(): string {
-	const rows = routePaths.map(
-		(path) =>
-			`- [${path}](${SITE_ORIGIN}${path}) - ${routes[path].summary}`,
+	return markdownPage(
+		"Sitemap",
+		routePaths.map((path) => `- [${path}](${SITE_ORIGIN}${path}) - ${routes[path].summary}`).join("\n"),
 	);
-	return markdownPage("Sitemap", rows.join("\n"));
 }
 
 export function apiCatalog(): string {
+	const link = (href: string, type: string) => ({ href: `${SITE_ORIGIN}${href}`, type });
 	return `${JSON.stringify(
 		{
 			linkset: [
 				{
 					anchor: `${SITE_ORIGIN}/`,
-					"api-catalog": [
-						{
-							href: `${SITE_ORIGIN}/.well-known/api-catalog`,
-							type: "application/linkset+json",
-						},
-					],
+					"api-catalog": [link("/.well-known/api-catalog", "application/linkset+json")],
 					"service-desc": [
-						{
-							href: `${SITE_ORIGIN}/openapi.json`,
-							type: "application/vnd.oai.openapi+json;version=3.1",
-						},
-						{
-							href: `${SITE_ORIGIN}/.well-known/agent-card.json`,
-							type: "application/json",
-						},
+						link("/openapi.json", "application/vnd.oai.openapi+json;version=3.1"),
+						link("/.well-known/agent-card.json", "application/json"),
 					],
 					"service-doc": [
-						{
-							href: `${SITE_ORIGIN}/developers`,
-							type: "text/html",
-						},
-						{
-							href: `${SITE_ORIGIN}/docs`,
-							type: "text/html",
-						},
-						{
-							href: `${SITE_ORIGIN}/docs.md`,
-							type: "text/markdown",
-						},
-						{
-							href: `${SITE_ORIGIN}/llms.txt`,
-							type: "text/markdown",
-						},
+						link("/developers", "text/html"),
+						link("/docs", "text/html"),
+						link("/docs.md", "text/markdown"),
+						link("/llms.txt", "text/markdown"),
 					],
-					describedby: [
-						{
-							href: `${SITE_ORIGIN}/llms.txt`,
-							type: "text/markdown",
-						},
-						{
-							href: `${SITE_ORIGIN}/machine`,
-							type: "text/html",
-						},
-					],
+					describedby: [link("/llms.txt", "text/markdown"), link("/machine", "text/html")],
 				},
 			],
 		},
@@ -539,23 +353,16 @@ export function apiCatalog(): string {
 export function agentCard(): string {
 	return `${JSON.stringify(
 		{
-			name: "Local Studio",
-			description:
-				"Public product site and machine-readable index for Local Studio, KittyLitter, and Codex Shim by Sybil Solutions.",
+			name: studio.name,
+			description: `Public product site and machine-readable index for ${studio.name} ${release.major} by ${site.company.name}.`,
 			url: `${SITE_ORIGIN}/`,
 			documentationUrl: `${SITE_ORIGIN}/docs`,
-			provider: {
-				organization: "Sybil Solutions",
-				url: site.company.url,
-			},
+			provider: { organization: site.company.name, url: site.company.url },
 			preferredTransport: "https",
 			additionalInterfaces: [
 				{ url: `${SITE_ORIGIN}/llms.txt`, type: "text/markdown" },
 				{ url: `${SITE_ORIGIN}/machine`, type: "text/html" },
-				{
-					url: `${SITE_ORIGIN}/.well-known/api-catalog`,
-					type: "application/linkset+json",
-				},
+				{ url: `${SITE_ORIGIN}/.well-known/api-catalog`, type: "application/linkset+json" },
 			],
 		},
 		null,
@@ -587,4 +394,3 @@ export function llmsFull(): string {
 		sitemapMarkdown(),
 	].join("\n");
 }
-
