@@ -18,22 +18,15 @@ import {
 } from "../domain/route";
 import { release } from "../domain/release";
 import { site } from "../domain/site";
+import { agentNames, upstreamCredit } from "../content/facts";
 import { styles } from "../styles/pages-styles";
-
-const releaseDateFormatter = new Intl.DateTimeFormat("en-US", {
-	dateStyle: "long",
-	timeZone: "UTC",
-});
-const publishedLabel = releaseDateFormatter.format(
-	new Date(`${release.published}T00:00:00Z`),
-);
 
 const toc = [
 	["Start Here", "start-here"],
 	["This Site", "this-site"],
 	["Local Studio", "local-studio"],
-	["Runtimes", "runtimes"],
-	["KittyLitter", "kittylitter"],
+	["Models and Machines", "runtimes"],
+	["T3 Code", "upstream"],
 	["Codex Shim", "codex-shim"],
 	["For Machines", "for-machines"],
 	["Source and Company", "source"],
@@ -50,19 +43,19 @@ interface OverviewEntry {
 
 const starts: readonly OverviewEntry[] = [
 	{
+		label: "Download",
+		text: "Installers for macOS, Windows and Linux, plus controller binaries. Every link verifies the release before it redirects.",
+		href: downloadPath,
+	},
+	{
 		label: "Documentation",
-		text: "Install the controller and the desktop workspace, choose a runtime backend, launch a model, and verify local inference end to end.",
+		text: "Install the app, connect agents, serve local models, link machines over Tailscale and pair a phone.",
 		href: docsPath,
 	},
 	{
 		label: "Setup Prompt",
-		text: "One portable prompt. Give it to any coding model and it installs Local Studio on the machine it runs on, then proves a real inference request.",
+		text: "One portable prompt. Give it to a coding agent and it installs Local Studio, then proves a model answers through the controller.",
 		href: setupPath,
-	},
-	{
-		label: "Download for macOS",
-		text: `The signed and notarized Apple Silicon DMG. ${release.label}, v${release.version}, hosted on GitHub Releases with auto-updates.`,
-		href: downloadPath,
 	},
 ];
 
@@ -74,104 +67,25 @@ const siteRoutes: readonly OverviewEntry[] = routePaths.map((path) => ({
 }));
 
 const studioFacts: readonly OverviewEntry[] = [
-	{
-		label: "Current",
-		text: `v${release.version}, published ${publishedLabel}. Signed, notarized, and self-updating from GitHub Releases.`,
-	},
-	{
-		label: "Platform",
-		text: "macOS desktop app for Apple Silicon.",
-	},
-	{
-		label: "Controller",
-		text: "Bun + Hono on 127.0.0.1:8080. Owns model lifecycle, recipes, downloads, system state, and the OpenAI-compatible proxy.",
-	},
-	{
-		label: "Frontend",
-		text: "Next.js 16 + React 19 in an Electron shell. The Workbench agent surface lives at /agent.",
-	},
-	{
-		label: "License",
-		text: "Apache-2.0.",
-	},
-	{
-		label: "Repository",
-		text: "Source, releases, and issue tracking.",
-		href: site.products.localStudio.repository,
-		external: true,
-	},
-];
-
-const studioSurfaces: readonly OverviewEntry[] = [
-	{
-		label: "Control",
-		text: "Launch and evict models, manage recipes and downloads, and watch GPU, process, log, and usage state across local and remote controllers.",
-	},
-	{
-		label: "Serve",
-		text: "vLLM, SGLang, MLX, and llama.cpp behind one OpenAI-compatible proxy: chat, models, tokenization, audio.",
-	},
-	{
-		label: "Work",
-		text: "Models, providers, browser, files, terminal, and agents in one session through the Pi-powered Workbench.",
-	},
+	{ label: "Current", text: `${release.major}.x, published by GitHub Actions with a signed manifest and checksums.` },
+	{ label: "Platforms", text: "macOS (Apple silicon and Intel, signed and notarized), Windows x64, Linux x64 and arm64 (AppImage and .deb)." },
+	{ label: "Agents", text: `${agentNames.join(", ")}.` },
+	{ label: "Controller", text: "Bundled with the app on 127.0.0.1:18091. One gateway for Chat Completions, Completions, Anthropic Messages and Responses." },
+	{ label: "License", text: `${site.upstream.license}, like ${site.upstream.name}.` },
+	{ label: "Repository", text: "Source, releases, and issue tracking.", href: site.products.localStudio.repository, external: true },
 ];
 
 const runtimes: readonly OverviewEntry[] = [
-	{
-		label: "vLLM",
-		text: "CUDA throughput serving on Linux and NVIDIA. Configured, discovered, system, Docker, or bundled targets.",
-	},
-	{
-		label: "SGLang",
-		text: "Structured and multi-turn serving through discovered or configured Python launch-server targets.",
-	},
-	{
-		label: "llama.cpp",
-		text: "GGUF models through llama-server. Strong on CPU and modest GPUs.",
-	},
-	{
-		label: "MLX",
-		text: "Apple Silicon serving through mlx_lm.server. The default path on Mac.",
-	},
+	{ label: "Discovery", text: "vLLM, SGLang, llama.cpp, LM Studio, or anything serving /v1/models on each machine." },
+	{ label: "auto", text: "The model id auto routes to the busiest live model across your machines.", code: true },
+	{ label: "Fleet", text: "Settings → Local finds tailnet machines. Connect existing controllers or install one over ssh with a shared fleet key." },
+	{ label: "Registry", text: "Hardware-matched recipes from local-ai-registry, pinned weights, and Share to send a working config back as a pull request.", href: site.registry.repository, external: true },
 ];
 
-const kittyRows: readonly OverviewEntry[] = [
-	{
-		label: "Connect",
-		text: "LAN auto-discovery, SSH to any machine, or Alleycat peer-to-peer QR pairing through NATs and firewalls. No VPN, public IP, or port forwarding.",
-	},
-	{
-		label: "Pairing",
-		text: `Local Studio ${site.products.kittyLitter.minimumLocalStudio}+ and KittyLitter ${site.products.kittyLitter.minimumVersion}+. Settings → Profile & phone → Connect your phone, then scan. The QR and copied JSON are controller credentials; treat them as secrets.`,
-	},
-	{
-		label: "In the box",
-		text: "Realtime voice, 70+ editor themes, an embedded Ghostty terminal, and LitterWatch for Apple Watch.",
-	},
-	{
-		label: "Get it",
-		text: (
-			<>
-				<a
-					{...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.overviewTextLink)}
-					href={site.products.kittyLitter.url}
-					target="_blank"
-					rel="noreferrer"
-				>
-					kittylitter.app
-				</a>{" "}
-				· <a {...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.overviewTextLink)} href={site.products.kittyLitter.appStore} target="_blank" rel="noreferrer">App Store</a>{" "}
-				· <a {...stylex.props(baseStyles.element, baseStyles.interactive, baseStyles.focusable, styles.overviewTextLink)} href={site.products.kittyLitter.playStore} target="_blank" rel="noreferrer">Google Play</a>
-			</>
-		),
-	},
-	{
-		label: "Source",
-		text: "GPL-3.0 with an App Store / Google Play exception. Open source and free.",
-		href: site.products.kittyLitter.source,
-		external: true,
-	},
+const upstreamRows: readonly OverviewEntry[] = [
+	{ label: "Authors", text: `${site.upstream.authors}. The thread UI, composer, terminal, source control, remote access and mobile app are their work.` },
+	{ label: "Mobile", text: `The ${site.upstream.name} app pairs with Local Studio from Settings → Connections.`, href: site.upstream.appStore, external: true },
+	{ label: "Repository", text: "Star and support the upstream project.", href: site.upstream.repository, external: true },
 ];
 
 const shimRows: readonly OverviewEntry[] = [
@@ -180,7 +94,7 @@ const shimRows: readonly OverviewEntry[] = [
 		text: "Optional ChatGPT Codex passthrough, Cursor Composer passthrough, an Auto Router that picks the cheapest capable model per task, and a macOS patch that unhides custom catalog entries.",
 	},
 	{
-		label: "Shape",
+		label: "Runtime",
 		text: "Python 3.11+ / aiohttp, binds 127.0.0.1, configures through ~/.codex-shim/models.json. MIT.",
 	},
 	{
@@ -244,40 +158,12 @@ const machineRows: readonly OverviewEntry[] = [
 ];
 
 const sourceRows: readonly OverviewEntry[] = [
-	{
-		label: "local-studio",
-		text: "The desktop app, controller, and frontend. Apache-2.0.",
-		href: site.products.localStudio.repository,
-		external: true,
-		code: true,
-	},
-	{
-		label: "litter",
-		text: "KittyLitter for iOS and Android. GPL-3.0 with a store exception.",
-		href: site.products.kittyLitter.source,
-		external: true,
-		code: true,
-	},
-	{
-		label: "codex-shim",
-		text: "The BYOK Responses shim. MIT.",
-		href: site.products.codexShim.repository,
-		external: true,
-		code: true,
-	},
-	{
-		label: "ls-web",
-		text: "This website.",
-		href: site.source,
-		external: true,
-		code: true,
-	},
-	{
-		label: "Sybil Solutions",
-		text: "The company behind Local Studio. Software, AI, automation.",
-		href: site.company.url,
-		external: true,
-	},
+	{ label: "local-studio", text: "The desktop app and controller. MIT.", href: site.products.localStudio.repository, external: true, code: true },
+	{ label: "t3code", text: "Upstream T3 Code. MIT.", href: site.upstream.repository, external: true, code: true },
+	{ label: "local-ai-registry", text: "Hardware records and recipes.", href: site.registry.repository, external: true, code: true },
+	{ label: "codex-shim", text: "The BYOK Responses shim. MIT.", href: site.products.codexShim.repository, external: true, code: true },
+	{ label: "local-studio-site", text: "This website.", href: site.source, external: true, code: true },
+	{ label: "Sybil Solutions", text: "The company behind Local Studio. Software, AI, automation.", href: site.company.url, external: true },
 ];
 
 function arrow(entry: OverviewEntry) {
@@ -359,7 +245,7 @@ export function ResourcesPage() {
 			<DocsLayout toc={toc} path={overviewPath} label="Overview sections">
 					<p {...stylex.props(baseStyles.element, baseStyles.paragraph)}>
 						One page, everything on the map: the site, the desktop app, the
-						phone client, the shim, the machine surface, and where the source
+						upstream project, the shim, the machine surface, and where the source
 						lives. If it exists around <span translate="no" {...stylex.props(baseStyles.element)}>Local Studio</span>,
 						it is linked from here.
 					</p>
@@ -386,31 +272,18 @@ export function ResourcesPage() {
 					<section id="local-studio" {...stylex.props(baseStyles.element, styles.docsSection)}>
 						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Local Studio</h2>
 						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							A local-first workstation for running, managing, and using
-							self-hosted LLM backends. Two modules share one controller API,
-							and it keeps the model, the runtime, and the hardware together.
-							Nothing important disappears behind a provider abstraction.
+							{upstreamCredit} It adds Pi and Oh My Pi, a bundled controller, a fleet over Tailscale and local-ai-registry recipes, under a strict budget of its own code so upstream improvements arrive quickly.
 						</p>
 						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.overviewRows)}>
 							{studioFacts.map((entry) => (
 								<OverviewRow entry={entry} key={entry.label} />
 							))}
 						</ul>
-						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.marginTop32)}>
-							Day-to-day operation runs through three surfaces.
-						</p>
-						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.overviewRows)}>
-							{studioSurfaces.map((entry) => (
-								<OverviewRow entry={entry} key={entry.label} />
-							))}
-						</ul>
 					</section>
 					<section id="runtimes" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Runtimes</h2>
+						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>Models and Machines</h2>
 						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							Recipes launch through the controller runtime layer; a chat proxy
-							call never launches a model silently. Discovery and saved
-							selections stay with the controller and surface in Settings.
+							Each machine runs its own controller. Controllers that share a fleet key link into one graph, so a model loaded anywhere is usable everywhere.
 						</p>
 						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.overviewRows)}>
 							{runtimes.map((entry) => (
@@ -418,16 +291,13 @@ export function ResourcesPage() {
 							))}
 						</ul>
 					</section>
-					<section id="kittylitter" {...stylex.props(baseStyles.element, styles.docsSection)}>
-						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>KittyLitter</h2>
+					<section id="upstream" {...stylex.props(baseStyles.element, styles.docsSection)}>
+						<h2 {...stylex.props(baseStyles.element, baseStyles.heading, baseStyles.headingTwo, styles.docsSectionHeading)}>{site.upstream.name}</h2>
 						<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.docsSectionLead)}>
-							The native iOS and Android client for Codex, Claude, OpenCode, Pi,
-							and Droid, and the mobile companion for Local Studio. Work still
-							runs on your Mac or server; sessions, streaming, reasoning, and
-							tool results follow the phone.
+							The open-source agent harness Local Studio is built on, used under the {site.upstream.license} License. Local Studio is a thin fork that tracks it closely.
 						</p>
 						<ul {...stylex.props(baseStyles.list, baseStyles.element, styles.overviewRows)}>
-							{kittyRows.map((entry) => (
+							{upstreamRows.map((entry) => (
 								<OverviewRow entry={entry} key={entry.label} />
 							))}
 						</ul>

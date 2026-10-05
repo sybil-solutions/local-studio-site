@@ -13,17 +13,9 @@ export const apiProducts = {
 			id: "local-studio",
 			name: site.products.localStudio.name,
 			description:
-				"Local-first macOS workstation for self-hosted language-model backends.",
+				"Desktop app for macOS, Windows and Linux that runs every coding agent on your own models, built on T3 Code.",
 			url: `${site.origin}/`,
 			repository: site.products.localStudio.repository,
-		},
-		{
-			id: "kittylitter",
-			name: site.products.kittyLitter.name,
-			description:
-				"Native iOS and Android client for coding agents and Local Studio sessions.",
-			url: site.products.kittyLitter.url,
-			repository: site.products.kittyLitter.source,
 		},
 		{
 			id: "codex-shim",
@@ -66,7 +58,7 @@ export function openApiSpec(): string {
 				description:
 					"Read-only public product metadata for Local Studio by Sybil Solutions. The desktop controller API runs on the user's machine and is documented separately.",
 				contact: { name: site.company.name, email: site.company.contact, url: site.company.url },
-				license: { name: "Apache-2.0", identifier: "Apache-2.0" },
+				license: { name: "MIT", identifier: "MIT" },
 			},
 			servers: [
 				{ url: "/", description: "Current origin" },

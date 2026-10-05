@@ -53,7 +53,7 @@ const css = files.filter((file) => file.name.endsWith(".css"));
 const js = files.filter((file) => file.name.endsWith(".js"));
 const sharedCss = css.length === 1 ? css[0] : undefined;
 const criticalJs = js.find((file) => file.name.startsWith("index-"));
-const lazyHints = ["HeroDemo", "FeatureDemo", "shader"];
+const lazyHints = ["shader"];
 const routeChunks = js.filter(
 	(file) =>
 		!file.name.startsWith("index-") &&

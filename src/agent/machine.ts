@@ -2,6 +2,7 @@ import { productFeatures, renderInlineMarkdown } from "../content/product.ts";
 import { release } from "../domain/release.ts";
 import { routePaths, routes, type RoutePath } from "../domain/route.ts";
 import { site } from "../domain/site.ts";
+import { upstreamCredit } from "../content/facts.ts";
 
 const SITE_ORIGIN = site.origin;
 
@@ -39,31 +40,22 @@ export function machineSections(): readonly MachineSection[] {
 		[
 			"PRODUCTS",
 			[
-				`${site.products.localStudio.name} - macOS workstation for local and remote LLM controllers`,
-				`${site.products.kittyLitter.name} - native mobile companion for coding agents`,
+				`${site.products.localStudio.name} - every coding agent on your own models, on every machine you own`,
 				`${site.products.codexShim.name} - local Responses API shim for Codex Desktop`,
 			],
 		],
 		[
 			"LOCAL_STUDIO",
 			[
-				"Local-first workstation for running, managing, and using self-hosted language-model backends.",
-				field("platform", "macOS desktop app (Apple Silicon)"),
-				field("current", `v${release.version} (${release.published})`),
-				field("download", release.url),
+				upstreamCredit,
+				field("platforms", "macOS arm64/x64, Windows x64, Linux x64/arm64"),
+				field("current", `${release.major}.x, verified at ${release.api}`),
+				field("download", `${SITE_ORIGIN}${release.sitePath}`),
+				field("controller", "127.0.0.1:18091, fleet key bearer auth"),
+				field("upstream", site.upstream.repository),
 				...productFeatures.map(
 					(feature) => `${feature.storyTitle}: ${renderInlineMarkdown(feature.storyDescription)}`,
 				),
-			],
-		],
-		[
-			"KITTYLITTER",
-			[
-				field("url", site.products.kittyLitter.url),
-				field("github", site.products.kittyLitter.source),
-				field("ios", site.products.kittyLitter.appStore),
-				field("android", site.products.kittyLitter.playStore),
-				"Native iOS and Android client. Connect over LAN, SSH, or Alleycat; work stays on the Mac or server.",
 			],
 		],
 		[

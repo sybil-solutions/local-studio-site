@@ -11,7 +11,6 @@ const command = process.argv[2] ?? "write";
 const architecture = JSON.parse(readFileSync(`${root}/architecture.json`, "utf8"));
 const tokenSources = {
 	public: "src/styles/public-tokens.stylex.ts",
-	demo: "packages/demo-ui/src/styles/tokens.stylex.ts",
 };
 
 function stylexTokenIds(rel) {

@@ -9,6 +9,7 @@ import { productFeatures } from "../content/product";
 import { renderInlineReact } from "../ui/prose";
 import { assets, frameSizes, heroSizes, responsiveSrcSet } from "../domain/asset";
 import { site } from "../domain/site";
+import { upstreamCredit } from "../content/facts";
 import { styles } from "../styles/pages-styles";
 
 export function ProductPage() {
@@ -19,9 +20,8 @@ export function ProductPage() {
 				title={routes[productPath].heading}
 				description={
 					<>
-						<span translate="no" {...stylex.props(baseStyles.element)}>{site.products.localStudio.name}</span> is a local-first
-						workstation for running, managing, and using self-hosted
-						language-model backends on local or remote controllers.
+						<span translate="no" {...stylex.props(baseStyles.element)}>{site.products.localStudio.name}</span> runs every
+						coding agent on your own models, across every machine you own. {upstreamCredit}
 					</>
 				}
 				actions={
@@ -36,12 +36,12 @@ export function ProductPage() {
 			>
 				<MediaFrame
 					sx={styles.productHero}
-					src={assets.workbenchBrowserHero}
-					srcSet={responsiveSrcSet(assets.workbenchBrowser)}
+					src={assets.shotThread1300}
+					srcSet={responsiveSrcSet(assets.shotThread)}
 					sizes={heroSizes}
-					alt={`${site.products.localStudio.name} Workbench showing a coding agent and integrated browser.`}
-					width="5118"
-					height="2800"
+					alt={`${site.products.localStudio.name} thread with an agent answer, code and changed files.`}
+					width="2880"
+					height="2200"
 					fetchPriority="high"
 				/>
 				{productFeatures.map((section, index) => (
@@ -68,8 +68,8 @@ export function ProductPage() {
 							srcSet={responsiveSrcSet(section.image)}
 							sizes={frameSizes}
 							alt={section.alt}
-							width="5118"
-							height="2800"
+							width="2880"
+							height="2200"
 							loading="lazy"
 							decoding="async"
 						/>

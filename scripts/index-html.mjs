@@ -9,11 +9,11 @@ import { release } from "../src/domain/release.ts";
 const dest = `${fileURLToPath(new URL("..", import.meta.url)).replace(/\/$/, "")}/index.html`;
 const { company, products } = site;
 const studio = products.localStudio.name;
-const kitty = products.kittyLitter.name;
+const description = `Every coding agent on your own models. ${studio} ${release.major} is built on ${site.upstream.name} (${site.upstream.license}).`;
 const org = {
 	"@type": "Organization",
 	name: company.name,
-	description: "Software company building local-first AI products including Local Studio, KittyLitter, and Codex Shim.",
+	description: "Software company building local-first AI products including Local Studio and Codex Shim.",
 	url: company.url,
 	email: company.contact,
 	contactPoint: { "@type": "ContactPoint", email: company.contact, contactType: "customer support", url: `${site.origin}/contact` },
@@ -23,8 +23,7 @@ const org = {
 const app = (name, url, extra) => ({ "@type": "SoftwareApplication", name, url, applicationCategory: "DeveloperApplication", ...extra });
 const jsonLd = { "@context": "https://schema.org", "@graph": [
 	org,
-	app(studio, `${site.origin}/`, { description: "Local-first macOS workstation for running and using self-hosted language-model backends.", operatingSystem: "macOS", license: "https://www.apache.org/licenses/LICENSE-2.0", downloadUrl: release.latestAlias, publisher: { "@type": "Organization", name: org.name, url: org.url } }),
-	app(kitty, `${products.kittyLitter.url}/`, { operatingSystem: "iOS, Android", isRelatedTo: { "@type": "SoftwareApplication", name: studio } }),
+	app(studio, `${site.origin}/`, { description, softwareVersion: release.major, operatingSystem: "macOS, Windows, Linux", license: "https://opensource.org/licenses/MIT", downloadUrl: `${site.origin}${release.sitePath}`, isBasedOn: { "@type": "SoftwareApplication", name: site.upstream.name, url: site.upstream.repository }, publisher: { "@type": "Organization", name: org.name, url: org.url } }),
 ] };
 const body = `<!doctype html>
 <html lang="en">
@@ -34,11 +33,11 @@ const body = `<!doctype html>
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="description" content="${studio} by ${company.name} - local-first workstation for self-hosted LLM backends. Companion: ${kitty}." />
+    <meta name="description" content="${studio} by ${company.name}. ${description}" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="${routes["/"].title} by ${company.name}" />
-    <meta property="og:description" content="Local-first workstation for running and using self-hosted language-model backends." />
-    <meta property="og:image" content="${site.origin}${assets.wordmark}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${site.origin}${assets.launchPoster}" />
     <meta property="og:url" content="${site.origin}/" />
     <link rel="canonical" href="${site.origin}/" />
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />

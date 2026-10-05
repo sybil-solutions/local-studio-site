@@ -35,24 +35,6 @@ export default defineConfig({
 					"packages/logo-renderer/src/renderer/index.tsx",
 				),
 			},
-			{
-				find: "@local-studio/demo-ui/hero",
-				replacement: path.resolve(
-					root,
-					"packages/demo-ui/src/hero/HeroDemo.tsx",
-				),
-			},
-			{
-				find: "@local-studio/demo-ui/story",
-				replacement: path.resolve(
-					root,
-					"packages/demo-ui/src/story/FeatureDemo.tsx",
-				),
-			},
-			{
-				find: "@local-studio/demo-ui",
-				replacement: path.resolve(root, "packages/demo-ui/src/index.ts"),
-			},
 		],
 	},
 });

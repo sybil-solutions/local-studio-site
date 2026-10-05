@@ -8,7 +8,7 @@ export const routes = {
 	"/": {
 		title: brandedTitle("Intelligence Should Be Owned"),
 		heading: "Intelligence Should Be Owned",
-		summary: "Homepage: Local Studio + KittyLitter product surface.",
+		summary: "Homepage: Local Studio 3.0, every coding agent on your own models.",
 		markdown: "/index.md",
 		footerLabel: null,
 		priority: 1,
@@ -17,7 +17,7 @@ export const routes = {
 	"/product": {
 		title: brandedTitle("Product"),
 		heading: "One Place to Run Local AI",
-		summary: "Control, serve, and work: controller, runtimes, Workbench.",
+		summary: "Agents, bundled controller, Tailscale fleet, registry, phone.",
 		markdown: "/product.md",
 		footerLabel: null,
 		priority: 0.9,
@@ -26,7 +26,7 @@ export const routes = {
 	"/docs": {
 		title: brandedTitle("Documentation"),
 		heading: "Get Local Studio Running",
-		summary: "Install, runtimes, agent runtime, remote/LAN, validation.",
+		summary: "Install, agents, local models, fleet, registry, phone, controller API.",
 		markdown: "/docs.md",
 		footerLabel: "Docs",
 		priority: 0.8,
@@ -42,9 +42,9 @@ export const routes = {
 		machineLabel: "setup",
 	},
 	"/download": {
-		title: brandedTitle("Download for macOS"),
-		heading: "Download for macOS",
-		summary: "Signed Apple Silicon DMG from GitHub Releases.",
+		title: brandedTitle("Download"),
+		heading: "Download Local Studio",
+		summary: "Verified installers for macOS, Windows, Linux, and controller binaries.",
 		markdown: "/download.md",
 		footerLabel: "Download",
 		priority: 0.8,
@@ -53,7 +53,7 @@ export const routes = {
 	"/overview": {
 		title: brandedTitle("Overview"),
 		heading: "Everything Around Local Studio",
-		summary: "Docs, setup, download, KittyLitter, GitHub, brand.",
+		summary: "Docs, setup, download, upstream credits, source, discovery.",
 		markdown: "/overview.md",
 		footerLabel: "Overview",
 		priority: 0.6,
@@ -173,7 +173,7 @@ export function productNav(): readonly ProductNavItem[] {
 	return [
 		{ label: site.products.localAi.name, href: site.products.localAi.url, external: true },
 		{ label: site.products.localStudio.name, href: downloadPath },
-		{ label: site.products.kittyLitter.name, href: site.products.kittyLitter.url, external: true },
+		{ label: site.products.codexShim.name, href: site.products.codexShim.repository, external: true },
 	];
 }
 

@@ -70,10 +70,10 @@ if (isHeroImageRoute(window.location.pathname)) {
 	preload.rel = "preload";
 	preload.as = "image";
 	preload.setAttribute("fetchpriority", "high");
-	preload.href = assets.workbenchBrowserHero;
+	preload.href = assets.shotThread1300;
 	preload.setAttribute(
 		"imagesrcset",
-		responsiveSrcSet(assets.workbenchBrowser),
+		responsiveSrcSet(assets.shotThread),
 	);
 	preload.setAttribute("imagesizes", heroSizes);
 	document.head.append(preload);

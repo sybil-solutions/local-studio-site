@@ -80,12 +80,12 @@ test("product nav uses canonical product facts", () => {
 	expect(productNav()).toEqual([
 		{ label: site.products.localAi.name, href: site.products.localAi.url, external: true },
 		{ label: site.products.localStudio.name, href: downloadPath },
-		{ label: site.products.kittyLitter.name, href: site.products.kittyLitter.url, external: true },
+		{ label: site.products.codexShim.name, href: site.products.codexShim.repository, external: true },
 	]);
 });
 
 test("download label comes from the download route heading", () => {
-	expect(downloadLabel()).toBe("Download for macOS");
+	expect(downloadLabel()).toBe("Download Local Studio");
 });
 
 test("HTML titles use the canonical product name", () => {
