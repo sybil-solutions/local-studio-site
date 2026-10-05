@@ -1,16 +1,11 @@
 import { baseStyles } from "../styles/base-styles";
 import * as stylex from "@stylexjs/stylex";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { productFeatures } from "../content/product";
+import { frameSizes, responsiveSrcSet } from "../domain/asset";
 import { renderInlineReact } from "../ui/prose";
 import { site } from "../domain/site";
 import { styles } from "../styles/sections-styles";
-const FeatureDemo = lazy(() => import("@local-studio/demo-ui/story"));
-
-const DEMO_PLACEHOLDER = (
-	<div {...stylex.props(baseStyles.element, styles.storyDemoPlaceholder)} aria-hidden="true" />
-);
-
 function useStoryProgress() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const showcaseRef = useRef<HTMLDivElement>(null);
@@ -95,22 +90,8 @@ function useStoryProgress() {
 
 export function ProductStory() {
 	const { activeIndex, showcaseRef } = useStoryProgress();
-	const [demoInRange, setDemoInRange] = useState(false);
-	const visualRef = useRef<HTMLElement>(null);
 	const activeFeature = productFeatures[activeIndex] ?? productFeatures[0];
 	const optionsOffset = `${(1 - activeIndex) * 20}%`;
-
-	useEffect(() => {
-		const visual = visualRef.current;
-		if (!visual) return;
-		const observer = new IntersectionObserver(
-			(entries) => setDemoInRange(entries.at(-1)?.isIntersecting ?? false),
-			{ rootMargin: "500px 0px" },
-		);
-		observer.observe(visual);
-		return () => observer.disconnect();
-	}, []);
-
 	return (
 		<section id="media" {...stylex.props(baseStyles.element, baseStyles.sectionAnchor, styles.sectionWidth, styles.story)} aria-label={`${site.products.localStudio.name} product story`}>
 				<div {...stylex.props(baseStyles.element, styles.storyShowcase)} ref={showcaseRef}>
@@ -165,21 +146,21 @@ export function ProductStory() {
 						<div {...stylex.props(baseStyles.element, styles.storyVisualHome)}>
 							<figure
 								{...stylex.props(baseStyles.element, styles.storyVisual)}
-								ref={visualRef}
 								data-active-feature={activeFeature.storyTitle}
 							>
-									{demoInRange ? (
-										<Suspense fallback={DEMO_PLACEHOLDER}>
-											<div
-												{...stylex.props(baseStyles.element, styles.storyDemoTransition)}
-												key={activeFeature.slug}
-											>
-												<FeatureDemo scene={activeFeature.demoScene} />
-											</div>
-										</Suspense>
-								) : (
-									DEMO_PLACEHOLDER
-								)}
+								<img
+									{...stylex.props(baseStyles.element, baseStyles.image, styles.storyDemoTransition, styles.storyImage)}
+									key={activeFeature.slug}
+									src={activeFeature.image}
+									srcSet={responsiveSrcSet(activeFeature.image)}
+									sizes={frameSizes}
+									alt={activeFeature.alt}
+									width="2880"
+									height="2200"
+									loading="lazy"
+									decoding="async"
+									draggable={false}
+								/>
 								<p {...stylex.props(baseStyles.element, baseStyles.paragraph, styles.screenReaderOnly)} role="status">
 									{activeFeature.storyTitle}. {renderInlineReact(activeFeature.storyDescription)}
 								</p>

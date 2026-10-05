@@ -92,7 +92,7 @@ function assertSourceContract() {
 			failures.push(`package.json: missing ${dependency}`);
 		}
 	}
-	if (createCalls < 20) failures.push(`StyleX coverage is too low: ${createCalls} create calls`);
+	if (createCalls < 12) failures.push(`StyleX coverage is too low: ${createCalls} create calls`);
 	if (propsCalls < 40) failures.push(`StyleX coverage is too low: ${propsCalls} props calls`);
 	if (typedVariables < 10) failures.push(`StyleX typed-variable coverage is too low: ${typedVariables} typed values`);
 	if (variableGroups < 2) failures.push(`StyleX token coverage is too low: ${variableGroups} variable groups`);

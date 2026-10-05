@@ -16,12 +16,10 @@ const storyDemoEnter = stylex.keyframes({
 });
 
 const pageWidth = `min(${lengths.pageWidth}, calc(100% - ${lengths.pageGutter}))`;
-const heroStagePadding = `calc((100% - ${pageWidth}) / 2)`;
-const heroStageClippedWidth = `calc(100% - ${heroStagePadding})`;
 const scrimAmbient = `color-mix(in oklab, ${colors.background} 48%, transparent)`;
 const scrimDirect = `color-mix(in oklab, ${colors.background} 32%, transparent)`;
-const kittyCarouselGutter = `max(24px, calc((100vw - ${lengths.pageWidth}) / 2))`;
-const kittyCardWidth = "min(620px, calc(100vw - 48px))";
+const phoneCarouselGutter = `max(24px, calc((100vw - ${lengths.pageWidth}) / 2))`;
+const phoneCardWidth = "min(620px, calc(100vw - 48px))";
 
 export const styles = stylex.create({
 	sectionWidth: {
@@ -121,6 +119,25 @@ export const styles = stylex.create({
 		fontWeight: 400,
 		lineHeight: "24px",
 	},
+	heroCredit: {
+		marginTop: "8px",
+		color: colors.chrome,
+		fontFamily: constants.fontSans,
+		fontSize: "14px",
+		fontWeight: 400,
+		lineHeight: "20px",
+	},
+	heroCreditLink: {
+		color: {
+			default: colors.dim,
+			"@media (hover: hover)": {
+				default: colors.dim,
+				":hover": colors.foreground,
+			},
+		},
+		textDecoration: "underline",
+		textUnderlineOffset: "3px",
+	},
 	heroActions: {
 		display: "flex",
 		alignItems: "center",
@@ -136,45 +153,18 @@ export const styles = stylex.create({
 			default: "72px",
 			"@media (max-width: 900px)": "56px",
 		},
-		marginRight: {
-			default: "auto",
-			[stylex.when.ancestor(
-				':has([aria-label="Local Studio workbench"][data-clip-right])',
-			)]: 0,
-			"@media (max-width: 900px)": 0,
-		},
-		marginBottom: 0,
-		marginLeft: {
-			default: "auto",
-			[stylex.when.ancestor(
-				':has([aria-label="Local Studio workbench"][data-clip-right])',
-			)]: heroStagePadding,
-			"@media (max-width: 900px)": "calc(48px / 2)",
-		},
-		width: {
-			default: pageWidth,
-			[stylex.when.ancestor(
-				':has([aria-label="Local Studio workbench"][data-clip-right])',
-			)]: heroStageClippedWidth,
-			"@media (max-width: 900px)": "calc(100% - 48px / 2)",
-		},
-		overflow: {
-			default: "visible",
-			[stylex.when.ancestor(
-				':has([aria-label="Local Studio workbench"][data-clip-right])',
-			)]: "clip",
-			"@media (max-width: 900px)": "clip",
-		},
 	},
-	heroDemoPlaceholder: {
-		height: {
-			default: "787px",
-			"@media (max-width: 900px)": "auto",
-		},
-		aspectRatio: {
-			default: "auto",
-			"@media (max-width: 900px)": "950 / 787",
-		},
+	heroVideo: {
+		display: "block",
+		width: "100%",
+		height: "auto",
+		aspectRatio: "16 / 9",
+		borderWidth: "1px",
+		borderStyle: "solid",
+		borderColor: colors.border,
+		borderRadius: lengths.radiusMediaFrame,
+		backgroundColor: colors.background,
+		boxShadow: `0 0 0 7px ${colors.mediaRingInner}, 0 0 0 8px ${colors.mediaRingOuter}, 0 28px 80px ${colors.shadowAmbient}, 0 8px 24px ${colors.shadowDirect}`,
 	},
 	sponsors: {
 		marginTop: "96px",
@@ -417,16 +407,14 @@ export const styles = stylex.create({
 		},
 		animationFillMode: "both",
 	},
-	storyDemoPlaceholder: {
+	storyImage: {
+		display: "block",
 		width: "100%",
-		maxHeight: {
-			default: "787px",
-			"@media (max-width: 900px)": "none",
-		},
-		aspectRatio: {
-			default: "820 / 787",
-			"@media (max-width: 900px)": "680 / 580",
-		},
+		height: "auto",
+		borderWidth: "1px",
+		borderStyle: "solid",
+		borderColor: colors.border,
+		borderRadius: lengths.radiusFrame,
 	},
 	storyScrollTrack: (height: string) => ({
 		position: "relative",
@@ -449,16 +437,16 @@ export const styles = stylex.create({
 		whiteSpace: "nowrap",
 		borderWidth: 0,
 	},
-	kitty: {
+	phone: {
 		paddingTop: lengths.storyGap,
 		paddingRight: 0,
 		paddingBottom: 0,
 		paddingLeft: 0,
 	},
-	kittyIntro: {
+	phoneIntro: {
 		textAlign: "left",
 	},
-	kittyHeading: {
+	phoneHeading: {
 		maxWidth: "760px",
 		marginTop: 0,
 		fontFamily: constants.fontSans,
@@ -473,7 +461,7 @@ export const styles = stylex.create({
 		},
 		letterSpacing: constants.headerTracking,
 	},
-	kittyCarousel: {
+	phoneCarousel: {
 		width: "100%",
 		overflowX: "auto",
 		marginTop: "32px",
@@ -488,31 +476,31 @@ export const styles = stylex.create({
 			display: "none",
 		},
 	},
-	kittyCarouselDragging: {
+	phoneCarouselDragging: {
 		userSelect: "none",
 	},
-	kittyItems: {
+	phoneItems: {
 		display: "flex",
 		width: "max-content",
 		alignItems: "flex-start",
 		columnGap: "24px",
 		rowGap: "24px",
-		paddingInline: kittyCarouselGutter,
+		paddingInline: phoneCarouselGutter,
 	},
-	kittyFeature: {
+	phoneFeature: {
 		minWidth: 0,
 		flexGrow: 0,
 		flexShrink: 0,
-		flexBasis: kittyCardWidth,
+		flexBasis: phoneCardWidth,
 	},
-	kittyFeatureBody: {
+	phoneFeatureBody: {
 		minHeight: "56px",
 		paddingTop: "16px",
 		paddingRight: 0,
 		paddingBottom: "16px",
 		paddingLeft: 0,
 	},
-	kittyFeatureTrigger: {
+	phoneFeatureTrigger: {
 		display: "block",
 		minWidth: 0,
 		flexGrow: 1,
@@ -526,10 +514,10 @@ export const styles = stylex.create({
 		lineHeight: "24px",
 		textAlign: "left",
 	},
-	kittyFeatureDescription: {
+	phoneFeatureDescription: {
 		overflow: "hidden",
 	},
-	kittyFeatureDescriptionText: {
+	phoneFeatureDescriptionText: {
 		maxWidth: "42ch",
 		paddingTop: "12px",
 		color: colors.fine,
@@ -538,7 +526,7 @@ export const styles = stylex.create({
 		fontWeight: 400,
 		lineHeight: "24px",
 	},
-	kittyFeatureMedia: {
+	phoneFeatureMedia: {
 		position: "relative",
 		isolation: "isolate",
 		aspectRatio: "1",
@@ -563,7 +551,7 @@ export const styles = stylex.create({
 			},
 		},
 	},
-	kittyFeatureImage: {
+	phoneFeatureImage: {
 		display: "block",
 		width: "100%",
 		height: "100%",

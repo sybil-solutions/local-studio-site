@@ -194,7 +194,6 @@ for (const name of [
 }
 const unusedDeps = Object.keys(declared).filter((name) => !usedDeps.has(name));
 const workspaceManifests = [
-	{ root: "packages/demo-ui", manifest: "packages/demo-ui/package.json" },
 	{ root: "packages/logo-renderer", manifest: "packages/logo-renderer/package.json" },
 ];
 

@@ -31,12 +31,6 @@
       "vite/client"
     ],
     "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
-    "paths": {
-      "@local-studio/demo-ui": [
-        "packages/demo-ui/src/index.ts"
-      ]
-    },
     "noImplicitReturns": true,
     "noUncheckedSideEffectImports": true,
     "allowUnreachableCode": false,
@@ -48,7 +42,6 @@
     "src"
   ],
   "exclude": [
-    "packages/logo-renderer",
-    "packages/demo-ui"
+    "packages/logo-renderer"
   ]
 }
